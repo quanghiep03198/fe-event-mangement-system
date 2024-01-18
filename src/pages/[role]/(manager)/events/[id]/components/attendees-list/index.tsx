@@ -1,6 +1,19 @@
 import { UserInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
-import { Avatar, AvatarFallback, AvatarImage, Badge, Box, Button, DataTable, DataTableRowActions, Icon, Label, buttonVariants } from '@/components/ui'
+import {
+   Avatar,
+   AvatarFallback,
+   AvatarImage,
+   Badge,
+   Box,
+   Button,
+   DataTable,
+   DataTableRowActions,
+   DropdownMenuItem,
+   Icon,
+   Label,
+   buttonVariants
+} from '@/components/ui'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { type Atteendees, useGetAttendeesByEventQuery, useRemoveAttendanceFromEventMutation } from '@/redux/apis/attendance.api'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
@@ -10,12 +23,15 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import AddAttendeeFormModal from './add-attendee-form-modal'
 import UpdateAttendeeFormModal from './update-attendee-form-modal'
+import MoveAttendeeToEventModal from './move-attendee-form-modal'
 
 const ParticipantsList: React.FunctionComponent = () => {
    const [addFormOpenState, setAddFormOpenState] = useState<boolean>(false)
    const [updateFormOpenState, setUpdateFormOpenState] = useState<boolean>(false)
+   const [moveAttendeeFormOpenState, setMoveAttendeeFormOpenState] = useState<boolean>(false)
+   const [selectedAttendee, setSelectedAttendee] = useState<number>()
    const { id: eventId } = useParams()
-   const { data: attendees } = useGetAttendeesByEventQuery({ eventId: eventId!, params: { pagination: false } })
+   const { data: attendees, refetch } = useGetAttendeesByEventQuery({ eventId: eventId!, params: { pagination: false } })
    const [attendeeToUpdate, setAttendeeToUpdate] = useState<Partial<UserInterface> | null>(null)
    const columnHelper = createColumnHelper<Atteendees>()
    const handleOpenAddFormModal = useCallback(setAddFormOpenState, [])
@@ -92,6 +108,17 @@ const ParticipantsList: React.FunctionComponent = () => {
                      handleOpenUpdateFormModal(true)
                   }}
                   onDelete={() => handleRemoveAttendeeFromEvent(id)}
+                  slot={
+                     <DropdownMenuItem
+                        className='gap-x-2 whitespace-nowrap'
+                        onClick={() => {
+                           setSelectedAttendee(id)
+                           setMoveAttendeeFormOpenState(true)
+                        }}
+                     >
+                        <Icon name='ArrowRightLeft' /> Chuyển sang sự kiện khác
+                     </DropdownMenuItem>
+                  }
                />
             )
          }
@@ -113,7 +140,13 @@ const ParticipantsList: React.FunctionComponent = () => {
             }
          />
          <AddAttendeeFormModal open={addFormOpenState} onOpenChange={handleOpenAddFormModal} />
-         <UpdateAttendeeFormModal open={updateFormOpenState} onOpenChange={handleOpenUpdateFormModal} defaultValue={attendeeToUpdate!} />
+         <UpdateAttendeeFormModal
+            open={updateFormOpenState}
+            onOpenChange={handleOpenUpdateFormModal}
+            onAfterUpdate={refetch}
+            defaultValue={attendeeToUpdate!}
+         />
+         <MoveAttendeeToEventModal open={moveAttendeeFormOpenState} onOpenChange={setMoveAttendeeFormOpenState} selectedAttendee={selectedAttendee} />
       </Box>
    )
 }

@@ -12,8 +12,6 @@ import Router from './routes'
 
 const theme = (localStorage.getItem('theme') ?? 'system') as Theme
 
-console.log(1)
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
    <Provider store={store}>
       <PersistGate persistor={persistor}>

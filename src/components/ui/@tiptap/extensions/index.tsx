@@ -92,7 +92,7 @@ export const extensions = [
    Color.configure(),
    Image.configure({
       HTMLAttributes: {
-         class: 'object-center object-contain max-w-full'
+         class: 'object-center object-cover max-w-full aspect-[16/9]'
       },
       allowBase64: true
    })

@@ -4,7 +4,7 @@ import useQueryParams from '@/common/hooks/use-query-params'
 import { EventInterface } from '@/common/types/entities'
 import { Box, Icon, Typography } from '@/components/ui'
 import Pagination from '@/components/ui/@custom/pagination'
-import { useGetEventsQuery, usePrefetch } from '@/redux/apis/event.api'
+import { useGetEventsQuery, useGetJoinedEventsQuery, usePrefetch } from '@/redux/apis/event.api'
 import _ from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { EmptySection } from '../components/shared/empty-section'
@@ -16,7 +16,7 @@ const MyEventsPage: React.FunctionComponent = () => {
    const [sortValue] = useState<string>('')
    const [params] = useQueryParams('page')
    const currentPage = useMemo(() => (params.page ? Number(params.page) : 1), [params])
-   const { data, isLoading } = useGetEventsQuery({
+   const { data, isLoading } = useGetJoinedEventsQuery({
       page: currentPage,
       limit: 12,
       search: searchValue,

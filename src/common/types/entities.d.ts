@@ -1,4 +1,4 @@
-import { EventStatus, JoinEventStatus, UserRoleEnum } from '../constants/enums'
+import { EventStatus, FeedbackStatus, JoinEventStatus, UserRoleEnum } from '../constants/enums'
 
 export interface BaseEntityInterface {
    id: number
@@ -28,6 +28,7 @@ export interface EventInterface extends BaseEntityInterface {
    content: string
    status: any
    status_join: JoinEventStatus
+   status_feedback: FeedbackStatus
    user_id: number
    user?: Partial<UserInterface>
    feedback?: FeedbackInterface[]

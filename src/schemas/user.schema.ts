@@ -23,6 +23,7 @@ export const UpdateUserSchema = z.object({
    role: z
       .string({ required_error: 'Vui lòng chọn vai trò tham gia' })
       .or(z.number({ required_error: 'Vui lòng chọn vai trò tham gia' }))
+      .nullable()
       .transform((value) => +value)
       .refine((value) => Object.values(UserRoleEnum).includes(value), { message: 'Vai trò không hợp lệ' })
       .optional()

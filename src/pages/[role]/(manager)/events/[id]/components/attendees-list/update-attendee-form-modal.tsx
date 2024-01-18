@@ -1,9 +1,10 @@
-import { UserRoleValues } from '@/common/constants/constants'
 import { UserInterface } from '@/common/types/entities'
-import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Form, Icon, InputFieldControl, SelectFieldControl } from '@/components/ui'
-import { useUpdateAttendeeInfoMutation } from '@/redux/apis/attendance.api'
+import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Form, Icon, InputFieldControl } from '@/components/ui'
+import { useUpdateUserMutation } from '@/redux/apis/user.api'
 import { UpdateUserSchema } from '@/schemas/user.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { QueryActionCreatorResult } from '@reduxjs/toolkit/query'
+import _ from 'lodash'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -13,6 +14,7 @@ import { z } from 'zod'
 type AddAttendeeFormModalProps = {
    defaultValue: Partial<UserInterface>
    open: boolean
+   onAfterUpdate: () => QueryActionCreatorResult<any>
    onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -20,20 +22,26 @@ type FormValue = z.infer<typeof UpdateUserSchema>
 
 const UpdateAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
    const form = useForm<FormValue>({ resolver: zodResolver(UpdateUserSchema) })
-   const [updateAttendeeInfo, { isLoading }] = useUpdateAttendeeInfoMutation()
+   const [updateAttendeeInfo, { isLoading }] = useUpdateUserMutation()
 
    useEffect(() => {
-      form.reset(props.defaultValue)
+      form.reset(_.pick(props.defaultValue, ['name', 'email', 'phone']))
    }, [props.defaultValue])
 
-   const handleAddAttendee = async (data: Required<FormValue>) => {
-      try {
-         await updateAttendeeInfo({ id: props.defaultValue?.id!, payload: data }).unwrap()
-         toast.success('Add sinh viên tham gia thành công')
-      } catch (error) {
-         const errorResponse = error as ErrorResponse
-         toast.error(errorResponse.data.message)
-      }
+   const handleAddAttendee = (data: Required<FormValue>) => {
+      toast.promise(updateAttendeeInfo({ id: props.defaultValue?.id!, payload: data }).unwrap(), {
+         loading: 'Đang cập nhật thông tin người tham gia ...',
+         success: () => {
+            form.reset()
+            props.onOpenChange(false)
+            props.onAfterUpdate()
+            return 'Cập nhật thông tin thành công'
+         },
+         error: (error) => {
+            const errorResponse = error as ErrorResponse
+            return errorResponse.data.message
+         }
+      })
    }
 
    return (
@@ -46,7 +54,6 @@ const UpdateAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => 
             <Form {...form}>
                <DialogForm onSubmit={form.handleSubmit(handleAddAttendee)}>
                   <InputFieldControl name='name' control={form.control} label='Họ tên' />
-                  <InputFieldControl name='phone' control={form.control} label='Số điện thoại' />
                   <InputFieldControl
                      name='email'
                      type='email'
@@ -54,15 +61,9 @@ const UpdateAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => 
                      label='Email'
                      description='Email này là email của sinh viên bạn muốn mời tham gia'
                   />
-                  <SelectFieldControl
-                     name='role'
-                     control={form.control}
-                     options={Array.from(UserRoleValues, ([value, label]) => ({ value: value.toString(), label }))}
-                     label='Vai trò'
-                     placeholder='Vai trò'
-                  />
+                  <InputFieldControl name='phone' control={form.control} label='Số điện thoại' />
                   <Button type='submit' className='gap-x-2'>
-                     {isLoading ? <Icon name='ArrowUpCircle' className='animate-spin' /> : <Icon name='PlusCircle' />} Lưu
+                     {isLoading ? <Icon name='ArrowUpCircle' className='animate-spin' /> : <Icon name='CheckCircle' />} Lưu
                   </Button>
                </DialogForm>
             </Form>

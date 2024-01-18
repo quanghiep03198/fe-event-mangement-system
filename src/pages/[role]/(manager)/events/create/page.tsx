@@ -1,15 +1,18 @@
 import { Paths } from '@/common/constants/pathnames'
 import { cn } from '@/common/utils/cn'
-import { createFormData } from '@/common/utils/form-data'
 import {
    Box,
    Button,
    DatePickerFieldControl,
-   Editor,
    Form,
+   FormControl,
+   FormField,
+   FormItem,
+   FormLabel,
    FormMessage,
    Icon,
    Image,
+   Input,
    InputFieldControl,
    Label,
    Typography,
@@ -21,7 +24,7 @@ import { useAppSelector } from '@/redux/hook'
 import { CreateEventSchema } from '@/schemas/event.schema'
 import { Cloudinary } from '@/services/cloudinary.service'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -32,10 +35,12 @@ type FormValue = z.infer<typeof CreateEventSchema>
 const CreateEventPage = () => {
    const form = useForm<FormValue>({ resolver: zodResolver(CreateEventSchema) })
    const [createEvent, { isLoading }] = useCreateEventMutation()
-   const [editorState, setEditorState] = useState<{ value: string; isEmpty: boolean }>({ value: '', isEmpty: true })
    const navigate = useNavigate()
    const user = useAppSelector((state) => state.auth.user)
    const [image, setImage] = useState<string>('')
+   const [fileValue, setFileValue] = useState<string>('')
+
+   console.log(image)
 
    const handleCreateEvent = async (data: FormValue) => {
       const banner = await Cloudinary.upload(data.banner[0])
@@ -68,7 +73,7 @@ const CreateEventPage = () => {
             </Box>
 
             <Box className='space-y-10'>
-               <Box className='grid grid-cols-6 gap-y-10 sm:grid-cols-1'>
+               <Box className='grid grid-cols-6 gap-x-6 gap-y-10 sm:grid-cols-1 sm:gap-x-0'>
                   <Box className='col-span-full w-full'>
                      <InputFieldControl name='name' control={form.control} label='Tên sự kiện' />
                   </Box>
@@ -85,29 +90,39 @@ const CreateEventPage = () => {
                      <DatePickerFieldControl name='end_time' control={form.control} label='Ngày kết thúc' />
                   </Box>
                   <Box className='col-span-full space-y-2'>
-                     <Label className={cn({ 'text-destructive': Boolean(form.getFieldState('banner').error) })} htmlFor='file'>
-                        Ảnh bìa
-                     </Label>
-                     <Box className='group relative h-80 w-[inherit] overflow-clip rounded-lg'>
-                        <Label
-                           htmlFor='file'
-                           className='absolute inset-0 z-10 flex h-full w-full cursor-pointer items-center justify-center bg-neutral-950/50 bg-opacity-50 text-primary-foreground opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100'
-                        >
-                           <Icon name='Camera' size={48} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
-                        </Label>
-                        <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height={320} />
-                        <InputFieldControl
-                           hidden
-                           id='file'
-                           name='banner'
-                           control={form.control}
-                           className='hidden'
-                           type='file'
-                           onChange={(e) => setImage(URL.createObjectURL(e.target.files?.[0]!))}
-                           accept='image/*'
-                        />
-                     </Box>
-                     {form.getFieldState('banner').error && <FormMessage>{form.getFieldState('banner').error?.message}</FormMessage>}
+                     <FormField
+                        name='banner'
+                        control={form.control}
+                        render={({ field }) => (
+                           <Fragment>
+                              <FormLabel> Ảnh bìa</FormLabel>
+                              <FormItem className='group relative h-80 w-[inherit] overflow-clip rounded-lg'>
+                                 <Label
+                                    htmlFor='file'
+                                    className='absolute inset-0 z-10 flex h-full w-full cursor-pointer items-center justify-center bg-neutral-950/50 bg-opacity-50 text-primary-foreground opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100'
+                                 >
+                                    <Icon name='Camera' size={32} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
+                                 </Label>
+                                 <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height={320} />
+                                 <FormControl>
+                                    <Input
+                                       {...field}
+                                       value={fileValue}
+                                       id='file'
+                                       type='file'
+                                       className='hidden'
+                                       onChange={(e) => {
+                                          setFileValue(e.target.value)
+                                          field.onChange(e.target.files)
+                                          setImage(URL.createObjectURL(e.target.files?.[0]!))
+                                       }}
+                                    />
+                                 </FormControl>
+                              </FormItem>
+                              <FormMessage />
+                           </Fragment>
+                        )}
+                     />
                   </Box>
                   <Box className='col-span-full'>
                      <EditorFieldControl name='content' form={form} label='Nội dung' />

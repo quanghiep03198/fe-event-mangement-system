@@ -13,7 +13,6 @@ import { toast } from 'sonner'
 import { NotificationContext } from '../context/notification-context'
 
 const NotificationDetailsPanel: React.FunctionComponent = () => {
-   const [params] = useQueryParams('id')
    const { selectedNotification } = useContext(NotificationContext)
    const [deleteNotification, { isLoading }] = useDeleteNotificationMutation()
    const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false)
@@ -76,7 +75,7 @@ const NotificationDetailsPanel: React.FunctionComponent = () => {
                         {format(selectedNotification?.created_at ?? new Date(), `HH:mm 'Thứ' d 'tháng' M`, { locale: vi })}
                      </Typography>
                   </Box>
-                  <Box className='p-4'>
+                  <Box className='px-6 py-4'>
                      <Typography variant='small' className='font-bold leading-snug'>
                         {selectedNotification?.title}
                      </Typography>

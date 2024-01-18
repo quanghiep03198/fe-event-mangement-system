@@ -43,8 +43,8 @@ export const attendanceApi = createApi({
             query: (id) => ({ url: `/attendances/${id}`, method: 'GET' }),
             providesTags: tagTypes
          }),
-         updateAttendeeInfo: build.mutation<unknown, { id: string | number; payload: Pick<UserInterface, 'email' | 'name' | 'phone'> }>({
-            query: ({ id, payload }) => ({ url: `/attendances/${id}`, method: 'PUT', data: payload }),
+         moveAttendeeToEvent: build.mutation<unknown, { id: string | number; payload: { event_id: number; user_id: number } }>({
+            query: ({ id, payload }) => ({ url: `/attendances/${id}`, method: 'PATCH', data: payload }),
             invalidatesTags: tagTypes
          }),
          removeAttendanceFromEvent: build.mutation<unknown, number>({
@@ -60,5 +60,5 @@ export const {
    useGetAttendeeInfoQuery,
    useGetAttendeesByEventQuery,
    useRemoveAttendanceFromEventMutation,
-   useUpdateAttendeeInfoMutation
+   useMoveAttendeeToEventMutation
 } = attendanceApi

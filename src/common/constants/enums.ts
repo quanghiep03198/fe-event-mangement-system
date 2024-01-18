@@ -21,6 +21,11 @@ export enum JoinEventStatus {
    ALREADY = 1
 }
 
+export enum FeedbackStatus {
+   NOT_YET = 0,
+   ALREADY = 1
+}
+
 export enum NotificationSendingStatus {
    SCHEDULED = 0,
    SENT = 1

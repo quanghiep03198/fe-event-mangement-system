@@ -1,8 +1,6 @@
-import { UserRoleValues } from '@/common/constants/constants'
 import { UserRoleEnum } from '@/common/constants/enums'
-import { UserInterface } from '@/common/types/entities'
 import ErrorBoundary from '@/components/shared/error-boundary'
-import { Box, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Form, InputFieldControl, SelectFieldControl } from '@/components/ui'
+import { Box, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Form, InputFieldControl } from '@/components/ui'
 import { useAddUserMutation } from '@/redux/apis/user.api'
 import { UserSchema } from '@/schemas/user.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,7 +36,12 @@ const CreateUserFormModal: React.FC<CreateFormModalProps> = (props) => {
             props.onOpenStateChange(!props.openState)
             return 'Đã thêm người dùng vào hệ thống'
          },
-         error: 'Thêm cộng tác viên thất bại'
+         error: (error) => {
+            const errorResponse = error as ErrorResponse
+            if (typeof errorResponse.data.message === 'string') return errorResponse.data.message
+            else if (Array.isArray(errorResponse.data.message)) return errorResponse.data.message[0]
+            return 'Thêm người dùng thất bại'
+         }
       })
    }
 

@@ -1,5 +1,5 @@
 import { EventStatusValues } from '@/common/constants/constants'
-import { EventStatus, JoinEventStatus } from '@/common/constants/enums'
+import { EventStatus, FeedbackStatus, JoinEventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import { EventInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
@@ -44,7 +44,11 @@ export const EventVerticalCard: React.FC<{
                   <Icon name='User' className='basis-4' />
                   <span className='line-clamp-1'>{data?.user?.name}</span>
                </CardDescription>
-               <Badge variant={data?.status === EventStatus.ACTIVE ? 'success' : 'destructive'} className='w-fit'>
+
+               <Badge
+                  variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
+                  className='w-fit'
+               >
                   {EventStatusValues.get(data.status)}
                </Badge>
             </CardContent>
@@ -86,14 +90,23 @@ export const EventHorizontalCard: React.FC<{ data: EventInterface }> = ({ data }
                      </time>
                   </p>
                   <p className='line-clamp-2 text-sm leading-tight text-muted-foreground sm:line-clamp-1'>{data?.description}</p>
-                  <Badge variant={data?.status === EventStatus.ACTIVE ? 'success' : 'destructive'} className='w-fit'>
+                  <Badge
+                     variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
+                     className='w-fit'
+                  >
                      {EventStatusValues.get(data.status)}
                   </Badge>
                </Box>
                <Box className='flex items-end justify-end gap-x-2 self-end'>
-                  <Button variant='outline' className='gap-x-2' size='sm' disabled={data?.status === EventStatus.INACTIVE} onClick={() => setOpen(true)}>
-                     <Icon name='Reply' /> Feedback
-                  </Button>
+                  {data.status_feedback === FeedbackStatus.ALREADY ? (
+                     <Badge className='gap-x-2' variant='success'>
+                        <Icon name='CheckCircle' /> Đã feedback
+                     </Badge>
+                  ) : (
+                     <Button variant='outline' className='gap-x-2' size='sm' disabled={data?.status === EventStatus.INACTIVE} onClick={() => setOpen(true)}>
+                        <Icon name='Reply' /> Feedback
+                     </Button>
+                  )}
                   <Button asChild variant='default' className='gap-x-2' size='sm' onMouseEnter={() => prefetchPage(String(data?.id))}>
                      <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data.id))}>
                         <Icon name='MousePointerClick' /> Chi tiết

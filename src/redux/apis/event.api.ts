@@ -58,6 +58,11 @@ export const eventApi = createApi({
             },
             providesTags: [{ type: 'Event', id: 'RECENT_LIST' }]
          }),
+         getJoinedEvents: build.query<Pagination<EventInterface>, RequestParams>({
+            query: (params) => ({ url: '/eventJoin', method: 'GET', params }),
+            transformResponse: (response: SuccessResponse<Pagination<EventInterface>>) => response.metadata,
+            providesTags: [{ type: 'Event', id: 'JOINED_EVENTS_LIST' }]
+         }),
          participateInEvent: build.mutation<unknown, { user_id: number; event_id: number }>({
             query: (payload) => ({ url: '/attendances', method: 'POST', data: payload }),
             invalidatesTags: tagTypes
@@ -94,5 +99,6 @@ export const {
    useGetEventDetailsQuery,
    useDeleteEventMutation,
    useGetRecentEventsQuery,
+   useGetJoinedEventsQuery,
    useParticipateInEventMutation
 } = eventApi

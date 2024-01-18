@@ -14,7 +14,7 @@ module.exports = {
       'prefer-spread': 'off',
       'no-sparse-arrays': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
-      'no-unsafe-optional-chaining': 'off',
+      'no-unsafe-optional-chaining': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       'react-hooks/exhaustive-deps': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',

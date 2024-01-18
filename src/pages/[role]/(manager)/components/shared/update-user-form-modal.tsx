@@ -1,10 +1,8 @@
-import { UserRoleValues } from '@/common/constants/constants'
-import { UserRoleEnum } from '@/common/constants/enums'
 import { UserInterface } from '@/common/types/entities'
 import ErrorBoundary from '@/components/shared/error-boundary'
-import { Box, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Form, InputFieldControl, SelectFieldControl } from '@/components/ui'
+import { Box, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Form, InputFieldControl } from '@/components/ui'
 import { useUpdateUserMutation } from '@/redux/apis/user.api'
-import { UpdateUserSchema, UserSchema } from '@/schemas/user.schema'
+import { UpdateUserSchema } from '@/schemas/user.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -30,8 +28,6 @@ const UpdateUserFormModal: React.FC<UpdateUserFormModalProps> = (props) => {
       form.reset(props.defaultValue)
    }, [props.defaultValue])
 
-   console.log(form.formState.errors)
-
    const handleUpdateParticipant = async (data: Required<FormValue>) => {
       toast.promise(updateParticipant({ id: props.defaultValue?.id!, payload: data }).unwrap(), {
          loading: 'Đang cập nhật thông tin người dùng',
@@ -40,7 +36,12 @@ const UpdateUserFormModal: React.FC<UpdateUserFormModalProps> = (props) => {
             form.reset()
             return 'Đã cập nhật thông tin người dùng'
          },
-         error: () => 'Cập nhật thông tin cộng tác viên thất bại'
+         error: (error) => {
+            const errorResponse = error as ErrorResponse
+            if (typeof errorResponse.data.message === 'string') return errorResponse.data.message
+            else if (Array.isArray(errorResponse.data.message)) return errorResponse.data.message[0]
+            return 'Thêm người dùng thất bại'
+         }
       })
    }
    return (

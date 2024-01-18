@@ -18,7 +18,7 @@ const EventDetailsPage: React.FunctionComponent = () => {
    const [params, setParams] = useQueryParams()
 
    useEffect(() => {
-      if (!params.tab) setParams('tab', 'preview')
+      if (!params.tab) setParams('tab', 'participants')
    }, [])
 
    const handleTabChange = useCallback((value: string) => {
