@@ -17,7 +17,9 @@ const NavbarBreadcrumb: React.FunctionComponent = () => {
             breadcrumbs?.map((item, index) => (
                <Box className='inline-flex items-center space-x-2' key={index}>
                   <Icon name='ChevronRight' />
-                  <Link to={item.path}>{item.name}</Link>
+                  <Link to={item.path} className='text-sm'>
+                     {item.name}
+                  </Link>
                </Box>
             ))}
       </Breadcrumb>

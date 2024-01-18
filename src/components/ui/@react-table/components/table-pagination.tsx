@@ -1,83 +1,56 @@
+import useQueryParams from '@/common/hooks/use-query-params'
 import { Table } from '@tanstack/react-table'
 import { Box, Button, Icon, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../..'
-import { PaginationActions, PaginationHandler } from '@/common/hooks/use-server-pagination'
-import { useSearchParams } from 'react-router-dom'
 import Tooltip from '../../@override/tooltip'
 
 type DataTablePaginationProps<TData> = {
    table: Table<TData>
    manualPagination: boolean
-   onManualPaginate: PaginationHandler | undefined
 } & Partial<Pagination<TData>>
 
 export default function TablePagination<TData>({
    table,
    manualPagination,
-   onManualPaginate: dispatch,
    hasNextPage,
    hasPrevPage,
    page,
    totalPages = 1,
-   limit
+   limit,
+   totalDocs
 }: DataTablePaginationProps<TData>) {
    const canNextPage = manualPagination ? hasNextPage : table.getCanNextPage()
    const canPreviousPage = manualPagination ? hasPrevPage : table.getCanPreviousPage()
    const pageCount = manualPagination ? totalPages : table.getPageCount()
    const pageSize = manualPagination ? limit : table.getState().pagination.pageSize
-   const currentPage = manualPagination ? page : table.getState().pagination.pageIndex + 1
-   const [_, setParams] = useSearchParams()
+   const pageIndex = manualPagination ? page : table.getState().pagination.pageIndex + 1
+   const [params, setParams] = useQueryParams()
 
    const gotoFirstPage = () => {
-      manualPagination ? dispatch!({ type: PaginationActions.GO_TO_FIRST_PAGE }) : table.setPageIndex(0)
-      setParams((params) => {
-         params.set('page', '1')
-         return params
-      })
+      table.setPageIndex(0)
+      setParams('page', 1)
    }
 
    const gotoPreviousPage = () => {
-      manualPagination ? dispatch!({ type: PaginationActions.GO_TO_PREV_PAGE }) : table.previousPage()
-      setParams((params) => {
-         params.set('page', String(currentPage! - 1))
-         return params
-      })
+      table.previousPage()
+      setParams('page', pageIndex - 1)
    }
 
    const gotoNextPage = () => {
-      manualPagination ? dispatch!({ type: PaginationActions.GO_TO_NEXT_PAGE }) : table.nextPage()
-      setParams((params) => {
-         params.set('page', String(currentPage! + 1))
-         return params
-      })
+      table.nextPage()
+      setParams('page', pageIndex + 1)
    }
 
    const gotoLastPage = () => {
-      manualPagination
-         ? dispatch!({
-              type: PaginationActions.GO_TO_LAST_PAGE,
-              payload: totalPages
-           })
-         : table.setPageIndex(table.getPageCount() - 1)
-      setParams((params) => {
-         params.set('page', String(pageCount))
-         return params
-      })
+      table.setPageIndex(table.getPageCount() - 1)
+      setParams('page', totalPages)
    }
 
    const changePageSize = (value: number) => {
-      setParams((params) => {
-         params.set('limit', value?.toString()!)
-         return params
-      })
-      if (manualPagination) {
-         if (currentPage! > pageCount!) gotoPreviousPage()
-         dispatch!({
-            type: PaginationActions.CHANGE_PAGE_SIZE,
-            payload: value
-         })
-      } else {
-         table.setPageSize(value)
+      if (value! > totalDocs) {
+         gotoFirstPage()
       }
+      setParams('limit', value)
+      if (!manualPagination) table.setPageSize(value)
    }
 
    return (
@@ -107,7 +80,7 @@ export default function TablePagination<TData>({
                </Select>
             </Box>
             <Box className='flex w-[100px] items-center justify-center text-sm font-medium'>
-               Trang {currentPage} / {pageCount}
+               Trang {pageIndex} / {pageCount}
             </Box>
             <Box className='flex items-center space-x-1'>
                <Tooltip content='Trang đầu'>
@@ -135,3 +108,5 @@ export default function TablePagination<TData>({
       </Box>
    )
 }
+
+TablePagination.displayName = 'TablePagination'

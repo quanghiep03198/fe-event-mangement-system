@@ -59,10 +59,12 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
                      'h-9 min-w-[8rem] rounded-none border-none text-xs font-medium text-muted-foreground/50 shadow-none hover:text-foreground focus:border-none'
                }}
                placeholder='Chọn ...'
-               options={sortedUniqueValues.map((value: any) => ({
-                  label: value,
-                  value: value
-               }))}
+               options={sortedUniqueValues
+                  .filter((value) => Boolean(value))
+                  .map((value: any) => ({
+                     label: value,
+                     value: value
+                  }))}
                onValueChange={(value) => column.setFilterValue(value)}
             />
          )
@@ -73,10 +75,13 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
                areAllFiltersCleared={areAllFiltersCleared}
                placeholder='Tìm kiếm trong cột ...'
                forceClose={isScrolling}
-               options={sortedUniqueValues.slice(0, 1000).map((value: any) => ({
-                  label: value,
-                  value: value
-               }))}
+               options={sortedUniqueValues
+                  .slice(0, 1000)
+                  .filter((value) => Boolean(value))
+                  .map((value: any) => ({
+                     label: value,
+                     value: value
+                  }))}
                className='h-9 w-full rounded-none border-none pl-2 text-xs shadow-none'
                onChange={(value) => column.setFilterValue(value)}
             />

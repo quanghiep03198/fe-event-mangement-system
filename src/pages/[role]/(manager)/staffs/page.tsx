@@ -20,7 +20,6 @@ const StaffsListPage: React.FunctionComponent = () => {
    const [updateFormOpenState, setUpdateFormOpenState] = useState<boolean>(false)
    const [userToUpdate, setUserToUpdate] = useState<Partial<UserInterface>>({})
    const [selectedRowId, setSelectedRowId] = useState<number | null>(null)
-   const participants = useMemo(() => (Array.isArray(data) ? data.filter((participant) => participant.id !== user?.id) : []), [data])
 
    const [deleteParticipant] = useDeleteUserMutation()
    const columnHelper = createColumnHelper<Partial<UserInterface>>()
@@ -67,12 +66,20 @@ const StaffsListPage: React.FunctionComponent = () => {
       columnHelper.accessor('phone', {
          header: 'Số điện thoại',
          enableColumnFilter: true,
-         enableSorting: true
+         enableSorting: true,
+         cell: ({ getValue }) => {
+            const value = getValue()
+            return Boolean(value) ? (
+               value
+            ) : (
+               <Typography variant='small' color='muted' className='italic'>
+                  Chưa cập nhật
+               </Typography>
+            )
+         }
       }),
       columnHelper.accessor('role', {
          header: 'Vai trò',
-         enableColumnFilter: true,
-         filterFn: 'equals',
          cell: ({ getValue }) => {
             const value = getValue()
             return (
@@ -112,7 +119,7 @@ const StaffsListPage: React.FunctionComponent = () => {
             </Box>
             <DataTable
                enableColumnResizing={false}
-               data={participants}
+               data={data as Partial<UserInterface>[]}
                loading={isLoading}
                columns={columns}
                slot={

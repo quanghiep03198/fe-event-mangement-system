@@ -133,7 +133,7 @@ const CreateNotificationPage: React.FunctionComponent = () => {
                   </Box>
                   {/* Content */}
                   <Box className='col-span-full space-y-2'>
-                     <EditorFieldControl form={form} name='content' label='Nội dung' errorMessage='Vui ' />
+                     <EditorFieldControl form={form} name='content' label='Nội dung' />
                   </Box>
                   <Button id={id} type='submit' disabled={isLoading} className='hidden w-fit gap-x-2 sm:inline-flex sm:w-full'>
                      <Icon name='BellPlus' /> Tạo thông báo

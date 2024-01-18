@@ -1,10 +1,11 @@
 import { Table } from '@tanstack/react-table'
-import React, { useContext } from 'react'
+import React, { memo, useContext } from 'react'
 import { Box, Button, Icon, Toggle } from '../..'
 import Tooltip from '../../@override/tooltip'
 import { TableContext } from '../context/table.context'
 import { GlobalFilter, GlobalFilterPopover } from './global-filter'
 import { TableViewOptions } from './table-view-options'
+import { unknown } from 'zod'
 
 type TableToolbarProps<TData> = {
    table: Table<TData>
@@ -15,7 +16,7 @@ type TableToolbarProps<TData> = {
    slot?: React.ReactNode
 }
 
-export function TableToolbar<TData>(props: TableToolbarProps<TData>) {
+export default function TableToolbar<TData>(props: TableToolbarProps<TData>) {
    const { table, globalFilter, isFiltered, slot, onGlobalFilterChange, onClearAllFilters } = props
    const { isFilterOpened, setIsFilterOpened } = useContext(TableContext)
 
@@ -48,5 +49,3 @@ export function TableToolbar<TData>(props: TableToolbarProps<TData>) {
       </Box>
    )
 }
-
-export default TableToolbar

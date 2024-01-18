@@ -41,16 +41,6 @@ const excelHandler = new Excel<Pick<UserInterface, 'name' | 'code' | 'email' | '
    phone: 'Số điện thoại'
 })
 
-const data = [
-   {
-      STT: 1,
-      'Mã sinh viên': 'PH19231',
-      'Họ tên': 'Trương Quang Hiệp',
-      Email: 'test@gmail.com',
-      'Số điện thoại': '0336089988'
-   }
-]
-
 const StudentsListPage: React.FunctionComponent = () => {
    const { data, isLoading } = useGetUsersQuery({ role: UserRoleEnum.STUDENT, pagination: false })
    const [openConfirmState, setOpenConfirmState] = useState<boolean>(false)
@@ -91,10 +81,6 @@ const StudentsListPage: React.FunctionComponent = () => {
                return 'Tải lên danh sách thất bại'
             }
          })
-         // excelHandler.importFile(e.target.files[0], (data) => {
-         //    console.log(data)
-         //    const payload = data as unknown as Partial<UserInterface>[]
-         // })
       }
    }
 
@@ -127,13 +113,15 @@ const StudentsListPage: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('role', {
          header: 'Vai trò',
-         filterFn: 'equals',
          enableGlobalFilter: false,
-         cell: (metadata) => (
-            <Badge variant='outline' className='whitespace-nowrap capitalize'>
-               {UserRoleValues.get(metadata.getValue())}
-            </Badge>
-         )
+         cell: ({ getValue }) => {
+            const value = getValue()
+            return (
+               <Badge variant='outline' className='whitespace-nowrap capitalize'>
+                  {UserRoleValues.get(value)}
+               </Badge>
+            )
+         }
       }),
       columnHelper.accessor('created_at', {
          header: 'Ngày tham gia',
@@ -179,7 +167,7 @@ const StudentsListPage: React.FunctionComponent = () => {
             </Box>
             <DataTable
                columns={columns as ColumnDef<TableDataType>[]}
-               data={data as Array<UserInterface>}
+               data={data as UserInterface[]}
                loading={isLoading}
                slot={
                   <>

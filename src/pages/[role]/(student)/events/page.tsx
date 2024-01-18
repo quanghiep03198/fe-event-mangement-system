@@ -48,11 +48,7 @@ const EventsBoardPage: React.FunctionComponent = () => {
                <EmptySection />
             ) : (
                <Box className='grid grid-cols-4 gap-x-4 gap-y-6 sm:grid-cols-1 md:md:grid-cols-3 md:gap-x-4 lg:grid-cols-4 xl:gap-x-6'>
-                  {Array.isArray(eventsList.docs)
-                     ? eventsList?.docs?.map((item) => <EventVerticalCard key={item.id} data={item} />)
-                     : Array.isArray(eventsList)
-                       ? eventsList?.map((item) => <EventVerticalCard key={item.id} data={item} />)
-                       : null}
+                  {Array.isArray(eventsList.docs) && eventsList?.docs?.map((item) => <EventVerticalCard key={item.id} data={item} />)}
                </Box>
             )}
          </Box>

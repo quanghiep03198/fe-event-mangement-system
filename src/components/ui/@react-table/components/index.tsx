@@ -12,13 +12,14 @@ import {
    getSortedRowModel,
    useReactTable
 } from '@tanstack/react-table'
-import { memo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { Box } from '../..'
 import { TableProvider } from '../context/table.context'
 import { fuzzyFilter } from '../utils/fuzzy-filter.util'
 import TableDataGrid from './table'
 import TablePagination from './table-pagination'
 import TableToolbar from './table-toolbar'
+import useQueryParams from '@/common/hooks/use-query-params'
 
 export interface DataTableProps<TData, TValue> {
    data: Array<TData>
@@ -45,10 +46,17 @@ function DataTable<TData, TValue>({
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
    const [sorting, setSorting] = useState<SortingState>([])
    const [globalFilter, setGlobalFilter] = useState<string>('')
+   const [params] = useQueryParams('page', 'limit')
 
    const table = useReactTable({
       data: data || [],
       columns,
+      initialState: {
+         pagination: {
+            pageIndex: params.page ? Number(params.page) - 1 : 0,
+            pageSize: params.limit ? Number(params.limit) : 10
+         }
+      },
       state: {
          sorting,
          columnFilters,
@@ -70,10 +78,10 @@ function DataTable<TData, TValue>({
       debugTable: import.meta.env.VITE_NODE_ENV === 'development'
    } as TableOptions<TData>)
 
-   const clearAllFilter = () => {
+   const clearAllFilter = useCallback(() => {
       setGlobalFilter('')
       setColumnFilters([])
-   }
+   }, [])
 
    return (
       <TableProvider areAllFiltersCleared={columnFilters.length === 0 && globalFilter.length === 0}>
@@ -87,7 +95,7 @@ function DataTable<TData, TValue>({
                slot={slot}
             />
             <TableDataGrid table={table} columns={columns} loading={loading} />
-            <TablePagination table={table} manualPagination={Boolean(manualPagination)} onManualPaginate={onManualPaginate} {...paginationState} />
+            <TablePagination table={table} manualPagination={Boolean(manualPagination)} {...paginationState} />
          </Box>
       </TableProvider>
    )

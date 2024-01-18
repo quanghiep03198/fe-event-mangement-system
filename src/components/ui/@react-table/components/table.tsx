@@ -1,5 +1,5 @@
 import { Table as TableType, flexRender } from '@tanstack/react-table'
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import tw from 'tailwind-styled-components'
 import { DataTableProps } from '.'
 import { Box, Icon, ScrollArea, ScrollBar, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../..'
@@ -55,7 +55,9 @@ export default function TableDataGrid<TData, TValue>({ table, columns, loading, 
                      table.getRowModel().rows.map((row) => (
                         <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                            {row.getVisibleCells().map((cell) => (
-                              <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                              <TableCell key={cell.id}>
+                                 <span className='line-clamp-1'>{flexRender(cell.column.columnDef.cell, cell.getContext())}</span>
+                              </TableCell>
                            ))}
                         </TableRow>
                      ))
