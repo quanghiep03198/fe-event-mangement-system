@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, CardFooter, CardHeader, Skeleton } from '@/components/ui'
 
-const PlaceHolderCard: React.FunctionComponent = () => {
+export const VerticalPlaceholderCard: React.FunctionComponent = () => {
    return (
       <Card className='max-w-72 w-full overflow-clip'>
          {
@@ -25,4 +25,24 @@ const PlaceHolderCard: React.FunctionComponent = () => {
    )
 }
 
-export default PlaceHolderCard
+export const HorizontalPlaceholderCard: React.FunctionComponent = () => {
+   return (
+      <Box className='grid h-fit grid-cols-[1fr_2fr] gap-6 rounded-lg border p-4 shadow md:grid-cols-[1fr_3fr]'>
+         <Skeleton className='h-52 w-52' />
+
+         <Box className='flex flex-col justify-between'>
+            <Box className='space-y-2'>
+               <Skeleton className='h-4 w-full' />
+               <Skeleton className='h-3 w-1/2' />
+               <Skeleton className='h-2 w-full' />
+               <Skeleton className='h-2 w-full' />
+               <Skeleton className='h-2 w-full' />
+            </Box>
+            <Box className='flex items-end justify-end gap-x-2 self-end'>
+               <Skeleton className='h-8 w-32' />
+               <Skeleton className='h-8 w-32' />
+            </Box>
+         </Box>
+      </Box>
+   )
+}

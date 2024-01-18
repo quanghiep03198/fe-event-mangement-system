@@ -22,7 +22,25 @@ export const RegisterSchema = z
          return values.password === values.confirmPassword
       },
       {
-         message: 'Passwords must match!',
+         message: 'Mật khẩu xác thực chưa đúng',
+         path: ['confirmPassword']
+      }
+   )
+
+export const ChangePasswordSchema = z
+   .object({
+      password: z
+         .string({ required_error: 'Vui lòng nhập mật khẩu' })
+         .min(6, { message: 'Mật khẩu phải có tối thiểu 6 ký tự' })
+         .regex(Regex.password, { message: 'Mật khẩu mới phải có ít nhất 1 chữ số và 1 ký tự in hoa' }),
+      confirmPassword: z.string({ required_error: 'Vui lòng nhập mật khẩu xác thực' })
+   })
+   .refine(
+      (values) => {
+         return values.password === values.confirmPassword
+      },
+      {
+         message: 'Mật khẩu xác thực chưa đúng',
          path: ['confirmPassword']
       }
    )

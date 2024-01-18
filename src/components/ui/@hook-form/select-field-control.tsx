@@ -1,19 +1,18 @@
+import { cn } from '@/common/utils/cn'
 import React from 'react'
-import { Control, FieldValues, Path } from 'react-hook-form'
+import { FieldValues, Path, PathValue } from 'react-hook-form'
 import { FormDescription, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '..'
 
-export type SelectFieldControlProps<T extends FieldValues> = {
-   label: string
-   placeholder?: string
-   name: Path<T>
-   options: Array<Record<'label' | 'value', string>>
-   description?: string
-   control: Control<T>
-   className?: string
-} & React.ComponentProps<typeof Select>
+export type SelectFieldControlProps<T extends FieldValues> = BaseFieldControl<T> &
+   React.ComponentProps<typeof Select> & {
+      options: Array<{
+         label: string
+         value: PathValue<T, Path<T>>
+      }>
+   }
 
 export function SelectFieldControl<T extends FieldValues>(props: SelectFieldControlProps<T>) {
-   const { control, name, onValueChange, ...restProps } = props
+   const { control, name, hidden, layout, className, defaultValue, onValueChange, ...restProps } = props
 
    return (
       <FormField
@@ -21,10 +20,11 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
          control={control}
          render={({ field }) => {
             return (
-               <FormItem>
+               <FormItem className={cn({ hidden, 'grid grid-cols-[1fr_2fr] items-center gap-2 space-y-0': layout === 'horizontal' })}>
                   <FormLabel>{props.label}</FormLabel>
                   <Select
                      {...field}
+                     defaultValue={defaultValue ?? String(field.value)}
                      onValueChange={(value) => {
                         field.onChange(value)
                         if (onValueChange) {
@@ -33,15 +33,15 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                      }}
                      {...restProps}
                   >
-                     <SelectTrigger>
+                     <SelectTrigger className={className}>
                         <SelectValue placeholder={props.placeholder} />
                      </SelectTrigger>
                      <SelectContent>
                         <SelectGroup>
                            {Array.isArray(props.options) &&
                               props.options.map((option) => (
-                                 <SelectItem key={option.value} value={option.value?.toString()}>
-                                    {option.label}
+                                 <SelectItem key={option?.value} value={String(option?.value)}>
+                                    {option?.label}
                                  </SelectItem>
                               ))}
                         </SelectGroup>

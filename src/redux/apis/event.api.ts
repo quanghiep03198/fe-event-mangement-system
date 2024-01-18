@@ -1,5 +1,5 @@
 import { EventStatusValues } from '@/common/constants/constants'
-import { EventType } from '@/common/types/entities'
+import { EventInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { format } from 'date-fns'
 import axiosBaseQuery from '../helper'
@@ -23,29 +23,31 @@ export const eventApi = createApi({
    baseQuery: axiosBaseQuery(),
    endpoints: (build) => {
       return {
-         getEvents: build.query<OptionalPagination<EventType>, RequestParams>({
+         getEvents: build.query<OptionalPagination<EventInterface>, RequestParams>({
             query: (params) => ({ url: '/event', method: 'GET', params }),
-            transformResponse: (response: HttpResponse<OptionalPagination<EventType>>, _meta, args) => {
+            transformResponse: (response: SuccessResponse<OptionalPagination<EventInterface>>, _meta, args) => {
                // With pagination
-               if (typeof args.pagination === 'undefined') return response.metadata as Pagination<EventType>
-               return (response.metadata as Array<EventType>)?.map((item) => {
-                  return {
-                     ...item,
-                     status: EventStatusValues.get(item.status)
-                  }
-               })
+               if (typeof args.pagination === 'undefined') return response.metadata as Pagination<EventInterface>
+               return Array.isArray(response.metadata)
+                  ? response.metadata?.map((item) => {
+                       return {
+                          ...item,
+                          status: EventStatusValues.get(item.status)
+                       }
+                    })
+                  : []
             },
             providesTags: [{ type: 'Event', id: 'PARTIAL_LIST' }]
          }),
-         getUpcomingEvents: build.query<EventType, void>({
+         getUpcomingEvents: build.query<EventInterface, void>({
             query: () => ({ url: '/event/notification', method: 'GET', params: { pagination: false } }),
             providesTags: [{ type: 'Event' as const, id: 'UPCOMING_LIST' }]
          }),
-         getRecentEvents: build.query<EventType[], void>({
+         getRecentEvents: build.query<EventInterface[], void>({
             query: () => ({ url: '/getNearstEvent', method: 'GET' }),
-            transformResponse: (response: HttpResponse<EventType[]>) => {
+            transformResponse: (response: SuccessResponse<EventInterface[]>) => {
                if (!Array.isArray(response.metadata)) {
-                  return [] as EventType[]
+                  return [] as EventInterface[]
                }
                return response.metadata?.map((item) => ({
                   ...item,
@@ -60,27 +62,23 @@ export const eventApi = createApi({
             query: (payload) => ({ url: '/attendances', method: 'POST', data: payload }),
             invalidatesTags: tagTypes
          }),
-         getEventDetails: build.query<EventType, string>({
+         getEventDetails: build.query<EventInterface, string>({
             query: (id) => ({ url: `/event/${id}`, method: 'GET' }),
-            transformResponse: (response: HttpResponse<EventType>) => {
+            transformResponse: (response: SuccessResponse<EventInterface>) => {
                return response.metadata!
             },
             providesTags: (result, _error, _arg) => (result ? [{ type: 'Event' as const, id: result?.id }] : tagTypes)
          }),
          createEvent: build.mutation({
-            query: (payload) => ({ url: '/event', method: 'POST', data: payload }),
+            query: (payload) => ({ url: `/event`, method: 'POST', data: payload }),
             invalidatesTags: (_result, error, _arg) => (error ? [] : tagTypes)
          }),
          updateEvent: build.mutation({
-            query: ({ id, payload }) => ({ url: '/event/' + id, method: 'PUT', data: payload }),
+            query: ({ id, payload }) => ({ url: `/event/${id}`, method: 'PATCH', data: payload }),
             invalidatesTags: (_result, error, _arg) => (error ? [] : tagTypes)
          }),
-         getEventStatistics: build.query({
-            query: () => ({ url: '/eventStatistics', method: 'GET' }),
-            providesTags: tagTypes
-         }),
          deleteEvent: build.mutation({
-            query: (id) => ({ url: '/event/' + id, method: 'DELETE' }),
+            query: (id) => ({ url: `/event/${id}`, method: 'DELETE' }),
             invalidatesTags: (_result, error) => (error ? [] : tagTypes)
          })
       }
@@ -92,7 +90,6 @@ export const {
    useGetEventsQuery,
    useGetUpcomingEventsQuery,
    useCreateEventMutation,
-   useGetEventStatisticsQuery,
    useUpdateEventMutation,
    useGetEventDetailsQuery,
    useDeleteEventMutation,

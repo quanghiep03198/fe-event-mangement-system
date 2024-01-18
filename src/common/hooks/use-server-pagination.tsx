@@ -10,8 +10,6 @@ export enum PaginationActions {
    CHANGE_PAGE_SIZE = 'CHANGE_PAGE_SIZE'
 }
 
-export type PaginationStateType = Record<'page' | 'limit', number>
-
 export type PaginationActionType = {
    type: PaginationActions
    payload?: number
@@ -19,7 +17,7 @@ export type PaginationActionType = {
 
 export type PaginationHandler = React.Dispatch<PaginationActionType>
 
-const intialState: PaginationStateType = {
+const intialState: PaginationPayload = {
    page: 1,
    limit: 10
 }
@@ -41,14 +39,14 @@ const reducer = (state: any, action: PaginationActionType) => {
    }
 }
 
-export default function useServerPagination(): [PaginationStateType, PaginationHandler] {
+export default function useServerPagination(): [PaginationPayload, PaginationHandler] {
    const location = useLocation()
    const [params] = useSearchParams(location.search)
 
    const page = params.get('page')
    const limit = params.get('limit')
 
-   const initialState: PaginationStateType = {
+   const initialState: PaginationPayload = {
       page: page ? Number(params.get('page')) : 1,
       limit: limit ? Number(params.get('limit')) : 10
    }

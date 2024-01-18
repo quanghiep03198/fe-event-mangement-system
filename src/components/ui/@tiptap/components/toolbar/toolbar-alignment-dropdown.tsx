@@ -82,8 +82,9 @@ export const AlignmentDropdownMenu: React.FC<{ editor: Editor }> = ({ editor }) 
                onValueChange={(value) => editor.commands.setTextAlign(value)}
             >
                {PresetAlignments.map((option) => (
-                  <Tooltip content={option.label}>
+                  <Tooltip content={option.label} key={option.value}>
                      <DropdownMenuRadioItem
+                        key={option.value}
                         value={option.value}
                         className={cn('p-2 hover:bg-accent hover:text-accent-foreground [&>span]:hidden', {
                            'bg-secondary': currentAlignment.value === option.value

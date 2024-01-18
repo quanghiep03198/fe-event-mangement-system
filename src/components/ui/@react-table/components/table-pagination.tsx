@@ -34,6 +34,7 @@ export default function TablePagination<TData>({
          return params
       })
    }
+
    const gotoPreviousPage = () => {
       manualPagination ? dispatch!({ type: PaginationActions.GO_TO_PREV_PAGE }) : table.previousPage()
       setParams((params) => {
@@ -41,6 +42,7 @@ export default function TablePagination<TData>({
          return params
       })
    }
+
    const gotoNextPage = () => {
       manualPagination ? dispatch!({ type: PaginationActions.GO_TO_NEXT_PAGE }) : table.nextPage()
       setParams((params) => {
@@ -48,6 +50,7 @@ export default function TablePagination<TData>({
          return params
       })
    }
+
    const gotoLastPage = () => {
       manualPagination
          ? dispatch!({
@@ -60,6 +63,7 @@ export default function TablePagination<TData>({
          return params
       })
    }
+
    const changePageSize = (value: number) => {
       setParams((params) => {
          params.set('limit', value?.toString()!)
@@ -67,21 +71,19 @@ export default function TablePagination<TData>({
       })
       if (manualPagination) {
          if (currentPage! > pageCount!) gotoPreviousPage()
-
          dispatch!({
             type: PaginationActions.CHANGE_PAGE_SIZE,
             payload: value
          })
-         return
       } else {
          table.setPageSize(value)
       }
    }
 
    return (
-      <Box className='flex items-center justify-between py-2'>
-         <Box className='flex-1 text-sm text-muted-foreground'>
-            {/* {table.getFilteredSelectedRowModel().rows.length} / {table.getFilteredRowModel().rows.length} hàng được chọn. */}
+      <Box className='flex items-center justify-between sm:justify-end'>
+         <Box className='flex-1 text-sm text-muted-foreground sm:hidden'>
+            {table.getFilteredSelectedRowModel().rows.length} / {table.getFilteredRowModel().rows.length} hàng được chọn.
          </Box>
          <Box className='flex items-center space-x-6 lg:space-x-8'>
             <Box className='flex items-center space-x-2'>

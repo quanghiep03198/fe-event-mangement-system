@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
    AlertDialog,
    AlertDialogAction,
@@ -48,4 +48,4 @@ ConfirmDialog.defaultProps = {
    cancelText: 'Hủy'
 }
 
-export default ConfirmDialog
+export default memo(ConfirmDialog)

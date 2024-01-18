@@ -1,8 +1,8 @@
-import { EventType } from '@/common/types/entities'
+import { EventInterface } from '@/common/types/entities'
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { useGetRecentEventsQuery } from '@/redux/apis/event.api'
 
-const EventItem: React.FC<{ data: EventType }> = ({ data }) => {
+const EventItem: React.FC<{ data: EventInterface }> = ({ data }) => {
    return (
       <div className='flex items-center'>
          <div className='space-y-1'>
@@ -25,8 +25,12 @@ export const RecentEvents: React.FunctionComponent = () => {
          <CardHeader>
             <CardTitle>Sự kiện gần đây</CardTitle>
          </CardHeader>
-         <CardContent>
-            <div className='space-y-8'>{Array.isArray(data) && data.map((item) => <EventItem key={item.id} data={item} />)}</div>
+         <CardContent className='h-[calc(100%-4rem)]'>
+            {Array.isArray(data) && data.length > 0 ? (
+               <div className='space-y-8'>{Array.isArray(data) && data.map((item) => <EventItem key={item.id} data={item} />)}</div>
+            ) : (
+               <div className='flex h-full items-center justify-center text-muted-foreground'>Chưa có sự kiện nào gần đây</div>
+            )}
          </CardContent>
       </Card>
    )

@@ -1,5 +1,6 @@
-const generatePicture = (name: string) => {
-   return 'https://ui-avatars.com/api/?name=' + name.charAt(0)
+const generatePicture = (name: string | undefined) => {
+   name ??= 'A'
+   return 'https://ui-avatars.com/api/?name=' + name
 }
 
 export default generatePicture

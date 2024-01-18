@@ -1,6 +1,7 @@
 export const EventStatusValues = new Map([
    [0, 'Đã kết thúc'],
-   [1, 'Đang diễn ra']
+   [1, 'Đang diễn ra'],
+   [2, 'Sắp diễn ra']
 ])
 
 export const UserRoleValues = new Map([

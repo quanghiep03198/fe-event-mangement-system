@@ -4,7 +4,7 @@ import { Box, Button, Icon } from '@/components/ui'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Autoplay } from 'swiper/modules'
 import { useGetUpcomingEventsQuery } from '@/redux/apis/event.api'
-import EventCard from '../../components/shared/event-card'
+import { EventVerticalCard } from '../../components/shared/event-card'
 
 const UpcomingEvents = () => {
    const { data } = useGetUpcomingEventsQuery()
@@ -29,7 +29,7 @@ const UpcomingEvents = () => {
             {Array.isArray(data) &&
                data.map((item, index) => (
                   <SwiperSlide key={index} className='z-0 flex items-center justify-center text-center font-medium uppercase sm:h-12 sm:w-3/5 sm:text-xs'>
-                     <EventCard data={item} />
+                     <EventVerticalCard data={item} />
                   </SwiperSlide>
                ))}
          </Swiper>

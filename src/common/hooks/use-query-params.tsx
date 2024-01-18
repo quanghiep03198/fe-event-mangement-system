@@ -1,11 +1,24 @@
 import _ from 'lodash'
-import { useLocation, useSearchParams } from 'react-router-dom'
-import * as qs from 'qs'
+import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
-export default function useQueryParams(...path: string[]) {
-   const { search } = useLocation()
-   const [params] = useSearchParams()
+export default function useQueryParams(...path: string[]): [Record<string, string>, (key: string, value: any) => void, (key: string) => void] {
+   const [searchParmams, setSearchParams] = useSearchParams()
+   const params =
+      path.length === 0 ? Object.fromEntries(searchParmams.entries()) : (_.pick(Object.fromEntries(searchParmams.entries()), path) as Record<string, string>)
 
-   if (path.length === 0) return qs.parse(search, { ignoreQueryPrefix: true })
-   return _.pick(Object.fromEntries(params.entries()), path)
+   const setParam = (key: string, value: any) =>
+      setSearchParams((params) => {
+         params.set(key, value)
+         return params
+      })
+
+   const removeParam = (key: string) => {
+      setSearchParams((params) => {
+         params.delete(key)
+         return params
+      })
+   }
+
+   return [params, setParam, removeParam]
 }

@@ -12,6 +12,7 @@ import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
+import Gapcursor from '@tiptap/extension-gapcursor'
 
 export const extensions = [
    StarterKit.configure({
@@ -30,7 +31,7 @@ export const extensions = [
          }
       },
       blockquote: {
-         HTMLAttributes: { class: 'text-foreground border-none p-0' }
+         HTMLAttributes: { class: 'text-foreground border-none' }
       },
       bulletList: {
          HTMLAttributes: {
@@ -41,26 +42,49 @@ export const extensions = [
          HTMLAttributes: {
             class: 'list-decimal text-foreground'
          }
+      },
+      listItem: {
+         HTMLAttributes: {
+            class: 'list-decimal text-foreground p-0'
+         }
+      },
+      horizontalRule: {
+         HTMLAttributes: {
+            class: 'border-t dark:border-t-border'
+         }
       }
    }),
    Placeholder.configure({
-      placeholder: 'Nhập gì đó ...'
+      placeholder: 'Nhập gì đó ...',
+      emptyEditorClass: 'top-0 text-muted-foreground/50 before:pointer-event-none before:content-[attr(data-placeholder)]'
    }),
    Underline.configure(),
    TextAlign.configure({
       types: ['heading', 'paragraph']
    }),
+   Gapcursor.configure(),
    Table.configure({
-      resizable: true
+      resizable: true,
+      HTMLAttributes: {
+         class: 'm-0 w-full table-fixed overflow-hidden border rounded border-collapse [& .resize-cursor]:cursor-col-resize'
+      }
    }),
    TableRow.configure(),
-   TableHeader.configure(),
-   TableCell.configure(),
+   TableHeader.configure({
+      HTMLAttributes: {
+         class: 'border p-3 relative'
+      }
+   }),
+   TableCell.configure({
+      HTMLAttributes: {
+         class: 'p-3 border'
+      }
+   }),
    Highlight.configure({ multicolor: true }),
    Link.configure({
       openOnClick: false,
       HTMLAttributes: {
-         class: 'text-sky-400 font-normal'
+         class: 'text-blue-500 font-normal'
       }
    }),
    FontSize.configure(),
@@ -68,24 +92,8 @@ export const extensions = [
    Color.configure(),
    Image.configure({
       HTMLAttributes: {
-         class: 'object-center object-cover max-w-full aspect-[16/9]'
+         class: 'object-center object-contain max-w-full'
       },
       allowBase64: true
-   }).extend({
-      src: {
-         default: null
-      },
-      alt: {
-         default: null
-      },
-      title: {
-         default: null
-      },
-      'data-base64': {
-         default: null
-      },
-      'data-label': {
-         default: null
-      }
    })
 ]

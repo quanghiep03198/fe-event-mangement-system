@@ -28,8 +28,8 @@ const Statistics: React.FunctionComponent = () => {
             growPercentage: data?.percentInJoinEvent ?? 0
          },
          {
-            title: 'Feedbacks',
-            icon: 'MessageSquare',
+            title: 'Feedback',
+            icon: 'MessagesSquare',
             statisticValue: data?.feedBackInCurrentMonth ?? 0,
             growPercentage: data?.percentInFeedBack ?? 0
          }
@@ -42,10 +42,10 @@ const Statistics: React.FunctionComponent = () => {
             <Card key={index}>
                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>{stats.title}</CardTitle>
-                  <Icon name={stats.icon} className='text-muted-foreground' />
+                  <Icon name={stats.icon} className='text-muted-foreground' size={18} />
                </CardHeader>
                <CardContent>
-                  <Typography variant='heading5' className='font-bold'>
+                  <Typography variant='h5' className='font-bold'>
                      {new Intl.NumberFormat().format(stats?.statisticValue)}
                   </Typography>
                   <CardDescription>{stats?.growPercentage}% so với tháng trước</CardDescription>
@@ -58,7 +58,7 @@ const Statistics: React.FunctionComponent = () => {
                <Icon name='UserRoundPlus' className='text-muted-foreground' />
             </CardHeader>
             <CardContent>
-               <Typography variant='heading5' className='font-bold'>
+               <Typography variant='h5' className='font-bold'>
                   {new Intl.NumberFormat().format(data?.userInRoleStaff ?? 0)}
                </Typography>
                <CardDescription>Từ trước đến nay</CardDescription>

@@ -17,8 +17,9 @@ function TableCellHead<TData, TValue>({ header }: TableCellHeadProps<TData, TVal
    return (
       <Collapsible open={isFilterCollapsed} onOpenChange={setIsFilterCollapsed} className='flex flex-col items-stretch divide-y divide-border'>
          <Box
-            className={cn('inline-flex cursor-auto select-none items-center gap-x-2 p-2', {
-               'cursor-pointer hover:text-foreground': header.column.columnDef.enableSorting
+            className={cn('relative inline-flex cursor-auto touch-none select-none items-center gap-x-2 p-2', {
+               'cursor-pointer hover:text-foreground': header.column.columnDef.enableSorting,
+               'cursor-col-resize': header.column.getIsResizing()
             })}
             onClick={() => {
                if (header.column.columnDef.enableSorting) {

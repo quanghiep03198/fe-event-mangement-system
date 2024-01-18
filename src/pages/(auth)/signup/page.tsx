@@ -1,4 +1,4 @@
-import ThemeSelect from '@/components/shared/theme-select'
+import ThemeSelect from '@/pages/components/theme-select'
 import { Box } from '@/components/ui'
 import Banner from './components/banner'
 import FormFooter from './components/form-footer'

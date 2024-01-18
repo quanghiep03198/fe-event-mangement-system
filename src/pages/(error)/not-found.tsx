@@ -6,16 +6,19 @@ import { Box } from '@/components/ui/@custom/box'
 import { Typography } from '@/components/ui/@custom/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import tw from 'tailwind-styled-components'
 
 const NotFound: React.FunctionComponent = () => {
    return (
       <Box className='relative mx-auto flex h-screen w-full max-w-full flex-col items-center justify-center gap-y-6'>
-         <Code>404</Code>
-         <Typography variant='heading3' className='block text-center'>
+         <Typography color='destructive' className='text-xl font-semibold'>
+            404
+         </Typography>
+         <Typography variant='h3' className='block text-center'>
             Page not found
          </Typography>
-         <Paragraph>Xin lỗi, chúng tôi không tìm thấy trang bạn yêu cầu.</Paragraph>
+         <Typography color='muted' className='text-lg'>
+            Xin lỗi, chúng tôi không tìm thấy trang bạn yêu cầu.
+         </Typography>
          <Box className='flex items-center justify-center space-x-1'>
             <Button asChild variant='default' className='gap-x-2'>
                <Link to={Paths.REDIRECT}>
@@ -32,8 +35,5 @@ const NotFound: React.FunctionComponent = () => {
       </Box>
    )
 }
-
-const Code = tw.span`text-destructive text-xl font-bold text-center`
-const Paragraph = tw.p`text-center text-lg sm:text-base text-gray-500 mb-6`
 
 export default NotFound

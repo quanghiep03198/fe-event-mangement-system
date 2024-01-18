@@ -1,63 +1,27 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Box, Card, CardContent, CardDescription, CardHeader, CardTitle, DropdownSelect, Icon } from '@/components/ui'
+import { useGetStudentStatisticsQuery } from '@/redux/apis/statistics.api'
+import { useState } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-const data = [
-   {
-      name: 'Jan',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Feb',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Mar',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Apr',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'May',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Jun',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Jul',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Aug',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Sep',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Oct',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Nov',
-      total: Math.floor(Math.random() * 5000) + 1000
-   },
-   {
-      name: 'Dec',
-      total: Math.floor(Math.random() * 5000) + 1000
-   }
-]
-
 export function Overview() {
+   const [time, setTime] = useState<string>(String(new Date().getFullYear()))
+   const { data } = useGetStudentStatisticsQuery({ year: time })
+
    return (
       <Card>
          <CardHeader>
-            <CardTitle>Tổng quan</CardTitle>
-            <CardDescription>Số lượng sinh viên tham gia</CardDescription>
+            <Box className='flex items-center justify-between'>
+               <Box className='space-y-1'>
+                  <CardTitle>Tổng quan</CardTitle>
+                  <CardDescription>Số lượng sinh viên tham gia</CardDescription>
+               </Box>
+               <DropdownSelect
+                  onValueChange={setTime}
+                  selectTriggerProps={{ className: 'w-28 gap-x-1', children: <Icon name='CalendarDays' /> }}
+                  selectProps={{ defaultValue: new Date().getFullYear().toString() }}
+                  options={[{ label: new Date().getFullYear().toString(), value: new Date().getFullYear().toString() }]}
+               />
+            </Box>
          </CardHeader>
          <CardContent className='pl-2'>
             <ResponsiveContainer width='100%' height={350}>

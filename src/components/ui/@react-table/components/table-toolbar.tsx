@@ -1,11 +1,10 @@
+import { Table } from '@tanstack/react-table'
 import React, { useContext } from 'react'
 import { Box, Button, Icon, Toggle } from '../..'
-import { GlobalFilter } from './global-filter'
-import { Table } from '@tanstack/react-table'
-import { TableViewOptions } from './table-view-options'
 import Tooltip from '../../@override/tooltip'
-import { cn } from '@/common/utils/cn'
 import { TableContext } from '../context/table.context'
+import { GlobalFilter, GlobalFilterPopover } from './global-filter'
+import { TableViewOptions } from './table-view-options'
 
 type TableToolbarProps<TData> = {
    table: Table<TData>
@@ -21,23 +20,26 @@ export function TableToolbar<TData>(props: TableToolbarProps<TData>) {
    const { isFilterOpened, setIsFilterOpened } = useContext(TableContext)
 
    return (
-      <Box className='flex items-center justify-between'>
+      <Box className='flex items-center justify-between sm:justify-end'>
          <GlobalFilter table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
          <Box className='flex items-center gap-x-2'>
-            <Tooltip content='Xóa lọc'>
-               <Button variant='destructive' size='sm' onClick={onClearAllFilters} className={cn('inline-flex items-center gap-x-2', { hidden: isFiltered })}>
-                  <Icon name='FilterX' /> Xóa lọc
-               </Button>
-            </Tooltip>
+            {isFiltered && (
+               <Tooltip content='Xóa lọc'>
+                  <Button variant='destructive' size='icon' onClick={onClearAllFilters} className='h-8 w-8'>
+                     <Icon name='XCircle' />
+                  </Button>
+               </Tooltip>
+            )}
+            <GlobalFilterPopover table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
             <Tooltip content={isFilterOpened ? 'Đóng bộ lọc' : 'Mở bộ lọc'}>
                <Toggle
                   variant='outline'
                   pressed={isFilterOpened}
                   onPressedChange={() => setIsFilterOpened(!isFilterOpened)}
+                  disabled={!table.getAllColumns().some(({ columnDef }) => columnDef.enableColumnFilter)}
                   size='sm'
-                  className='gap-x-2 text-xs'
                >
-                  <Icon name={isFilterOpened ? 'FoldVertical' : 'UnfoldVertical'} /> Bộ lọc
+                  <Icon name={isFilterOpened ? 'FilterX' : 'Filter'} />
                </Toggle>
             </Tooltip>
             <TableViewOptions table={table} />

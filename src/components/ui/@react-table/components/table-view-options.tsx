@@ -2,6 +2,7 @@
 
 import { Table } from '@tanstack/react-table'
 import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, Icon } from '../..'
+import Tooltip from '../../@override/tooltip'
 
 interface DataTableViewOptionsProps<TData> {
    table: Table<TData>
@@ -10,12 +11,13 @@ interface DataTableViewOptionsProps<TData> {
 export function TableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
    return (
       <DropdownMenu>
-         <DropdownMenuTrigger asChild>
-            <Button variant='outline' size='sm' className='inline-flex items-center gap-x-2'>
-               <Icon name='SlidersHorizontal' />
-               Chế độ xem
-            </Button>
-         </DropdownMenuTrigger>
+         <Tooltip content='View'>
+            <DropdownMenuTrigger asChild>
+               <Button variant='outline' size='icon' className='h-8 w-8'>
+                  <Icon name='SlidersHorizontal' />
+               </Button>
+            </DropdownMenuTrigger>
+         </Tooltip>
          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
             <DropdownMenuSeparator />

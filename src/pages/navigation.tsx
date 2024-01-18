@@ -14,7 +14,7 @@ const Navigation = () => {
             navigate(Paths.EVENTS_BOARD)
             break
          case UserRoleEnum.STAFF:
-            navigate(Paths.SIGNIN)
+            navigate(Paths.EVENTS_LIST)
             break
          case UserRoleEnum.MANAGER:
             navigate(Paths.MANAGER_DASHBOARD)

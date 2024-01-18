@@ -115,6 +115,9 @@ export { Textarea } from './@shadcn/textarea'
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './@shadcn/resizable'
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './@shadcn/collapsible'
 export { HoverCard, HoverCardTrigger, HoverCardContent } from './@shadcn/hover-card'
+export { RadioGroup, RadioGroupItem } from './@shadcn/radio-group'
+export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './@shadcn/carousel'
+export { Switch } from './switch'
 // #endregion
 
 // #region Form field controls
@@ -122,7 +125,7 @@ export { ForwardedRefTextareaFieldControl as TextareaFieldControl } from './@hoo
 export { ForwardedRefInputFieldControl as InputFieldControl } from './@hook-form/input-field-control'
 export { SelectFieldControl } from './@hook-form/select-field-control'
 export { DatePickerFieldControl } from './@hook-form/date-picker-control'
-export { RadioGroup, RadioGroupItem } from './@shadcn/radio-group'
+export { ComboboxFieldControl } from './@hook-form/combobox-field-control'
 // #endregion
 
 // #region React data table

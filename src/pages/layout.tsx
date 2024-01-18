@@ -1,23 +1,23 @@
 import { Paths } from '@/common/constants/pathnames'
-import LoadingProgressBar from '@/components/shared/loading-progress-bar'
 import { metadata } from '@/configs/metadata.config'
 import { useAppSelector } from '@/redux/hook'
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useLayoutEffect } from 'react'
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom'
+import Fallback from './fallback'
 
 const RootLayout: React.FunctionComponent = () => {
    const { pathname } = useLocation()
    const authenticated = useAppSelector((state) => state.auth.authenticated)
    const navigate = useNavigate()
 
-   useEffect(() => {
+   useLayoutEffect(() => {
       if (authenticated && ([Paths.SIGNIN, Paths.SIGNUP] as Array<string>).includes(pathname)) navigate(-1)
       const currentPath = Object.keys(metadata).find((path) => !!matchPath(path, pathname))
-      document.title = metadata[currentPath as keyof typeof metadata] ?? 'Sự kiện Fpoly'
+      document.title = metadata[currentPath as keyof typeof metadata] ?? 'Sự kiện Poly'
    }, [pathname])
 
    return (
-      <Suspense fallback={<LoadingProgressBar />}>
+      <Suspense fallback={<Fallback />}>
          <Outlet />
       </Suspense>
    )

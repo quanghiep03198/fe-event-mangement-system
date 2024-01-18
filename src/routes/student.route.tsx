@@ -1,6 +1,6 @@
 import { Paths } from '@/common/constants/pathnames'
 import { RouteObject } from 'react-router-dom'
-import StackLayout from '@/pages/[role]/(student)/layout'
+import Layout from '@/pages/[role]/(student)/layout'
 import { lazy } from 'react'
 import AuthGuard from '@/guard/auth.guard'
 import RoleGuard from '@/guard/role.guard'
@@ -15,7 +15,7 @@ const studentRoutes: RouteObject = {
    element: (
       <AuthGuard>
          <RoleGuard roles={[UserRoleEnum.STUDENT]}>
-            <StackLayout />
+            <Layout />
          </RoleGuard>
       </AuthGuard>
    ),

@@ -1,53 +1,53 @@
 import { cn } from '@/common/utils/cn'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { useMemo } from 'react'
 
-declare type TTypographyProps = {
+type TypographyProps = {
    as?: React.ElementType
-   variant?: 'heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6'
-   color?: 'primary' | 'secondary' | 'accent' | 'destructive' | 'muted'
 } & React.HTMLAttributes<HTMLElement> &
+   VariantProps<typeof typographyVariants> &
    React.PropsWithChildren
 
-export const Typography: React.FC<TTypographyProps> = (props) => {
-   const { as = 'div', className, children, variant, color, ...restProps } = props
+export const typographyVariants = cva('', {
+   variants: {
+      variant: {
+         default: 'text-base tracking-tight',
+         h1: 'text-6xl sm:text-5xl font-extrabold scroll-m-20 font-extrabold tracking-tight',
+         h2: 'text-5xl sm:text-4xl font-bold scroll-m-20 tracking-tight',
+         h3: 'text-4xl sm:text-3xl font-bold tracking-tight scroll-m-20',
+         h4: 'text-3xl sm:text-2xl font-semibold tracking-tight scroll-m-20',
+         h5: 'text-2xl sm:text-xl font-semibold tracking-tight scroll-m-20',
+         h6: 'text-xl sm:text-lg font-semibold',
+         p: 'leading-7',
+         blockquote: 'mt-6 border-l-2 pl-6 italic',
+         small: 'text-sm leading-snug'
+      },
+      color: {
+         default: 'text-foreground',
+         primary: 'text-primary',
+         accent: 'accent',
+         secondary: 'text-secondary',
+         muted: 'text-muted-foreground',
+         success: 'text-success',
+         destructive: 'text-destructive'
+      }
+   },
+   defaultVariants: {
+      variant: 'default',
+      color: 'default'
+   }
+})
+
+export const Typography: React.FC<TypographyProps> = (props) => {
+   const { as = 'p', className, children, color, variant, ...restProps } = props
 
    const Element = useMemo(() => {
-      if (as) return as
-      switch (variant) {
-         case 'heading1':
-            return 'h1'
-         case 'heading2':
-            return 'h2'
-         case 'heading3':
-            return 'h1'
-         case 'heading4':
-            return 'h4'
-         default:
-            return as
-      }
+      if (!variant || variant === 'default' || as) return as
+      return variant as React.ElementType
    }, [variant, as])
 
-   const classnames = cn(
-      {
-         'text-6xl sm:text-5xl font-bold': variant === 'heading1',
-         'text-5xl sm:text-4xl font-bold': variant === 'heading2',
-         'text-4xl sm:text-3xl font-bold': variant === 'heading3',
-         'text-3xl sm:text-2xl font-semibold': variant === 'heading4',
-         'text-2xl sm:text-xl font-semibold': variant === 'heading5',
-         'text-xl sm:text-lg font-semibold': variant === 'heading6',
-         'text-base font-medium': !variant,
-
-         'text-primary': color === 'primary',
-         'text-secondary': color === 'secondary',
-         'text-accent': color === 'accent',
-         'text-muted': color === 'muted',
-         'text-destructive': color === 'destructive'
-      },
-      className
-   )
-
    return (
-      <Element className={classnames} {...restProps}>
+      <Element className={cn(typographyVariants({ variant, color, className }))} {...restProps}>
          {children}
       </Element>
    )

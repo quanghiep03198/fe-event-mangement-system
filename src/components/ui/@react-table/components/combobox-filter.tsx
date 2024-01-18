@@ -12,6 +12,7 @@ interface ComboboxFilterProps extends ComboboxProps {
 export const ComboboxFilter: React.FC<ComboboxFilterProps> = ({ options, placeholder, className, onChange, forceClose, areAllFiltersCleared }) => {
    const [open, setOpen] = useState(false)
    const [value, setValue] = useState('')
+
    useEffect(() => {
       if (forceClose === true) setOpen(false)
       if (areAllFiltersCleared) setValue(placeholder!)
@@ -40,7 +41,7 @@ export const ComboboxFilter: React.FC<ComboboxFilterProps> = ({ options, placeho
                <CommandInput placeholder={placeholder} className='h-9' />
                <CommandEmpty>Không có kết quả phù hợp</CommandEmpty>
                <CommandGroup>
-                  <ScrollArea className='h-80 w-full'>
+                  <ScrollArea className='h-80 w-full' onWheel={(e) => e.stopPropagation()}>
                      {options.map((option) => (
                         <CommandItem
                            key={option.value}

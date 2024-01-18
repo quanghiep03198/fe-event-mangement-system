@@ -3,22 +3,17 @@ import { format } from 'date-fns'
 import { Button, Calendar, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Icon, Popover, PopoverContent, PopoverTrigger } from '..'
 import { Control, FieldValues, Path } from 'react-hook-form'
 
-type DatePickerFieldControlProps<T extends FieldValues> = {
-   name: Path<T>
-   label: string
-   control: Control<T>
-   description?: string
-}
+type DatePickerFieldControlProps<T extends FieldValues> = BaseFieldControl<T>
 
 export function DatePickerFieldControl<T extends FieldValues>(props: DatePickerFieldControlProps<T>) {
-   const { control, name, description, label } = props
+   const { control, name, description, label, layout, hidden } = props
 
    return (
       <FormField
          control={control}
          name={name}
          render={({ field }) => (
-            <FormItem className='flex flex-col'>
+            <FormItem className={cn({ hidden, 'grid grid-cols-[1fr_2fr] items-center gap-2 space-y-0': layout === 'horizontal' })}>
                <FormLabel>{label}</FormLabel>
                <Popover>
                   <PopoverTrigger asChild>
@@ -26,7 +21,7 @@ export function DatePickerFieldControl<T extends FieldValues>(props: DatePickerF
                         <Button
                            variant={'outline'}
                            className={cn(
-                              'inline-flex items-center justify-start space-x-2 pl-3 text-left font-normal',
+                              'flex w-full items-center justify-start space-x-2 pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground'
                            )}
                         >
@@ -40,8 +35,8 @@ export function DatePickerFieldControl<T extends FieldValues>(props: DatePickerF
                         mode='single'
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date: Date) => date > new Date() || date < new Date('1900-01-01')}
                         initialFocus
+                        // disabled={(date: Date) => date < new Date() || date < new Date('1900-01-01')}
                      />
                   </PopoverContent>
                </Popover>

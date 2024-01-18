@@ -1,37 +1,40 @@
-import { JoinEventStatus, UserRoleEnum } from '../constants/enums'
+import { EventStatus, JoinEventStatus, UserRoleEnum } from '../constants/enums'
 
-export type UserType = {
+export interface BaseEntityInterface {
    id: number
+   created_at: Date
+   updated_at: Date
+}
+
+export interface UserInterface extends BaseEntityInterface {
    name: string
    password?: string
    email: string
+   code?: string
    avatar?: string
    phone: string
    role: UserRoleEnum
 }
 
-export type EventType = {
+export interface EventInterface extends BaseEntityInterface {
+   name: string
    attendances_count: number
    banner: string
    contact: string
-   end_time: Date | string
-   id: number
    location: string
-   name: string
    start_time: Date | string
+   end_time: Date | string
    description: string
    content: string
    status: any
    status_join: JoinEventStatus
-   created_at: Date | string
-   updated_at: Date | string
    user_id: number
-   user?: Partial<UserType>
-   feedback?: FeedbackType[]
-   attendances: Partial<UserType>[]
+   user?: Partial<UserInterface>
+   feedback?: FeedbackInterface[]
+   attendances: Partial<UserInterface>[]
 }
 
-export type StatisticsType = {
+export interface StatisticsInterface {
    eventInLastMonth: number
    eventInCurrentMonth: number
    percentInEvent: number
@@ -44,29 +47,32 @@ export type StatisticsType = {
    percentInFeedBack: number
 }
 
-export type FeedbackType = {
+export interface FeedbackInterface extends BaseEntityInterface {
    id: number
    content: string
    user_id: number
    event_id: number
    created_at: Date
    updated_at: Date
-   user: Partial<UserType>
+   user: Partial<UserInterface>
    created_at: Date
    updated_at: Date
    read?: boolean
 }
 
-export interface FeedbackInterface {
-   id: number
+/**
+ * @description
+ * preset: 0 (now), 8 (after 8h), 12 (after 12h), 24 (after 1d) from now
+ */
+export interface NotificationInterface extends BaseEntityInterface {
+   title: string
+   content: string
    event_id: number
-   rating: 1 | 2 | 3 | 4 | 5 // overall point of the quality of event organization
-   comment: string
-   recommendation: string // what user recommend to enhance the quality of event organization
-   suggest_for_friend: 'yes' | 'no' //enum
-   has_read: boolean // check if user has read the feedback or not
-   sender: Partial<UserType> // user who send this feedback
-   created_at: Date
-   updated_at: Date
-   // user_id: number
+   user_id: number
+   event: Partial<EventInterface>
+   time_send: string | Date
+   create_by: Partial<UserInterface>
+   deleted_at: Date | null
+   sent_at: Date | string | null
+   user_join: Partial<UserInterface>[]
 }

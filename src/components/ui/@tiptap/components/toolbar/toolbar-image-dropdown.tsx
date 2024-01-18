@@ -1,3 +1,4 @@
+import { convertBase64 } from '@/common/utils/convert-base64'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Editor } from '@tiptap/react'
 import React, { useId, useState } from 'react'
@@ -31,14 +32,16 @@ const ImageDropdown: React.FC<{ editor: Editor }> = ({ editor }) => {
       resolver: zodResolver(UploadSchema)
    })
    const id = useId()
+
    const handleInsertImageURL = ({ url }: FormValue) => {
       if (url) editor.commands.setImage({ src: url, alt: 'Image' })
       form.reset()
       setOpen(false)
    }
 
-   const handleInsertImageFromDevice = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const url = URL.createObjectURL(e.target.files?.[0]!)
+   const handleInsertImageFromDevice = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files?.[0]) return
+      const url = (await convertBase64(e.target.files?.[0])) as string
       editor.commands.setImage({ src: url })
    }
 
@@ -72,7 +75,12 @@ const ImageDropdown: React.FC<{ editor: Editor }> = ({ editor }) => {
             <DialogContent className='items-stretch'>
                <DialogHeader className='text-left'>Chèn hình ảnh</DialogHeader>
                <Form {...form}>
-                  <FormDialog onSubmit={form.handleSubmit(handleInsertImageURL)}>
+                  <FormDialog
+                     onSubmit={(e) => {
+                        e.stopPropagation()
+                        form.handleSubmit(handleInsertImageURL)(e)
+                     }}
+                  >
                      <InputFieldControl
                         control={form.control}
                         type='url'

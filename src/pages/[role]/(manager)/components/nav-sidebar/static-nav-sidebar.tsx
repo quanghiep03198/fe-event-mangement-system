@@ -2,10 +2,11 @@ import { Theme } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import useTheme from '@/common/hooks/use-theme'
 import { cn } from '@/common/utils/cn'
-import { Box } from '@/components/ui'
-import { Link } from 'react-router-dom'
+import PrivateComponent from '@/components/shared/private-component'
+import { Box, Icon, buttonVariants } from '@/components/ui'
+import Tooltip from '@/components/ui/@override/tooltip'
+import { Link, NavLink, matchPath, useLocation } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
-import CollapseSidebarMenu from './menu-sidebar-lg'
 
 type StaticNavSidebarProps = {
    navigation: Array<MenuNavigationItem>
@@ -28,6 +29,7 @@ const getLogoImageSource = (theme: Theme, isCollapsed: boolean) => {
 const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isCollapsed }) => {
    const { theme } = useTheme()
    const logo = getLogoImageSource(theme, isCollapsed)
+   const { pathname } = useLocation()
 
    return (
       <Box
@@ -46,11 +48,38 @@ const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isColla
                })}
             />
          </Link>
-         <CollapseSidebarMenu isCollapsed={isCollapsed} navigation={navigation} />
+         <Menu>
+            {navigation.map((item) => {
+               const isAlsoActive = !!matchPath(item.path, pathname)
+               return (
+                  <PrivateComponent key={item.id} roles={item.roles}>
+                     <MenuItem>
+                        <Tooltip content={item.name} side='right' hidden={!isCollapsed} key={item.id}>
+                           <NavLink
+                              to={item.path}
+                              className={({ isActive }) =>
+                                 cn('flex w-[inherit] !text-base !font-normal', buttonVariants({ variant: 'ghost', size: isCollapsed ? 'icon' : 'default' }), {
+                                    'text-primary hover:text-primary': isActive || isAlsoActive,
+                                    'hover:text-foreground': !isActive,
+                                    'justify-start gap-x-2': !isCollapsed
+                                 })
+                              }
+                           >
+                              <Icon name={item.icon!} size={18} />
+                              <span className={cn({ hidden: isCollapsed })}>{item.name}</span>
+                           </NavLink>
+                        </Tooltip>
+                     </MenuItem>
+                  </PrivateComponent>
+               )
+            })}
+         </Menu>
       </Box>
    )
 }
 
 const Image = tw.img`object-cover object-center`
+const Menu = tw.ul`flex flex-col space-y-2 mt-10 items-stretch`
+const MenuItem = tw.li`whitespace-nowrap font-normal w-full [&>:first-child]:w-full`
 
 export default StaticNavSidebar

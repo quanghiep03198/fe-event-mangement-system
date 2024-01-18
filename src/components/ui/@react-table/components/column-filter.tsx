@@ -22,7 +22,7 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
    )
 
    if (!column.columnDef.enableColumnFilter)
-      return <Box className='flex h-9 select-none items-center justify-start bg-muted px-2 text-xs font-medium text-muted-foreground/50'></Box>
+      return <Box className='flex h-9 select-none items-center justify-start bg-muted/50 px-2 text-xs font-medium text-muted-foreground/50'></Box>
 
    switch (filterType) {
       case 'inNumberRange':
@@ -54,13 +54,16 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
       case 'equals':
          return (
             <DropdownSelect
-               className='h-9 min-w-[8rem] rounded-none border-none text-xs font-medium text-muted-foreground/50 shadow-none hover:text-foreground focus:border-none'
+               selectTriggerProps={{
+                  className:
+                     'h-9 min-w-[8rem] rounded-none border-none text-xs font-medium text-muted-foreground/50 shadow-none hover:text-foreground focus:border-none'
+               }}
                placeholder='Chọn ...'
                options={sortedUniqueValues.map((value: any) => ({
                   label: value,
                   value: value
                }))}
-               onChange={(value) => column.setFilterValue(value)}
+               onValueChange={(value) => column.setFilterValue(value)}
             />
          )
 

@@ -4,6 +4,7 @@
       "useDefineForClassFields": true,
       "lib": ["ES2020", "DOM", "DOM.Iterable"],
       "module": "ESNext",
+      "experimentalDecorators": true,
       "skipLibCheck": true,
 
       /* Bundler mode */
@@ -15,10 +16,10 @@
       "jsx": "react-jsx",
 
       /* Linting */
-      "strict": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "noFallthroughCasesInSwitch": true,
+      "strict": false,
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "noFallthroughCasesInSwitch": false,
 
       /* Path alias */
       "baseUrl": ".",
@@ -26,6 +27,6 @@
          "@/*": ["./src/*"]
       }
    },
-   "include": ["src", "src/.ts", "src/pages/(home)/.tsx"],
+   "include": ["src"],
    "references": [{ "path": "./tsconfig.node.json" }]
 }

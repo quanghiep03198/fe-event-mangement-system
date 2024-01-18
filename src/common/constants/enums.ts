@@ -11,13 +11,19 @@ export enum Theme {
 }
 
 export enum EventStatus {
-   ACTIVE = 'Đang diễn ra',
-   INACTIVE = 'Đã kết thúc'
+   UPCOMING = 2,
+   ACTIVE = 1,
+   INACTIVE = 0
 }
 
 export enum JoinEventStatus {
    NOT_YET = 0,
    ALREADY = 1
+}
+
+export enum NotificationSendingStatus {
+   SCHEDULED = 0,
+   SENT = 1
 }
 
 export enum BreakPoints {

@@ -1,82 +1,81 @@
-import { UserType } from '@/common/types/entities'
-import { createFormData } from '@/common/utils/formdata'
+import { Paths } from '@/common/constants/pathnames'
+import { cn } from '@/common/utils/cn'
+import { createFormData } from '@/common/utils/form-data'
 import {
    Box,
    Button,
    DatePickerFieldControl,
+   Editor,
    Form,
+   FormMessage,
    Icon,
+   Image,
    InputFieldControl,
    Label,
-   SelectFieldControl,
-   TextareaFieldControl,
    Typography,
-   Editor
+   buttonVariants
 } from '@/components/ui'
+import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
 import { useCreateEventMutation } from '@/redux/apis/event.api'
-import { useGetParticipantsQuery } from '@/redux/apis/participant.api'
-import { EventSchema } from '@/schemas/event.schema'
+import { useAppSelector } from '@/redux/hook'
+import { CreateEventSchema } from '@/schemas/event.schema'
+import { Cloudinary } from '@/services/cloudinary.service'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-type FormValue = z.infer<typeof EventSchema>
-type HelderOptions = Array<Record<string, any>>
+type FormValue = z.infer<typeof CreateEventSchema>
 
-const CreateEvent = () => {
-   const form = useForm<FormValue>({ resolver: zodResolver(EventSchema) })
-   const { data: participants } = useGetParticipantsQuery({ page: 1, limit: 1000 })
-   const [createEvent] = useCreateEventMutation()
+const CreateEventPage = () => {
+   const form = useForm<FormValue>({ resolver: zodResolver(CreateEventSchema) })
+   const [createEvent, { isLoading }] = useCreateEventMutation()
    const [editorState, setEditorState] = useState<{ value: string; isEmpty: boolean }>({ value: '', isEmpty: true })
-
-   const heldersList = useMemo<HelderOptions>(() => {
-      const helders = (participants as Pagination<UserType>)?.docs ?? []
-      return helders.map((helder) => ({ value: helder?.id, label: helder?.name }))
-   }, [participants])
+   const navigate = useNavigate()
+   const user = useAppSelector((state) => state.auth.user)
+   const [image, setImage] = useState<string>('')
 
    const handleCreateEvent = async (data: FormValue) => {
-      if (editorState.isEmpty) {
-         toast.error('Vui lòng nhập nội dung')
-         return
-      }
+      const banner = await Cloudinary.upload(data.banner[0])
 
-      const formData = createFormData({
-         ...data,
-         content: editorState.value,
-         start_time: format(data.start_time, 'yyyy/MM/dd HH:mm:ss'),
-         end_time: format(data.end_time, 'yyyy/MM/dd HH:mm:ss'),
-         banner: data.banner?.[0]
-      })
-      toast.promise(createEvent(formData), {
+      toast.promise(createEvent({ ...data, banner, user_id: user?.id }).unwrap(), {
          loading: 'Đang tạo sự kiện ...',
-         success: 'Sự kiện đã được tạo thành công',
+         success: () => {
+            navigate(Paths.EVENTS_LIST)
+            return 'Sự kiện đã được tạo thành công'
+         },
          error: 'Tạo sự kiện thất bại'
       })
    }
 
    return (
       <Form {...form}>
-         <form className='flex flex-col gap-y-14' onSubmit={form.handleSubmit(handleCreateEvent)}>
+         <form className='flex max-w-4xl flex-col gap-y-14 sm:max-w-full' onSubmit={form.handleSubmit(handleCreateEvent)}>
             <Box className='flex items-center justify-between border-b py-4'>
                <Box className='space-y-2'>
-                  <Typography variant='heading6'>Thêm sự kiện</Typography>
+                  <Typography variant='h6'>Thêm sự kiện</Typography>
                   <p className='text-sm text-muted-foreground'>Nhập thông tin để đăng tải sự kiện</p>
                </Box>
-               <Button type='submit' variant='default' size='sm' className='gap-x-2 sm:hidden md:hidden'>
+               <Label
+                  htmlFor='submit'
+                  className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'gap-x-2 sm:hidden', { 'pointer-events-none opacity-50': isLoading })}
+               >
                   <Icon name='CheckCircle' />
                   Lưu
-               </Button>
+               </Label>
             </Box>
 
-            <Box className='flex flex-col items-stretch gap-10'>
-               <Box className='grid max-w-5xl grid-cols-6 gap-x-6 gap-y-10 sm:grid-cols-1'>
-                  <Box className='col-span-3'>
-                     <InputFieldControl name='name' control={form.control} label='Tên sự kiện' description='Tên sự kiện không quá 60 ký tự' />
+            <Box className='space-y-10'>
+               <Box className='grid grid-cols-6 gap-y-10 sm:grid-cols-1'>
+                  <Box className='col-span-full w-full'>
+                     <InputFieldControl name='name' control={form.control} label='Tên sự kiện' />
                   </Box>
-                  <Box className='col-span-3'>
+                  <Box className='col-span-full w-full'>
+                     <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' />
+                  </Box>
+                  <Box className='col-span-full w-full'>
                      <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' />
                   </Box>
                   <Box className='col-span-3'>
@@ -85,32 +84,37 @@ const CreateEvent = () => {
                   <Box className='col-span-3'>
                      <DatePickerFieldControl name='end_time' control={form.control} label='Ngày kết thúc' />
                   </Box>
-                  <Box className='col-span-2'>
-                     <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' />
+                  <Box className='col-span-full space-y-2'>
+                     <Label className={cn({ 'text-destructive': Boolean(form.getFieldState('banner').error) })} htmlFor='file'>
+                        Ảnh bìa
+                     </Label>
+                     <Box className='group relative h-80 w-[inherit] overflow-clip rounded-lg'>
+                        <Label
+                           htmlFor='file'
+                           className='absolute inset-0 z-10 flex h-full w-full cursor-pointer items-center justify-center bg-neutral-950/50 bg-opacity-50 text-primary-foreground opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100'
+                        >
+                           <Icon name='Camera' size={48} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
+                        </Label>
+                        <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height={320} />
+                        <InputFieldControl
+                           hidden
+                           id='file'
+                           name='banner'
+                           control={form.control}
+                           className='hidden'
+                           type='file'
+                           onChange={(e) => setImage(URL.createObjectURL(e.target.files?.[0]!))}
+                           accept='image/*'
+                        />
+                     </Box>
+                     {form.getFieldState('banner').error && <FormMessage>{form.getFieldState('banner').error?.message}</FormMessage>}
                   </Box>
-                  <Box className='col-span-2'>
-                     <InputFieldControl name='banner' control={form.control} type='file' label='Banner' />
-                  </Box>
-                  <Box className='col-span-2'>
-                     <SelectFieldControl
-                        className='col-span-2'
-                        name='user_id'
-                        control={form.control}
-                        options={heldersList}
-                        label='Nguời tổ chức'
-                        placeholder='Chọn người tổ chức'
-                     />{' '}
-                  </Box>
-
                   <Box className='col-span-full'>
-                     <TextareaFieldControl rows={5} resizable={true} name='description' control={form.control} label='Mô tả' />
+                     <EditorFieldControl name='content' form={form} label='Nội dung' />
                   </Box>
                </Box>
-               <Box className='w-full max-w-5xl space-y-2'>
-                  <Label>Nội dung</Label>
-                  <Editor onUpdate={setEditorState} />
-               </Box>
-               <Button type='submit' className='lg:hidden xl:hidden'>
+
+               <Button type='submit' id='submit' disabled={isLoading} className='hidden w-full sm:inline-flex'>
                   Lưu
                </Button>
             </Box>
@@ -119,4 +123,4 @@ const CreateEvent = () => {
    )
 }
 
-export default CreateEvent
+export default CreateEventPage

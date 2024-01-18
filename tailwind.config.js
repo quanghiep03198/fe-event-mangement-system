@@ -16,6 +16,10 @@ module.exports = {
          fontFamily: {
             sans: ['Inter var', ...defaultTheme.fontFamily.sans]
          },
+         containers: {
+            xs: '80px',
+            sm: '128px'
+         },
          colors: {
             border: 'hsl(var(--border))',
             input: 'hsl(var(--input))',

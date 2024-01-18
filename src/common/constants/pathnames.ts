@@ -1,12 +1,15 @@
 export const Paths = {
    HOME: '/',
+   /** Auth middleware route */
+   REDIRECT: '/',
+
    /** Auth routes */
    SIGNIN: '/signin',
    SIGNUP: '/signup',
    RECOVER_PASSOWRD: '/forgot-password',
 
-   /** Auth middleware route */
-   REDIRECT: '/',
+   /** User preferences routes */
+   ACCOUNT_SETTINGS: '/account-settings',
 
    /** Error routes */
    NOT_FOUND: '/404',
@@ -16,12 +19,14 @@ export const Paths = {
    MANAGER: '/manager',
    MANAGER_DASHBOARD: '/manager/dashboard',
    EVENTS_LIST: '/manager/events',
-   EVENTS_CREATE: '/manager/event/create',
-   EVENTS_UPDATE: '/manager/events/:id/update',
+   CREATE_EVENT: '/manager/events/create',
+   EDIT_EVENT: '/manager/events/:id/edit',
    EVENT_STATISTICS_DETAILS: '/manager/events/:id',
-   PARTICIPANTS_LIST: '/manager/participants',
+   STAFFS_LIST: '/manager/participants',
    STUDENTS_LIST: '/manager/student-list',
-   NOTIFICATION_SETTINGS: '/manager/notification-settings',
+   NOTIFICATION_LIST: '/manager/notification',
+   CREATE_NOTIFICATION: '/manager/notification/create',
+   EDIT_NOTIFICATION: '/manager/notification/:id/edit',
 
    /** Student routes */
    EVENTS_BOARD: '/student/events',

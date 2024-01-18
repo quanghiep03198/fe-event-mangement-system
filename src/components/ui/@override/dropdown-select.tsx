@@ -1,4 +1,4 @@
-import { SelectTriggerProps } from '@radix-ui/react-select'
+import { SelectProps, SelectTriggerProps } from '@radix-ui/react-select'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '..'
 import React from 'react'
 
@@ -6,18 +6,23 @@ type DropdownSelectProps = {
    openState?: boolean
    placeholder?: string
    options: Record<'label' | 'value', string>[]
-   onChange?: (value: string) => any | AnonymousFunction
-} & SelectTriggerProps
+   onValueChange?: (value: string) => any | AnonymousFunction
 
-export const DropdownSelect: React.FC<DropdownSelectProps> = ({ options, placeholder, openState, onChange, ...selectTrigerProps }) => {
+   selectProps?: SelectProps
+   selectTriggerProps?: SelectTriggerProps
+}
+
+export const DropdownSelect: React.FC<DropdownSelectProps> = ({ options, placeholder, openState, onValueChange, selectTriggerProps, selectProps }) => {
    return (
       <Select
          open={openState}
          onValueChange={(value) => {
-            if (onChange) onChange(value)
+            if (onValueChange) onValueChange(value)
          }}
+         {...selectProps}
       >
-         <SelectTrigger {...selectTrigerProps}>
+         <SelectTrigger {...selectTriggerProps}>
+            {selectTriggerProps?.children}
             <SelectValue placeholder={placeholder} />
          </SelectTrigger>
          <SelectContent>

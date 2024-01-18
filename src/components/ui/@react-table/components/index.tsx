@@ -12,7 +12,7 @@ import {
    getSortedRowModel,
    useReactTable
 } from '@tanstack/react-table'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Box } from '../..'
 import { TableProvider } from '../context/table.context'
 import { fuzzyFilter } from '../utils/fuzzy-filter.util'
@@ -22,22 +22,32 @@ import TableToolbar from './table-toolbar'
 
 export interface DataTableProps<TData, TValue> {
    data: Array<TData>
-   columns: Array<ColumnDef<TData, TValue>>
-   loading: boolean
+   columns: ColumnDef<TData | any, TValue>[]
+   loading?: boolean
    manualPagination?: boolean
    manualFilter?: boolean
+   enableColumnResizing?: boolean
    paginationState?: Omit<Pagination<TData>, 'docs'>
-   onManualPaginate?: PaginationHandler
    slot?: React.ReactNode
+   onManualPaginate?: PaginationHandler
 }
 
-export function DataTable<TData, TValue>({ data, columns, loading, manualPagination, slot, paginationState, onManualPaginate }: DataTableProps<TData, TValue>) {
+function DataTable<TData, TValue>({
+   data,
+   columns,
+   loading,
+   manualPagination,
+   slot,
+   paginationState,
+   enableColumnResizing,
+   onManualPaginate
+}: DataTableProps<TData, TValue>) {
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
    const [sorting, setSorting] = useState<SortingState>([])
    const [globalFilter, setGlobalFilter] = useState<string>('')
 
    const table = useReactTable({
-      data: data ?? [],
+      data: data || [],
       columns,
       state: {
          sorting,
@@ -45,10 +55,12 @@ export function DataTable<TData, TValue>({ data, columns, loading, manualPaginat
          globalFilter
       },
       manualPagination,
+      globalFilterFn: fuzzyFilter,
+      columnResizeMode: 'onChange',
+      enableColumnResizing,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
       onGlobalFilterChange: setGlobalFilter,
-      globalFilterFn: fuzzyFilter,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
@@ -68,7 +80,7 @@ export function DataTable<TData, TValue>({ data, columns, loading, manualPaginat
          <Box className='flex h-full flex-col items-stretch gap-y-4'>
             <TableToolbar
                table={table}
-               isFiltered={globalFilter.length === 0 && columnFilters.length === 0}
+               isFiltered={globalFilter.length !== 0 || columnFilters.length !== 0}
                globalFilter={globalFilter}
                onGlobalFilterChange={setGlobalFilter}
                onClearAllFilters={clearAllFilter}
@@ -80,3 +92,5 @@ export function DataTable<TData, TValue>({ data, columns, loading, manualPaginat
       </TableProvider>
    )
 }
+
+export default memo(DataTable)

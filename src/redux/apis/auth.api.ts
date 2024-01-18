@@ -1,11 +1,11 @@
-import { UserType } from '@/common/types/entities'
+import { UserInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axiosBaseQuery from '../helper'
 
-type SigninMetadata = Omit<UserType, 'password'> & { token: string }
-type SigninPayload = Pick<UserType, 'email' | 'password'>
-type SignupPayload = Pick<UserType, 'email' | 'name' | 'phone' | 'password'>
-type SignupMetadata = Omit<UserType, 'password'>
+type SigninMetadata = { user: Omit<UserInterface, 'password'>; access_token: string }
+type SigninPayload = Pick<UserInterface, 'email' | 'password'>
+type SignupPayload = Pick<UserInterface, 'email' | 'name' | 'phone' | 'password'>
+type SignupMetadata = Omit<UserInterface, 'password'>
 
 const reducerPath = 'auth/api' as const
 const tagTypes = ['Auth'] as const
@@ -16,21 +16,24 @@ export const authApi = createApi({
    baseQuery: axiosBaseQuery(),
    endpoints: (build) => {
       return {
-         signin: build.mutation<HttpResponse<SigninMetadata>, SigninPayload>({
+         signin: build.mutation<SuccessResponse<SigninMetadata>, SigninPayload>({
             query: (payload) => ({ url: '/login', method: 'POST', data: payload }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                const { data } = await queryFulfilled
-               const accessToken = data?.metadata?.token
+               const accessToken = data?.metadata?.access_token
                localStorage.setItem('access_token', `Bearer ${accessToken}`)
             }
          }),
-         signup: build.mutation<HttpResponse<SignupMetadata>, SignupPayload>({
+         updateUserInfo: build.mutation<Partial<UserInterface>, Partial<UserInterface>>({
+            query: (payload) => ({ url: '/updateUser', method: 'PATCH', data: payload }),
+            transformResponse: (response: SuccessResponse<Partial<UserInterface>>) => response.metadata!,
+            invalidatesTags: tagTypes
+         }),
+         signup: build.mutation<SuccessResponse<SignupMetadata>, SignupPayload>({
             query: (payload) => ({ url: '/register', method: 'POST', data: payload })
          })
       }
    }
 })
 
-const { useSigninMutation, useSignupMutation } = authApi
-
-export { useSigninMutation, useSignupMutation }
+export const { useSigninMutation, useSignupMutation, useUpdateUserInfoMutation } = authApi

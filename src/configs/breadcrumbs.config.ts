@@ -4,18 +4,31 @@ export const breadcrumbs = {
    /* MANAGER */
    [Paths.MANAGER_DASHBOARD]: [{ path: Paths.MANAGER_DASHBOARD, name: 'Màn hình chính' }],
    [Paths.EVENTS_LIST]: [{ path: Paths.EVENTS_LIST, name: 'Sự kiện' }],
-   [Paths.EVENTS_CREATE]: [
+   [Paths.CREATE_EVENT]: [
       { path: Paths.EVENTS_LIST, name: 'Sự kiện' },
-      { path: Paths.EVENTS_CREATE, name: 'Thêm mới' }
+      { path: Paths.CREATE_EVENT, name: 'Thêm mới' }
    ],
-   [Paths.EVENTS_UPDATE]: [
+   [Paths.EDIT_EVENT]: [
       { path: Paths.EVENTS_LIST, name: 'Sự kiện' },
-      { path: Paths.EVENTS_UPDATE, name: 'Cập nhật' }
+      { path: Paths.EDIT_EVENT, name: 'Cập nhật' }
    ],
    [Paths.EVENT_STATISTICS_DETAILS]: [
       { path: Paths.EVENTS_LIST, name: 'Sự kiện' },
       { path: Paths.EVENT_STATISTICS_DETAILS, name: 'Thống kê chi tiết' }
    ],
-   [Paths.PARTICIPANTS_LIST]: [{ path: Paths.PARTICIPANTS_LIST, name: 'Công tác viên' }],
-   [Paths.STUDENTS_LIST]: [{ path: Paths.STUDENTS_LIST, name: 'Sinh viên' }]
+   [Paths.STAFFS_LIST]: [{ path: Paths.STAFFS_LIST, name: 'Công tác viên' }],
+   [Paths.STUDENTS_LIST]: [{ path: Paths.STUDENTS_LIST, name: 'Sinh viên' }],
+   [Paths.NOTIFICATION_LIST]: [{ path: Paths.NOTIFICATION_LIST, name: 'Thông báo' }],
+   [Paths.CREATE_NOTIFICATION]: [
+      { path: Paths.NOTIFICATION_LIST, name: 'Thông báo' },
+      { path: Paths.CREATE_NOTIFICATION, name: 'Tạo thông báo' }
+   ],
+   [Paths.EDIT_NOTIFICATION]: [
+      { path: Paths.NOTIFICATION_LIST, name: 'Thông báo' },
+      { path: Paths.EDIT_NOTIFICATION, name: 'Cập nhật' }
+   ],
+   [Paths.ACCOUNT_SETTINGS]: [
+      { path: Paths.ACCOUNT_SETTINGS, name: 'Cài đặt' },
+      { path: Paths.ACCOUNT_SETTINGS, name: 'Tài khoản' }
+   ]
 }

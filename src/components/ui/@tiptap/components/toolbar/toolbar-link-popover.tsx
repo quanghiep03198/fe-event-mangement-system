@@ -44,9 +44,17 @@ export const LinkPopover: React.FC<{ editor: Editor }> = ({ editor }) => {
                   <p className='text-sm text-muted-foreground'>Chèn 1 đường liên kết vào văn bản đã chọn</p>
                </Box>
                <Form {...form}>
-                  <form className='flex items-center gap-x-3' onSubmit={form.handleSubmit(handleInsertLink)}>
-                     <InputFieldControl placeholder='Dán 1 đường liên kết' control={form.control} name='url' className='col-span-2 h-8' />
-                     <Button variant='default'>Áp dụng</Button>
+                  <form
+                     className='flex items-stretch gap-x-2'
+                     onSubmit={(e) => {
+                        e.stopPropagation()
+                        form.handleSubmit(handleInsertLink)(e)
+                     }}
+                  >
+                     <InputFieldControl placeholder='Dán 1 đường liên kết' control={form.control} name='url' className='col-span-2 !h-8 text-sm' />
+                     <Button variant='default' size='sm'>
+                        Áp dụng
+                     </Button>
                   </form>
                </Form>
             </Box>

@@ -1,8 +1,10 @@
+import { EventStatusValues } from '@/common/constants/constants'
 import { EventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
-import { EventType } from '@/common/types/entities'
+import { EventInterface } from '@/common/types/entities'
 import { Badge, Box, Button, DataTable, DataTableRowActions, Icon, Typography } from '@/components/ui'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
+import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteEventMutation, useGetEventsQuery } from '@/redux/apis/event.api'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -10,10 +12,10 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-type EventListWithoutPagination = Exclude<OptionalPagination<EventType>, Pagination<EventType>>
+type EventListWithoutPagination = Exclude<OptionalPagination<EventInterface>, Pagination<EventInterface>>
 
-const EventList: React.FunctionComponent = () => {
-   const { data, isFetching } = useGetEventsQuery({ pagination: false })
+const EventListPage: React.FunctionComponent = () => {
+   const { data, isLoading } = useGetEventsQuery({ pagination: false, limit: 10 })
    const [deleteEvent] = useDeleteEventMutation()
    const [selectedRowId, setSelectedRowId] = useState<number | null>(null)
    const [confirmDialogOpenState, setConfirmDialogOpenState] = useState<boolean>(false)
@@ -38,30 +40,30 @@ const EventList: React.FunctionComponent = () => {
       }
    }, [selectedRowId])
 
-   const columnHelper = createColumnHelper<EventType>()
+   const columnHelper = createColumnHelper<EventInterface>()
 
    const columns = [
       columnHelper.accessor('name', {
          header: 'Tên sự kiện',
          enableSorting: true,
          enableColumnFilter: true,
-         size: 160
+         size: 208
       }),
       columnHelper.accessor('contact', {
          header: 'Số điện thoại liên hệ',
          enableColumnFilter: true,
-         size: 160
+         size: 144
       }),
       columnHelper.accessor('location', {
          header: 'Địa điểm',
          enableColumnFilter: true,
-         size: 160
+         size: 320
       }),
-
       columnHelper.accessor('start_time', {
          header: 'Thời gian bắt đầu',
          enableSorting: true,
          enableMultiSort: true,
+         enableResizing: false,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -71,6 +73,7 @@ const EventList: React.FunctionComponent = () => {
          header: 'Thời gian kết thúc',
          enableSorting: true,
          enableMultiSort: true,
+         enableResizing: false,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -79,12 +82,21 @@ const EventList: React.FunctionComponent = () => {
       columnHelper.accessor('status', {
          header: 'Trạng thái',
          enableColumnFilter: true,
+         enableResizing: false,
          filterFn: 'equals',
          cell: ({ getValue }) => {
-            const value = getValue()
-            console.log(value)
+            const value = getValue() as string
             return (
-               <Badge className='whitespace-nowrap' variant={value === EventStatus.ACTIVE ? 'success' : 'destructive'}>
+               <Badge
+                  className='whitespace-nowrap'
+                  variant={
+                     value === EventStatusValues.get(EventStatus.ACTIVE)
+                        ? 'success'
+                        : value === EventStatusValues.get(EventStatus.UPCOMING)
+                          ? 'warning'
+                          : 'destructive'
+                  }
+               >
                   {value}
                </Badge>
             )
@@ -92,6 +104,9 @@ const EventList: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('id', {
          header: 'Thao tác',
+         enableResizing: false,
+         size: 64,
+         enableHiding: false,
          cell: ({ cell }) => {
             const id = cell.getValue()
             return (
@@ -99,27 +114,38 @@ const EventList: React.FunctionComponent = () => {
                   canViewDetails={true}
                   canEdit={true}
                   canDelete={true}
-                  onViewDetails={() => navigate(Paths.EVENT_STATISTICS_DETAILS.replace(':id', id))}
-                  onEdit={() => navigate(Paths.EVENTS_UPDATE.replace(':id', id))}
+                  onViewDetails={() => navigate(Paths.EVENT_STATISTICS_DETAILS.replace(':id', id.toString()))}
+                  onEdit={() => navigate(Paths.EDIT_EVENT.replace(':id', id.toString()))}
                   onDelete={() => handleDeleteButtonClick(id)}
                />
             )
          }
       })
-   ] as ColumnDef<EventType, any>[]
+   ] as ColumnDef<EventInterface>[]
 
    return (
-      <Box className='flex h-full flex-col space-y-4'>
-         <Box className='mb-4 flex items-center justify-between'>
-            <Typography variant='heading6'>Danh sách sự kiện</Typography>
-            <Link to={Paths.EVENTS_CREATE}>
-               <Button variant='outline' className='gap-x-2'>
-                  <Icon name='PlusCircle' />
-                  Thêm mới
-               </Button>
-            </Link>
+      <Box className='space-y-10'>
+         <Box className='space-y-1'>
+            <Typography variant='h6'>Danh sách sự kiện</Typography>
+            <Typography variant='small' color='muted'>
+               Danh sách liệt kê các sự kiện đã và đang tổ chức
+            </Typography>
          </Box>
-         <DataTable columns={columns} data={eventsList!} loading={isFetching} />
+         <DataTable
+            enableColumnResizing
+            columns={columns}
+            data={eventsList!}
+            loading={isLoading}
+            slot={
+               <Tooltip content='Thêm mới'>
+                  <Button variant='outline' className='h-8 w-8' size='icon' asChild>
+                     <Link to={Paths.CREATE_EVENT}>
+                        <Icon name='PlusCircle' />
+                     </Link>
+                  </Button>
+               </Tooltip>
+            }
+         />
          <ConfirmDialog
             open={confirmDialogOpenState}
             onOpenStateChange={setConfirmDialogOpenState}
@@ -131,4 +157,4 @@ const EventList: React.FunctionComponent = () => {
    )
 }
 
-export default EventList
+export default EventListPage

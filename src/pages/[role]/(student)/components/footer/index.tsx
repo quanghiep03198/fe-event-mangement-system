@@ -8,7 +8,7 @@ const Footer: React.FunctionComponent = () => {
    const { theme } = useTheme()
 
    return (
-      <Box as='footer' className='border-t bg-background'>
+      <Box as='footer' className='relative z-10 border-t bg-background'>
          <Box className='mx-auto flex max-w-7xl flex-col items-center justify-center space-y-6 p-6'>
             <Image src={theme === Theme.LIGHT ? '/logo.png' : '/logo.webp'} />
 

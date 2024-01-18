@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
@@ -11,11 +13,20 @@ export default defineConfig({
          find: '@'
       }
    },
+   test: {
+      globals: true,
+      environment: 'jsdom',
+      reporters: ['default', 'html']
+   },
    esbuild: {
       drop: ['console', 'debugger']
    },
-
-   server: {
+   preview: {
       port: 5000
+   },
+   server: {
+      port: 5000,
+      host: true,
+      open: true
    }
 })

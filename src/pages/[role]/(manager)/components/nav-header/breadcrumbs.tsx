@@ -10,14 +10,14 @@ const NavbarBreadcrumb: React.FunctionComponent = () => {
 
    return (
       <Breadcrumb>
-         <BreadcrumbItem className='text-sm font-medium' to={Paths.HOME}>
+         <Link className='text-sm font-medium' to={Paths.HOME}>
             <Icon name='Home' />
-         </BreadcrumbItem>
+         </Link>
          {Array.isArray(breadcrumbs) &&
             breadcrumbs?.map((item, index) => (
                <Box className='inline-flex items-center space-x-2' key={index}>
                   <Icon name='ChevronRight' />
-                  <BreadcrumbItem to={item.path}>{item.name}</BreadcrumbItem>
+                  <Link to={item.path}>{item.name}</Link>
                </Box>
             ))}
       </Breadcrumb>
@@ -25,6 +25,5 @@ const NavbarBreadcrumb: React.FunctionComponent = () => {
 }
 
 const Breadcrumb = tw.div`flex items-center space-x-2`
-const BreadcrumbItem = tw(Link)`text-sm`
 
 export default NavbarBreadcrumb

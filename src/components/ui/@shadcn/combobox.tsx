@@ -3,16 +3,17 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 import { Button, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Popover, PopoverContent, PopoverTrigger, ScrollArea } from '..'
 
-export interface ComboboxProps {
+export type ComboboxProps = {
    placeholder?: string
    className?: string
    options: Array<Record<'label' | 'value', any>>
-   onChange: (value: string | number) => void
-}
+   value?: string
+   onChange?: (value: string) => void
+} & React.ComponentProps<typeof PopoverContent>
 
-export const Combobox: React.FC<ComboboxProps> = ({ options, placeholder, className, onChange }) => {
+export const Combobox: React.FC<ComboboxProps> = ({ options, placeholder, className, value, onChange, ...props }) => {
    const [open, setOpen] = useState(false)
-   const [value, setValue] = useState('')
+   const [currentValue, setCurrentValue] = useState(value ?? '')
 
    return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -25,7 +26,7 @@ export const Combobox: React.FC<ComboboxProps> = ({ options, placeholder, classN
                className={cn(
                   'justify-between',
                   {
-                     'text-muted-foreground/50': !value
+                     'text-muted-foreground/50': !currentValue
                   },
                   className
                )}
@@ -34,7 +35,7 @@ export const Combobox: React.FC<ComboboxProps> = ({ options, placeholder, classN
                <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
             </Button>
          </PopoverTrigger>
-         <PopoverContent className='w-56 p-0'>
+         <PopoverContent className='w-full p-0' {...props}>
             <Command>
                <CommandInput placeholder={placeholder} className='h-9' />
                <CommandEmpty>Không có kết quả phù hợp</CommandEmpty>
@@ -44,14 +45,14 @@ export const Combobox: React.FC<ComboboxProps> = ({ options, placeholder, classN
                         <CommandItem
                            key={option.value}
                            value={option.value}
-                           onSelect={(currentValue: (typeof options)[number]['value']) => {
-                              setValue(currentValue === value ? '' : currentValue)
-                              onChange(currentValue === value ? '' : currentValue)
+                           onSelect={(val: (typeof options)[number]['value']) => {
+                              setCurrentValue(val === currentValue ? '' : currentValue)
+                              if (onChange) onChange(val === currentValue ? '' : currentValue)
                               setOpen(false)
                            }}
                         >
                            {option.label}
-                           <CheckIcon className={cn('ml-auto h-4 w-4', value === option.value ? 'opacity-100' : 'opacity-0')} />
+                           <CheckIcon className={cn('ml-auto h-4 w-4', currentValue === option.value ? 'opacity-100' : 'opacity-0')} />
                         </CommandItem>
                      ))}
                   </ScrollArea>

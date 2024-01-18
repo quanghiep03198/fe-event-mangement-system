@@ -1,42 +1,46 @@
-import React, { useState } from 'react'
-import { Icon, Skeleton } from '..'
 import { cn } from '@/common/utils/cn'
+import React, { useEffect, useState } from 'react'
+import { Icon, Skeleton } from '..'
 
 type ImageProps = { fallback?: string } & React.ImgHTMLAttributes<HTMLImageElement>
 
 export const Image: React.FC<ImageProps> = (props) => {
    const [error, setError] = useState<boolean>(false)
-   const [loading, setLoading] = useState<boolean>(false)
+   const [loading, setLoading] = useState<boolean>(true)
 
-   const handleLoad = () => {
+   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      if (props.fallback) e.currentTarget.src = props.fallback
+      setError(true)
       setLoading(false)
    }
 
-   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      setError(true)
-      if (props.fallback) e.currentTarget.src = props.fallback
-   }
+   useEffect(() => {
+      setLoading(false)
+   }, [])
 
    return (
-      <>
-         <Skeleton style={{ width: props.width, height: props.height, display: loading ? 'block' : 'none' }} />
-         <img
-            loading='lazy'
-            className={cn(props.className, { hidden: loading || error })}
-            src={props.src}
-            onLoad={handleLoad}
-            onError={handleError}
-            width={props.width}
-            height={props.height}
-         />
+      <div className='relative'>
+         {loading && <Skeleton className='absolute inset-0 z-10' style={{ width: props.width, height: props.height }} />}
+         {!loading && !error && (
+            <img
+               loading='lazy'
+               className={cn(props.className)}
+               src={props.src}
+               onLoad={() => setLoading(false)}
+               onLoadedMetadata={() => setLoading(false)}
+               onError={handleError}
+               width={props.width}
+               height={props.height}
+            />
+         )}
          {!props.fallback && (
             <div
-               className='!m-0 items-center justify-center rounded-lg bg-accent/50'
+               className={cn(props.className, '!m-0 items-center justify-center rounded-lg bg-accent/50')}
                style={{ width: props.width, height: props.height, display: error ? 'flex' : 'none' }}
             >
                <Icon name='Image' size={32} strokeWidth={1} className='text-muted-foreground/50' />
             </div>
          )}
-      </>
+      </div>
    )
 }

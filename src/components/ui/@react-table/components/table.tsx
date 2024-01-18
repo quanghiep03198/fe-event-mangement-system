@@ -7,6 +7,7 @@ import { TableContext } from '../context/table.context'
 import { TableBodyLoading } from './table-body-loading'
 import { TableCellHead } from './table-cell-head'
 import { cn } from '@/common/utils/cn'
+import ColumnResizer from './column-resizer'
 
 interface TableProps<TData, TValue> extends Omit<DataTableProps<TData, TValue>, 'data' | 'slot'>, React.AllHTMLAttributes<HTMLTableElement> {
    table: TableType<TData>
@@ -17,14 +18,31 @@ export default function TableDataGrid<TData, TValue>({ table, columns, loading, 
 
    return (
       <TableWrapper className='group w-full shadow'>
-         <ScrollArea className={cn({ 'h-[60vh]': table.getRowModel().rows.length > 0 })} onWheel={handleScroll}>
-            <Table {...props}>
-               <TableHeader className='!sticky top-0 z-10'>
+         <ScrollArea className={cn({ 'h-[60vh]': table.getRowModel().rows.length >= 10 })} onWheel={handleScroll}>
+            <Table
+               className='border-separate border-spacing-0'
+               style={{
+                  width: table.getCenterTotalSize(),
+                  minWidth: '100%'
+               }}
+               {...props}
+            >
+               <TableHeader className='!sticky top-0 z-10 border-b'>
                   {table.getHeaderGroups().map((headerGroup) => (
                      <TableRow key={headerGroup.id} className='sticky top-0 hover:bg-background'>
                         {headerGroup.headers.map((header) => (
-                           <TableHead className='border-collapse whitespace-nowrap border-b p-0' key={header.id} colSpan={header.colSpan}>
+                           <TableHead
+                              className='relative whitespace-nowrap border-b p-0'
+                              {...{
+                                 key: header.id,
+                                 colSpan: header.colSpan,
+                                 style: {
+                                    width: header.getSize()
+                                 }
+                              }}
+                           >
                               <TableCellHead table={table} header={header} />
+                              {table.options.enableColumnResizing && <ColumnResizer header={header} />}
                            </TableHead>
                         ))}
                      </TableRow>

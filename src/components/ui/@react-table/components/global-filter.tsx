@@ -1,6 +1,6 @@
 import { Table } from '@tanstack/react-table'
-import { useEffect } from 'react'
-import { Box, Icon } from '../..'
+import { Box, Button, Icon, Popover, PopoverContent, PopoverTrigger } from '../..'
+import Tooltip from '../../@override/tooltip'
 import { DebouncedInput } from './debounced-input'
 
 type GlobalFilterProps<T> = {
@@ -10,23 +10,42 @@ type GlobalFilterProps<T> = {
 }
 
 export function GlobalFilter<T>(props: GlobalFilterProps<T>) {
-   useEffect(() => {
-      if (props.table.getState().columnFilters[0]?.id === 'fullName') {
-         if (props.table.getState().sorting[0]?.id !== 'fullName') {
-            props.table.setSorting([{ id: 'fullName', desc: false }])
-         }
-      }
-   }, [props.table.getState().columnFilters[0]?.id])
-
    return (
-      <Box className='relative w-fit'>
-         <Icon name='Search' className='absolute left-2 top-1/2 -translate-y-1/2' />
-         <DebouncedInput
-            value={props.globalFilter ?? ''}
-            onChange={(value) => props.onGlobalFilterChange(String(value))}
-            className='font-lg border-block border p-2 pl-8 shadow'
-            placeholder='Tìm kiếm ...'
-         />
-      </Box>
+      <>
+         <Box className='relative w-fit sm:hidden'>
+            <Icon name='Search' className='absolute left-2 top-1/2 -translate-y-1/2' />
+            <DebouncedInput
+               value={props.globalFilter ?? ''}
+               onChange={(value) => props.onGlobalFilterChange(String(value))}
+               className='font-lg border p-2 pl-8 shadow'
+               placeholder='Tìm kiếm ...'
+            />
+         </Box>
+      </>
+   )
+}
+
+export function GlobalFilterPopover<T>(props: GlobalFilterProps<T>) {
+   return (
+      <Popover>
+         <Tooltip content='Tìm kiếm'>
+            <PopoverTrigger asChild>
+               <Button variant='outline' size='icon' className='hidden h-8 w-8 sm:inline-flex'>
+                  <Icon name='Search' />
+               </Button>
+            </PopoverTrigger>
+         </Tooltip>
+         <PopoverContent align='center' side='left' sideOffset={4} className='w-fit border-none p-0'>
+            <Box className='relative w-fit'>
+               <Icon name='Search' className='absolute left-2 top-1/2 -translate-y-1/2' />
+               <DebouncedInput
+                  value={props.globalFilter ?? ''}
+                  onChange={(value) => props.onGlobalFilterChange(String(value))}
+                  className='font-lg border p-2 pl-8 shadow'
+                  placeholder='Tìm kiếm ...'
+               />
+            </Box>
+         </PopoverContent>
+      </Popover>
    )
 }

@@ -1,19 +1,20 @@
-import { EventType } from '@/common/types/entities'
+import useQueryParams from '@/common/hooks/use-query-params'
 import { calculatePaginationRange } from '@/common/utils/calculate-pagination-range'
 import { cn } from '@/common/utils/cn'
 import { Box, Button, Icon, buttonVariants } from '@/components/ui'
+import _ from 'lodash'
 import * as qs from 'qs'
 import React from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
 
-type PaginationProps = Pick<Pagination<EventType>, 'page' | 'totalPages' | 'hasNextPage' | 'hasPrevPage'> & { onPrefetch?: () => void }
+type PaginationProps = Pick<Pagination<unknown>, 'page' | 'totalPages' | 'hasNextPage' | 'hasPrevPage'> & { onPrefetch?: () => void }
 
-const Pagination: React.FC<PaginationProps> = ({ page, totalPages, hasNextPage, hasPrevPage, onPrefetch }) => {
+const Pagination: React.FC<PaginationProps> = (props) => {
+   const { page, totalPages, hasNextPage, hasPrevPage, onPrefetch: handlePrefetch } = props
    const navigate = useNavigate()
-   const [params] = useSearchParams()
-   const currentPage = params.get('page') ? Number(params.get('page')) : 1
-
+   const [params] = useQueryParams()
+   const currentPage = params.page ? Number(params.page) : 1
    const paginationRange = calculatePaginationRange(page, totalPages)
 
    return (
@@ -27,7 +28,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, totalPages, hasNextPage, 
                <Link
                   key={pageIndex}
                   to={{ search: qs.stringify({ page: pageIndex }) }}
-                  className={cn(buttonVariants({ variant: page == currentPage ? 'outline' : 'ghost', size: 'icon' }))}
+                  className={cn(buttonVariants({ variant: page == pageIndex ? 'outline' : 'ghost', size: 'icon' }))}
                >
                   {pageIndex}
                </Link>
@@ -36,13 +37,13 @@ const Pagination: React.FC<PaginationProps> = ({ page, totalPages, hasNextPage, 
          <Button
             variant='ghost'
             disabled={!hasNextPage}
-            className='gap-x-2'
-            onMouseEnter={() => {
-               if (onPrefetch) onPrefetch()
-            }}
+            className='flex-row-reverse gap-x-2'
             onClick={() => navigate({ search: qs.stringify({ page: page + 1 }) })}
+            onMouseEnter={() => {
+               if (handlePrefetch) handlePrefetch()
+            }}
          >
-            Next <Icon name='ChevronRight' />
+            <Icon name='ChevronRight' /> Next
          </Button>
       </Box>
    )
