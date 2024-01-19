@@ -37,7 +37,7 @@ export const userApi = createApi({
          query: (payload) => ({ url: '/participants', method: 'POST', data: payload }),
          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),
-      importUsersList: build.mutation<unknown, any>({
+      importUsersList: build.mutation<unknown, FormData>({
          query: (payload) => ({ url: '/importUser', method: 'POST', data: payload }),
          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),

@@ -67,6 +67,8 @@ export class Excel<T> {
       const workbook = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(workbook, worksheet, 'SheetJS')
       /* Generate XLSX file and send to client */
-      return XLSX.writeFile(workbook, fileName + '.xlsx')
+      return XLSX.writeFile(workbook, fileName + '.xlsx', {
+         cellStyles: true
+      })
    }
 }

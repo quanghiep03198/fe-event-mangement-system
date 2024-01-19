@@ -208,9 +208,9 @@ const StudentsListPage: React.FunctionComponent = () => {
             description='Hành động này không thể khôi phục. Người dùng này sẽ bị xóa vĩnh viễn khỏi hệ thống.'
             onConfirm={handleDeleteUser}
          />
-         <input type='file' className='hidden' id='file' onChange={handleImportStudents} />
          <CreateUserFormModal openState={createFormOpenState} onOpenStateChange={setCreateFormOpenState} createForRole={UserRoleEnum.STUDENT} />
          <UpdateUserFormModal openState={updateFormOpenState} onOpenStateChange={setUpdateFormOpenState} defaultValue={userToUpdate} />
+         <input type='file' className='hidden' id='file' onChange={handleImportStudents} />
       </>
    )
 }
