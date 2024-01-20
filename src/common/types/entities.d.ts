@@ -10,7 +10,7 @@ export interface UserInterface extends BaseEntityInterface {
    name: string
    password?: string
    email: string
-   code?: string
+   student_code?: string
    avatar?: string
    phone: string
    role: UserRoleEnum

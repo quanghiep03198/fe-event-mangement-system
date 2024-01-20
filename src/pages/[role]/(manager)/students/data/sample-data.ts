@@ -3,10 +3,10 @@ export const sampleData = {
    data: [
       {
          STT: '',
-         'Mã sinh viên': '',
          'Họ tên': '',
          Email: '',
-         'Số điện thoại': ''
+         'Số điện thoại': '',
+         'Mã sinh viên': ''
       }
    ]
 }

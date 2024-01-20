@@ -30,15 +30,16 @@ import CreateUserFormModal from '../components/shared/create-user-form-modal'
 import UpdateUserFormModal from '../components/shared/update-user-form-modal'
 import { sampleData } from './data/sample-data'
 import { createFormData } from '@/common/utils/form-data'
+import _ from 'lodash'
 
 type TableDataType = UserInterface & { index: number }
 
-const excelHandler = new Excel<Pick<UserInterface, 'name' | 'code' | 'email' | 'phone'> & { index: string }>({
+const excelHandler = new Excel<Pick<UserInterface, 'name' | 'student_code' | 'email' | 'phone'> & { index: number }>({
    index: 'STT',
    name: 'Họ tên',
-   code: 'Mã sinh viên',
    email: 'Email',
-   phone: 'Số điện thoại'
+   phone: 'Số điện thoại',
+   student_code: 'Mã sinh viên'
 })
 
 const StudentsListPage: React.FunctionComponent = () => {
@@ -110,6 +111,15 @@ const StudentsListPage: React.FunctionComponent = () => {
          header: 'Số điện thoại',
          enableColumnFilter: true,
          enableSorting: true
+      }),
+      columnHelper.accessor('student_code', {
+         header: 'Mã sinh viên',
+         enableColumnFilter: true,
+         enableSorting: true,
+         cell: ({ getValue }) => {
+            const value = getValue()
+            return <span className='uppercase'>{value}</span>
+         }
       }),
       columnHelper.accessor('role', {
          header: 'Vai trò',
