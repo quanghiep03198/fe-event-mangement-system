@@ -1,9 +1,9 @@
 import '@/styles/nprogress.css'
 
-import { useEffect } from 'react'
 import nProgress from 'nprogress'
+import { useEffect } from 'react'
 
-const Fallback: React.FunctionComponent = () => {
+const Loading: React.FunctionComponent = () => {
    nProgress.configure({
       showSpinner: false
    })
@@ -18,4 +18,4 @@ const Fallback: React.FunctionComponent = () => {
    return null
 }
 
-export default Fallback
+export default Loading

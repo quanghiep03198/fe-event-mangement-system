@@ -1,3 +1,4 @@
+import useMediaQuery from '@/common/hooks/use-media-query'
 import { cn } from '@/common/utils/cn'
 import { Box, ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui'
 import React, { useState } from 'react'
@@ -9,6 +10,7 @@ import { NotificationProvider } from './context/notification-context'
 
 const NotificationList: React.FunctionComponent = () => {
    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+   const isSmallScreen = useMediaQuery('(min-width:320px) and (max-width: 1023px)')
 
    return (
       <NotificationProvider>
@@ -19,20 +21,20 @@ const NotificationList: React.FunctionComponent = () => {
                <ResizablePanel defaultSize={4} minSize={4} maxSize={4} className='min-w-[4rem] p-3 sm:hidden'>
                   <NotificationMenu />
                </ResizablePanel>
-               <ResizableHandle withHandle className='sm:hidden' />
+               <ResizableHandle withHandle={!isSmallScreen} />
                <ResizablePanel
                   defaultSize={448}
                   minSize={36}
                   maxSize={64}
                   collapsible={true}
-                  className={cn('h-[70vh]', isCollapsed && 'min-w-[24rem] transition-all duration-300 ease-in-out')}
+                  className={cn(isCollapsed && 'min-w-[24rem] transition-all duration-300 ease-in-out')}
                   onExpand={() => setIsCollapsed(false)}
                   onCollapse={() => setIsCollapsed(true)}
                >
                   <NotificationListPanel />
                </ResizablePanel>
-               <ResizableHandle withHandle />
-               <ResizablePanel defaultSize={320} collapsible={true} className='min-w-[16rem]'>
+               <ResizableHandle withHandle={!isSmallScreen} />
+               <ResizablePanel defaultSize={320} collapsible={true} className='min-w-[16rem] sm:hidden md:hidden'>
                   <NotificationDetailsPanel />
                </ResizablePanel>
             </ResizablePanelGroup>

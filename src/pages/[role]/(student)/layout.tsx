@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import Footer from './components/footer'
 import Header from './components/header'
-import Fallback from '@/pages/fallback'
+import Loading from '@/pages/loading'
 
 const Layout: React.FunctionComponent = () => {
    return (
@@ -13,7 +13,7 @@ const Layout: React.FunctionComponent = () => {
       >
          <Header />
          <Box className='h-full min-h-[calc(100vh-240px)] flex-1'>
-            <Suspense fallback={<Fallback />}>
+            <Suspense fallback={<Loading />}>
                <Outlet />
             </Suspense>
          </Box>

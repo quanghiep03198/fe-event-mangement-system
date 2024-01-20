@@ -1,4 +1,4 @@
-import { PaginationHandler } from '@/common/hooks/use-server-pagination'
+import useQueryParams from '@/common/hooks/use-query-params'
 import {
    ColumnDef,
    ColumnFiltersState,
@@ -19,7 +19,6 @@ import { fuzzyFilter } from '../utils/fuzzy-filter.util'
 import TableDataGrid from './table'
 import TablePagination from './table-pagination'
 import TableToolbar from './table-toolbar'
-import useQueryParams from '@/common/hooks/use-query-params'
 
 export interface DataTableProps<TData, TValue> {
    data: Array<TData>
@@ -30,19 +29,9 @@ export interface DataTableProps<TData, TValue> {
    enableColumnResizing?: boolean
    paginationState?: Omit<Pagination<TData>, 'docs'>
    slot?: React.ReactNode
-   onManualPaginate?: PaginationHandler
 }
 
-function DataTable<TData, TValue>({
-   data,
-   columns,
-   loading,
-   manualPagination,
-   slot,
-   paginationState,
-   enableColumnResizing,
-   onManualPaginate
-}: DataTableProps<TData, TValue>) {
+function DataTable<TData, TValue>({ data, columns, loading, manualPagination, slot, paginationState, enableColumnResizing }: DataTableProps<TData, TValue>) {
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
    const [sorting, setSorting] = useState<SortingState>([])
    const [globalFilter, setGlobalFilter] = useState<string>('')

@@ -1,3 +1,4 @@
+import useMediaQuery from '@/common/hooks/use-media-query'
 import useQueryParams from '@/common/hooks/use-query-params'
 import { FeedbackInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
@@ -21,18 +22,29 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import * as qs from 'qs'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
 
 const Feedback: React.FC<{ data: FeedbackInterface }> = ({ data }) => {
    const [params] = useQueryParams()
    const prefetch = usePrefetch('getFeedbackDetails')
+   const isSmallScreen = useMediaQuery('(min-width:320px) and (max-width: 1023px)')
+   const [open, setOpen] = useState<boolean>(false)
 
    return (
-      <Link to={{ search: qs.stringify({ ...params, feedback: data.id }) }} onMouseEnter={() => prefetch(data.id)}>
-         <Card className={cn('duration-200 ease-in-out hover:bg-accent/50', { 'bg-accent/50': params.feedback === String(data.id) })}>
-            <CardHeader className='pb-6 pt-4'>
+      <Link
+         to={{ search: qs.stringify({ ...params, feedback: data.id }) }}
+         onMouseEnter={() => prefetch(data.id)}
+         onClick={(e) => {
+            e.currentTarget.scrollIntoView({ block: 'start', behavior: 'smooth' })
+            if (isSmallScreen) {
+               setOpen(!open)
+            }
+         }}
+      >
+         <Card className={cn('space-y-4 p-4 duration-200 ease-in-out hover:bg-accent/50', { 'bg-accent/50': params.feedback === String(data.id) })}>
+            <CardHeader className='p-0'>
                <Box className='flex flex-row items-center justify-between'>
                   <HoverCard>
                      <HoverCardTrigger asChild>
@@ -63,8 +75,14 @@ const Feedback: React.FC<{ data: FeedbackInterface }> = ({ data }) => {
                </Box>
                <CardDescription className='text-xs text-foreground'>{data?.user?.email}</CardDescription>
             </CardHeader>
-            <CardContent className='spacy-y-0 py-0'>
-               <Paragraph>{data.content}</Paragraph>{' '}
+            <CardContent className='spacy-y-0 p-0'>
+               <Typography
+                  variant='small'
+                  color='muted'
+                  className={cn('line-clamp-2 text-xs', { '!line-clamp-none': isSmallScreen && open && data.id === +params.feedback })}
+               >
+                  {data.content}
+               </Typography>
             </CardContent>
          </Card>
       </Link>
@@ -72,6 +90,5 @@ const Feedback: React.FC<{ data: FeedbackInterface }> = ({ data }) => {
 }
 
 const Time = tw.time`text-xs text-muted-foreground m-0 align-middle`
-const Paragraph = tw.p`text-xs line-clamp-3 mb-6 text-muted-foreground`
 
 export default Feedback

@@ -117,7 +117,7 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './@shadcn/c
 export { HoverCard, HoverCardTrigger, HoverCardContent } from './@shadcn/hover-card'
 export { RadioGroup, RadioGroupItem } from './@shadcn/radio-group'
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './@shadcn/carousel'
-export { Switch } from './switch'
+export { Switch } from './@shadcn/switch'
 // #endregion
 
 // #region Form field controls

@@ -2,6 +2,7 @@ import useQueryParams from '@/common/hooks/use-query-params'
 import { Table } from '@tanstack/react-table'
 import { Box, Button, Icon, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../..'
 import Tooltip from '../../@override/tooltip'
+import { useEffect, useLayoutEffect } from 'react'
 
 type DataTablePaginationProps<TData> = {
    table: Table<TData>

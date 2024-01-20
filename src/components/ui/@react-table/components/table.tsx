@@ -66,7 +66,7 @@ export default function TableDataGrid<TData, TValue>({ table, columns, loading, 
             </Table>
             <ScrollBar orientation='horizontal' />
          </ScrollArea>
-         {table.getRowModel().rows.length === 0 && (
+         {!loading && table.getRowModel().rows.length === 0 && (
             <Box className='flex h-[25vh] w-full items-center justify-center'>
                <Box className='flex items-center justify-center gap-x-2 text-muted-foreground'>
                   <Icon name='PackageOpen' strokeWidth={1} size={32} /> Không có dữ liệu

@@ -26,10 +26,12 @@ const NotificationListPanel: React.FunctionComponent = () => {
    }, [data])
 
    return (
-      <Box className='relative h-[inherit] @container'>
+      <Box className='relative flex h-[32rem] flex-col @container'>
          <Box className='flex h-16 items-center justify-between border-b p-4'>
-            <SearchBox onSearchOptionsChange={setAdvancedSearchOptions} />
-            <Box className='absolute bottom-0 left-1/2 z-10 flex w-full -translate-x-1/2 justify-end border-t bg-background px-4 py-2 @xl:relative @xl:top-0 @xl:!-translate-x-full @xl:justify-end @xl:border-none @xl:p-0'>
+            <Box className='w-full @xl:w-auto'>
+               <SearchBox onSearchOptionsChange={setAdvancedSearchOptions} />
+            </Box>
+            <Box className='hidden justify-end @xl:block'>
                <SimplePagination
                   hasNextPage={data?.hasNextPage!}
                   hasPrevPage={data?.hasPrevPage!}
@@ -39,9 +41,9 @@ const NotificationListPanel: React.FunctionComponent = () => {
             </Box>
          </Box>
 
-         {isLoading && (
-            <Box className='flex flex-col gap-y-2 p-4'>
-               {Array.apply(null, Array(3)).map(() => (
+         <Box className='relative z-10 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-secondary'>
+            {isLoading ? (
+               Array.apply(null, Array(3)).map(() => (
                   <Box className='flex flex-col gap-2 rounded-lg border p-4'>
                      <Skeleton className='h-2 w-1/4 rounded-lg' />
                      <Skeleton className='h-2 w-1/3 rounded-lg' />
@@ -49,19 +51,19 @@ const NotificationListPanel: React.FunctionComponent = () => {
                      <Skeleton className='mt-2 h-2 w-full rounded-lg' />
                      <Skeleton className='h-2 w-full rounded-lg' />
                   </Box>
-               ))}
-            </Box>
-         )}
+               ))
+            ) : Array.isArray(data?.docs) && data?.docs.length > 0 ? (
+               <Box className='flex flex-col gap-y-2 p-4'>{data?.docs?.map((item) => <NotificationCard data={item} key={item.id} />)} </Box>
+            ) : (
+               <Box className='flex h-full items-center justify-center gap-x-4 text-sm text-muted-foreground'>
+                  <Icon name='MailX' size={56} strokeWidth={1} />
+               </Box>
+            )}
+         </Box>
 
-         {Array.isArray(data?.docs) && data?.docs.length > 0 ? (
-            <ScrollArea className='h-[calc(70vh-4rem)] p-4'>
-               <Box className='flex flex-col gap-y-2'>{data?.docs?.map((item) => <NotificationCard data={item} key={item.id} />)} </Box>
-            </ScrollArea>
-         ) : (
-            <Box className='flex h-[calc(70vh-4.5rem)] items-center justify-center gap-x-4 text-sm text-muted-foreground'>
-               <Icon name='MailX' size={56} strokeWidth={1} />
-            </Box>
-         )}
+         <Box className='flex w-full items-center justify-end border-t px-4 py-2 @xl:hidden'>
+            <SimplePagination hasNextPage={data?.hasNextPage!} hasPrevPage={data?.hasPrevPage!} totalDocs={data?.totalDocs!} totalPages={data?.totalPages!} />
+         </Box>
       </Box>
    )
 }

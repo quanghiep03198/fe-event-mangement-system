@@ -1,6 +1,6 @@
 import { EventStatusValues } from '@/common/constants/constants'
 import { EventStatus } from '@/common/constants/enums'
-import useQueryParams from '@/common/hooks/use-query-params'
+import useMediaQuery from '@/common/hooks/use-media-query'
 import { EventInterface, NotificationInterface, UserInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
 import {
@@ -20,16 +20,24 @@ import {
 } from '@/components/ui'
 import { format, formatDistanceToNow } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { NotificationContext } from '../context/notification-context'
 
 const NotificationCard: React.FC<{ data: NotificationInterface }> = ({ data }) => {
    const { selectedNotification, setSelectedNotification } = useContext(NotificationContext)
+   const isSmallScreen = useMediaQuery('(min-width:320px) and (max-width: 1023px)')
+   const [open, setOpen] = useState<boolean>(false)
 
    return (
       <Card
          className={cn('space-y-2 p-4 duration-200 ease-in-out hover:bg-accent/50', { 'bg-accent': selectedNotification?.id === data.id })}
-         onClick={() => setSelectedNotification(data)}
+         onClick={(e) => {
+            e.currentTarget.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+            setSelectedNotification(data)
+            if (isSmallScreen) {
+               setOpen(!open)
+            }
+         }}
       >
          <CardHeader className='p-0'>
             <Box className='flex flex-row items-center justify-between'>
@@ -43,14 +51,17 @@ const NotificationCard: React.FC<{ data: NotificationInterface }> = ({ data }) =
             </Box>
          </CardHeader>
          <CardContent className='space-y-2 p-0'>
-            <Typography variant='small' className='line-clamp-1 text-xs font-semibold'>
+            <Typography variant='small' className={'line-clamp-1 text-xs font-semibold'}>
                {data.title}
             </Typography>
-            <Typography variant='small' color='muted' className='line-clamp-2 text-xs' dangerouslySetInnerHTML={{ __html: data.content }} />
+            <Typography
+               variant='small'
+               color='muted'
+               className={cn('line-clamp-2 text-xs', { '!line-clamp-none': isSmallScreen && open && selectedNotification.id === data.id })}
+               dangerouslySetInnerHTML={{ __html: data.content }}
+            />
          </CardContent>
       </Card>
-      // <Link to={{ search: qs.stringify({ ...params, id: data.id }) }} onMouseEnter={() => prefetch({ id: String(data.id), params: { type: 'deleted' } })}>
-      // </Link>
    )
 }
 

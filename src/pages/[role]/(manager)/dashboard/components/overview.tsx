@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardDescription, CardHeader, CardTitle, DropdownSelect, Icon } from '@/components/ui'
+import { Box, Card, CardContent, CardDescription, CardHeader, CardTitle, DropdownSelect, Icon, ScrollArea, ScrollBar } from '@/components/ui'
 import { useGetStudentStatisticsQuery } from '@/redux/apis/statistics.api'
 import { useState } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
@@ -24,13 +24,16 @@ export function Overview() {
             </Box>
          </CardHeader>
          <CardContent className='pl-2'>
-            <ResponsiveContainer width='100%' height={350}>
-               <BarChart data={data}>
-                  <XAxis dataKey='name' stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke='#888888' fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
-                  <Bar dataKey='total' fill='currentColor' radius={[4, 4, 0, 0]} className='fill-primary' />
-               </BarChart>
-            </ResponsiveContainer>
+            <ScrollArea>
+               <ResponsiveContainer width='100%' height={360}>
+                  <BarChart data={data}>
+                     <XAxis dataKey='name' stroke='hsl(var(--muted-foreground))' fontSize={12} tickLine={false} axisLine={false} />
+                     <YAxis stroke='hsl(var(--muted-foreground))' fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
+                     <Bar dataKey='total' fill='currentColor' radius={[4, 4, 0, 0]} className='fill-primary' />
+                  </BarChart>
+               </ResponsiveContainer>
+               <ScrollBar orientation='horizontal' />
+            </ScrollArea>
          </CardContent>
       </Card>
    )

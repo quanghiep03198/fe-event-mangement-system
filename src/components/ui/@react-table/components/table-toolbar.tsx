@@ -27,7 +27,7 @@ export default function TableToolbar<TData>(props: TableToolbarProps<TData>) {
             {isFiltered && (
                <Tooltip content='Xóa lọc'>
                   <Button variant='destructive' size='icon' onClick={onClearAllFilters} className='h-8 w-8'>
-                     <Icon name='XCircle' />
+                     <Icon name='X' />
                   </Button>
                </Tooltip>
             )}

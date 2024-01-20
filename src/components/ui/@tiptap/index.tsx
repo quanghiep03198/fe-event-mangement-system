@@ -44,7 +44,7 @@ export const Editor: React.FC<EditorProps> = memo(({ content, id, disabled, name
    return (
       <Box className='flex w-full max-w-full flex-col items-stretch divide-y divide-border overflow-x-clip rounded-lg border shadow'>
          <Toolbar editor={editor} />
-         <ScrollArea className='[content: h-[75vh] w-full max-w-full overflow-auto'>
+         <ScrollArea className='h-[32rem] w-full max-w-full overflow-auto'>
             <EditorContent id={id} editor={editor} name={name} controls={true} content={content} />
          </ScrollArea>
          <BubbleMenu editor={editor} />

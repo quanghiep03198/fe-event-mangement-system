@@ -58,7 +58,7 @@ const NotificationDetailsPanel: React.FunctionComponent = () => {
             </Box>
             {selectedNotification ? (
                <>
-                  <Box className='flex justify-between divide-y divide-border border-b p-4'>
+                  <Box className='flex h-[72px] justify-between divide-y divide-border border-b p-4'>
                      <Box className='flex space-x-4'>
                         <Avatar className='h-8 w-8'>
                            <AvatarImage src={selectedNotification?.create_by?.avatar} />

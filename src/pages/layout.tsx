@@ -3,7 +3,7 @@ import { metadata } from '@/configs/metadata.config'
 import { useAppSelector } from '@/redux/hook'
 import React, { Suspense, useLayoutEffect } from 'react'
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom'
-import Fallback from './fallback'
+import Loading from './loading'
 
 const RootLayout: React.FunctionComponent = () => {
    const { pathname } = useLocation()
@@ -17,7 +17,7 @@ const RootLayout: React.FunctionComponent = () => {
    }, [pathname])
 
    return (
-      <Suspense fallback={<Fallback />}>
+      <Suspense fallback={<Loading />}>
          <Outlet />
       </Suspense>
    )

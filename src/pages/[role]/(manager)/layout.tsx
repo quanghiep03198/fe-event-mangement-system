@@ -3,7 +3,7 @@ import { Paths } from '@/common/constants/pathnames'
 import useMediaQuery from '@/common/hooks/use-media-query'
 import { cn } from '@/common/utils/cn'
 import ErrorBoundary from '@/components/shared/error-boundary'
-import Fallback from '@/pages/fallback'
+import Loading from '@/pages/loading'
 import { Box, ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui'
 import { Suspense, useState } from 'react'
 import { Outlet } from 'react-router-dom'
@@ -72,11 +72,11 @@ const Layout: React.FunctionComponent = () => {
             </ResizablePanel>
             <ResizableHandle withHandle={isLargeScreen || isExtraLargeScreen} />
             <ResizablePanel>
-               <Box className='h-screen max-w-full overflow-y-scroll bg-background scrollbar-thin scrollbar-thumb-border'>
+               <Box className='h-screen max-w-full overflow-y-scroll bg-background scrollbar-thin scrollbar-thumb-secondary'>
                   <NavHeader openState={open} onOpenStateChange={setOpen} />
-                  <Box as='section' className='p-10 sm:p-3'>
+                  <Box as='section' className='p-10 sm:p-2 md:p-4'>
                      <ErrorBoundary>
-                        <Suspense fallback={<Fallback />}>
+                        <Suspense fallback={<Loading />}>
                            <Outlet />
                         </Suspense>
                      </ErrorBoundary>

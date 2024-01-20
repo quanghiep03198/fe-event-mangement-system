@@ -57,7 +57,7 @@ const EventListPage: React.FunctionComponent = () => {
       columnHelper.accessor('location', {
          header: 'Địa điểm',
          enableColumnFilter: true,
-         size: 320
+         size: 240
       }),
       columnHelper.accessor('start_time', {
          header: 'Thời gian bắt đầu',
