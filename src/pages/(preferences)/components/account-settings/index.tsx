@@ -15,7 +15,7 @@ type FormValue = z.infer<typeof UpdateUserSchema>
 
 const AccountSettingsPanel: React.FunctionComponent = () => {
    return (
-      <Box className='relative z-10 mx-auto w-full max-w-7xl rounded-lg border bg-background shadow-2xl'>
+      <Box className='relative z-10 mx-auto w-full max-w-7xl rounded-lg border bg-background'>
          <Box className='space-y-1 border-b px-8 py-4 sm:px-4'>
             <Typography variant='h6' className='mb-0'>
                Tài khoản

@@ -6,7 +6,7 @@ import { cn } from '@/common/utils/cn'
 import { Badge, Box, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, Icon, Image, Typography } from '@/components/ui'
 import { usePrefetch } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
-import { format } from 'date-fns'
+import { addDays, format, isAfter, isBefore } from 'date-fns'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import FeedbackFormModal from './feedback-form-modal'
@@ -25,7 +25,7 @@ export const EventVerticalCard: React.FC<{
             </CardHeader>
             <CardContent className='grid gap-y-2 px-3 py-2'>
                <Box className='flex items-center justify-between'>
-                  <Link className='line-clamp-1 font-medium' to='#'>
+                  <Link className='line-clamp-1 font-medium underline-offset-2 hover:underline' to='#'>
                      {data?.name}
                   </Link>
                   {data?.status_join === JoinEventStatus.ALREADY && (
@@ -34,13 +34,13 @@ export const EventVerticalCard: React.FC<{
                      </Tooltip>
                   )}
                </Box>
-               <CardDescription className='mb-2 inline-flex items-center space-x-2'>
+               <CardDescription className='inline-flex items-center space-x-2'>
                   <Icon name='Calendar' />
                   <time>
                      {format(data?.start_time, 'dd/MM/yyyy')} - {format(data?.end_time, 'dd/MM/yyyy')}
                   </time>
                </CardDescription>
-               <CardDescription className='mb-2 flex items-center space-x-2'>
+               <CardDescription className='flex items-center space-x-2'>
                   <Icon name='User' className='basis-4' />
                   <span className='line-clamp-1'>{data?.user?.name}</span>
                </CardDescription>
@@ -79,17 +79,17 @@ export const EventHorizontalCard: React.FC<{ data: EventInterface }> = ({ data }
 
             <Box className='flex flex-col justify-between'>
                <Box className='space-y-2'>
-                  <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data?.id))}>
+                  <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data?.id))} className='underline-offset-2 hover:underline'>
                      {' '}
                      <Typography className='capitalize'>{data?.name}</Typography>
                   </Link>
-                  <p className='flex items-center space-x-2 text-sm text-muted-foreground'>
+                  <Typography variant='small' className='flex items-center gap-x-2 text-sm text-muted-foreground'>
                      <Icon name='Clock' />
-                     <time>
-                        {format(data?.start_time, 'dd/MM/yyyy')} - {format(data?.end_time, 'dd/MM/yyyy')}
-                     </time>
-                  </p>
-                  <p className='line-clamp-2 text-sm leading-tight text-muted-foreground sm:line-clamp-1'>{data?.description}</p>
+                     {format(data?.start_time, 'dd/MM/yyyy')} - {format(data?.end_time, 'dd/MM/yyyy')}
+                  </Typography>
+                  <Typography variant='small' color='muted' className='flex items-center gap-x-2'>
+                     <Icon name='Users' /> {data?.attendances.length} người tham gia
+                  </Typography>
                   <Badge
                      variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
                      className='w-fit'
@@ -97,13 +97,19 @@ export const EventHorizontalCard: React.FC<{ data: EventInterface }> = ({ data }
                      {EventStatusValues.get(data.status)}
                   </Badge>
                </Box>
-               <Box className='flex items-end justify-end gap-x-2 self-end'>
-                  {data.status_feedback === FeedbackStatus.ALREADY ? (
+               <Box className='flex items-stretch justify-end gap-x-2 self-end'>
+                  {data.status_feedBack_join === FeedbackStatus.ALREADY ? (
                      <Badge className='gap-x-2' variant='success'>
                         <Icon name='CheckCircle' /> Đã feedback
                      </Badge>
                   ) : (
-                     <Button variant='outline' className='gap-x-2' size='sm' disabled={data?.status === EventStatus.INACTIVE} onClick={() => setOpen(true)}>
+                     <Button
+                        variant='outline'
+                        className='gap-x-2'
+                        size='sm'
+                        disabled={isBefore(new Date(), new Date(data.start_time)) || isAfter(new Date(), new Date(addDays(new Date(data.end_time), 1)))}
+                        onClick={() => setOpen(true)}
+                     >
                         <Icon name='Reply' /> Feedback
                      </Button>
                   )}

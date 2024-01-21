@@ -28,11 +28,11 @@ export interface EventInterface extends BaseEntityInterface {
    content: string
    status: any
    status_join: JoinEventStatus
-   status_feedback: FeedbackStatus
+   status_feedBack_join: FeedbackStatus
    user_id: number
    user?: Partial<UserInterface>
    feedback?: FeedbackInterface[]
-   attendances: Partial<UserInterface>[]
+   attendances: Partial<UserInterface & { status_feedback: FeedbackStatus }>[]
 }
 
 export interface StatisticsInterface {

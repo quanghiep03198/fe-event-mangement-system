@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { EventStatus, JoinEventStatus } from '@/common/constants/enums'
+import { EventStatus, FeedbackStatus, JoinEventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import { UserInterface } from '@/common/types/entities'
 import { Badge, Box, Button, Icon } from '@/components/ui'
@@ -19,7 +19,6 @@ const EventDetailsPage: React.FunctionComponent = () => {
    const { data: eventDetails } = useGetEventDetailsQuery(id!)
    const { user, authenticated } = useAppSelector((state) => state.auth)
    const [participateInEvent] = useParticipateInEventMutation()
-   // const { data: attendeeInfo } = useGetAttendeeInfoQuery(id!, { skip: !authenticated })
    const [openFeedbackFormState, setOpenFeedbackFormState] = useState<boolean>(false)
 
    const navigate = useNavigate()
@@ -42,18 +41,8 @@ const EventDetailsPage: React.FunctionComponent = () => {
          <Box className='mx-auto flex w-full max-w-7xl flex-col gap-y-10 p-4 py-10'>
             {/* Top-bar */}
             <Box className='flex items-center justify-between sm:flex-col sm:items-start sm:gap-y-4'>
-               <Breadcrumbs name={eventDetails?.name!} currentPath={Paths.HOME + '/' + eventDetails?.id} />
-               <Box className='flex items-center gap-x-2'>
-                  {eventDetails?.status_join === JoinEventStatus.ALREADY && (
-                     <Button
-                        variant='outline'
-                        className='gap-x-2'
-                        disabled={eventDetails.status === EventStatus.INACTIVE}
-                        onClick={() => setOpenFeedbackFormState(true)}
-                     >
-                        <Icon name='Reply' /> Feedback
-                     </Button>
-                  )}
+               <Breadcrumbs name={eventDetails?.name!} currentPath={Paths.EVENTS_BOARD + '/' + eventDetails?.id} />
+               <Box className='flex items-stretch gap-x-2'>
                   {eventDetails?.status_join === JoinEventStatus.ALREADY ? (
                      <Badge variant='success' className='h-9 gap-x-2'>
                         <Icon name='CheckCircle' /> Đã đăng ký
@@ -89,7 +78,7 @@ const EventDetailsPage: React.FunctionComponent = () => {
             <Box className='flex flex-grow items-stretch justify-between gap-10 sm:flex-col md:flex-col'>
                <Box
                   as='article'
-                  className='sm: prose w-full max-w-3xl basis-3/4 text-foreground sm:mx-auto sm:max-w-full md:mx-auto md:max-w-full'
+                  className='sm: prose w-full max-w-4xl basis-3/4 text-foreground sm:mx-auto sm:max-w-full md:mx-auto md:max-w-full'
                   dangerouslySetInnerHTML={{ __html: eventDetails?.content! }}
                />
             </Box>
