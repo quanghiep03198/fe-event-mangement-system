@@ -83,7 +83,6 @@ const EventDetailsPage: React.FunctionComponent = () => {
                />
             </Box>
          </Box>
-         <FeedbackFormModal open={openFeedbackFormState} onOpenChange={setOpenFeedbackFormState} eventId={id!} sender={user as Partial<UserInterface>} />
       </>
    )
 }
