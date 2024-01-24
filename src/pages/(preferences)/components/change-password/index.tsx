@@ -17,11 +17,10 @@ import { z } from 'zod'
 type FormValue = z.infer<typeof ChangePasswordSchema>
 
 const ChangePasswordPanel: React.FunctionComponent = () => {
-   const isCorrectCurrentPasswordRef = useRef<boolean>(false)
    const user = useAppSelector((state) => state.auth.user)
    const form = useForm<FormValue>({
       resolver: zodResolver(ChangePasswordSchema),
-      mode: 'onBlur'
+      mode: 'onChange'
    })
    const [changePassword, { isLoading }] = useUpdateUserInfoMutation()
    const navigate = useNavigate()
@@ -40,9 +39,9 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
    const handleCheckCurrentPassword: React.ChangeEventHandler<HTMLInputElement> = debounce(async (e) => {
       try {
          const response = (await axiosInstance.post('/check-password', { email: user.email, password: e.target.value })) as HttpResponse<boolean>
-         isCorrectCurrentPasswordRef.current = response.metadata
+         if (response.status === 'success') form.clearErrors('currentPassword')
       } catch (error) {
-         form.setError('currentPassword', error.response.data.metadata)
+         form.setError('currentPassword', { message: error.response.data.message })
       }
    }, 500)
 

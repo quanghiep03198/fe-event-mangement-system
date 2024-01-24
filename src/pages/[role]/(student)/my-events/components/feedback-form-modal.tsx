@@ -21,6 +21,7 @@ import {
    RadioGroupItem,
    TextareaFieldControl
 } from '@/components/ui'
+import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
 import { eventApi } from '@/redux/apis/event.api'
 import { useCreateFeedbackMutation } from '@/redux/apis/feedback.api'
 import { FeedbackSchema } from '@/schemas/feedback.schema'
@@ -28,7 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AnyAction } from '@reduxjs/toolkit'
 import { QueryActionCreatorResult } from '@reduxjs/toolkit/query'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { ControllerRenderProps, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
@@ -53,11 +54,11 @@ const ratingValues = [
 ]
 
 const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
-   const dispatch = useDispatch()
-   const [params] = useQueryParams('page')
-
    const form = useForm<FormValue>({
-      resolver: zodResolver(FeedbackSchema)
+      resolver: zodResolver(FeedbackSchema),
+      defaultValues: {
+         rating: 4
+      }
    })
 
    const [createFeedback, { isLoading }] = useCreateFeedbackMutation()
@@ -97,31 +98,36 @@ const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
                      render={({ field }) => (
                         <FormItem>
                            <FormLabel className='block'>Đánh giá</FormLabel>
-                           <FormControl>
-                              <RadioGroup
-                                 className='relative inline-flex items-center gap-x-1'
-                                 onValueChange={(value) => {
-                                    field.onChange(value)
-                                 }}
-                              >
-                                 {ratingValues.map((item) => (
-                                    <FormItem key={item.id}>
-                                       <FormControl>
-                                          <RadioGroupItem value={item.value} className='hidden' />
-                                       </FormControl>
-                                       <FormLabel>
-                                          <Icon
-                                             stroke='hsl(var(--primary))'
-                                             name='Star'
-                                             fill={+field.value! >= +item.value ? 'hsl(var(--primary))' : 'hsl(var(--background))'}
-                                          />
-                                       </FormLabel>
-                                    </FormItem>
-                                 ))}
-                              </RadioGroup>
-                           </FormControl>
+                           <StarRatingRadioGroup name='rating' field={field} defaultValue={'0'} />
                            <FormMessage />
                         </FormItem>
+                        // <FormItem>
+                        //    <FormLabel className='block'>Đánh giá</FormLabel>
+                        //    <FormControl>
+                        //       <RadioGroup
+                        //          className='relative inline-flex items-center gap-x-1'
+                        //          onValueChange={(value) => {
+                        //             field.onChange(value)
+                        //          }}
+                        //       >
+                        //          {ratingValues.map((item) => (
+                        //             <FormItem key={item.id}>
+                        //                <FormControl>
+                        //                   <RadioGroupItem value={item.value} className='hidden' />
+                        //                </FormControl>
+                        //                <FormLabel>
+                        //                   <Icon
+                        //                      stroke='hsl(var(--primary))'
+                        //                      name='Star'
+                        //                      fill={+field.value! >= +item.value ? 'hsl(var(--primary))' : 'hsl(var(--background))'}
+                        //                   />
+                        //                </FormLabel>
+                        //             </FormItem>
+                        //          ))}
+                        //       </RadioGroup>
+                        //    </FormControl>
+                        //    <FormMessage />
+                        // </FormItem>
                      )}
                   />
                   <TextareaFieldControl name='content' control={form.control} label='Nội dung' rows={5} />

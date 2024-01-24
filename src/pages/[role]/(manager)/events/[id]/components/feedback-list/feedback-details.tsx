@@ -1,6 +1,7 @@
 import useQueryParams from '@/common/hooks/use-query-params'
 import { FeedbackInterface } from '@/common/types/entities'
-import { Avatar, AvatarFallback, AvatarImage, Box, Button, Icon, ScrollArea, Separator, Textarea, Toggle } from '@/components/ui'
+import { Avatar, AvatarFallback, AvatarImage, Box, Button, Icon, ScrollArea, Separator, Textarea, Toggle, Typography } from '@/components/ui'
+import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteFeedbackMutation, useGetFeedbackDetailsQuery } from '@/redux/apis/feedback.api'
@@ -13,9 +14,7 @@ const FeedbackDetails: React.FunctionComponent = () => {
    const [deleteFeedback] = useDeleteFeedbackMutation()
    const [open, setOpen] = useState<boolean>(false)
    const [params] = useQueryParams('feedback')
-
    const { data } = useGetFeedbackDetailsQuery(params.feedback)
-   console.log(data)
 
    const handleDeleteFeedback = () => {
       toast.promise(deleteFeedback(data?.id).unwrap, {
@@ -75,9 +74,10 @@ const FeedbackDetails: React.FunctionComponent = () => {
                </Box>
             )}
 
-            <Box className='flex-1 p-3'>
+            <Box className='flex flex-1 flex-col gap-y-4 p-3'>
+               <StarRatingRadioGroup defaultValue={data?.rating ? String(data.rating) : '4'} disabled />
                <ScrollArea className='h-[calc(55vh-4.75rem)]'>
-                  <Paragraph>{data?.content}</Paragraph>
+                  <Typography variant='small'>{data?.content}</Typography>
                </ScrollArea>
             </Box>
 

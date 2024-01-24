@@ -15,9 +15,13 @@ import {
    HoverCard,
    HoverCardContent,
    HoverCardTrigger,
+   Label,
+   RadioGroup,
+   RadioGroupItem,
    Typography
 } from '@/components/ui'
-import { useGetFeedbackDetailsQuery, usePrefetch } from '@/redux/apis/feedback.api'
+import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
+import { usePrefetch } from '@/redux/apis/feedback.api'
 import { format, formatDistanceToNow } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
@@ -76,6 +80,7 @@ const Feedback: React.FC<{ data: FeedbackInterface }> = ({ data }) => {
                <CardDescription className='text-xs text-foreground'>{data?.user?.email}</CardDescription>
             </CardHeader>
             <CardContent className='spacy-y-0 p-0'>
+               <StarRatingRadioGroup defaultValue={data?.rating ? String(data?.rating) : '4'} disabled />
                <Typography
                   variant='small'
                   color='muted'
