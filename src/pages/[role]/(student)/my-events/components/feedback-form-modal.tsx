@@ -105,7 +105,7 @@ const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
                                  }}
                               >
                                  {ratingValues.map((item) => (
-                                    <FormItem>
+                                    <FormItem key={item.id}>
                                        <FormControl>
                                           <RadioGroupItem value={item.value} className='hidden' />
                                        </FormControl>

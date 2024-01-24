@@ -9,8 +9,6 @@ import { debounce, isEmpty } from 'lodash'
 import * as qs from 'qs'
 import { NavLink, matchPath, useLocation, useNavigate } from 'react-router-dom'
 
-type Props = {}
-
 const postedTimeOptions: Record<'label' | 'value', string>[] = [
    { label: 'Mới nhất', value: 'latest' },
    { label: 'Cũ nhất', value: 'oldest' }

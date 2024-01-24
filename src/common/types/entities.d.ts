@@ -50,6 +50,7 @@ export interface StatisticsInterface {
 
 export interface FeedbackInterface extends BaseEntityInterface {
    id: number
+   rating:number,
    content: string
    user_id: number
    event_id: number
