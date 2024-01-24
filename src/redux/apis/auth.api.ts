@@ -16,7 +16,7 @@ export const authApi = createApi({
    baseQuery: axiosBaseQuery(),
    endpoints: (build) => {
       return {
-         signin: build.mutation<SuccessResponse<SigninMetadata>, SigninPayload>({
+         signin: build.mutation<HttpResponse<SigninMetadata>, SigninPayload>({
             query: (payload) => ({ url: '/login', method: 'POST', data: payload }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                const { data } = await queryFulfilled
@@ -26,10 +26,10 @@ export const authApi = createApi({
          }),
          updateUserInfo: build.mutation<Partial<UserInterface>, Partial<UserInterface>>({
             query: (payload) => ({ url: '/updateUser', method: 'PATCH', data: payload }),
-            transformResponse: (response: SuccessResponse<Partial<UserInterface>>) => response.metadata!,
+            transformResponse: (response: HttpResponse<Partial<UserInterface>>) => response.metadata!,
             invalidatesTags: tagTypes
          }),
-         signup: build.mutation<SuccessResponse<SignupMetadata>, SignupPayload>({
+         signup: build.mutation<HttpResponse<SignupMetadata>, SignupPayload>({
             query: (payload) => ({ url: '/register', method: 'POST', data: payload })
          })
       }

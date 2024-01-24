@@ -12,6 +12,7 @@ import {
    DropdownMenuItem,
    Icon,
    Label,
+   Typography,
    buttonVariants
 } from '@/components/ui'
 import Tooltip from '@/components/ui/@override/tooltip'
@@ -53,7 +54,7 @@ const ParticipantsList: React.FunctionComponent = () => {
          header: 'Họ tên',
          enableSorting: true,
          enableColumnFilter: true,
-         size: 384,
+         size: 256,
          cell: ({ getValue, row }) => {
             const username = getValue()
             return (
@@ -75,8 +76,12 @@ const ParticipantsList: React.FunctionComponent = () => {
       columnHelper.accessor('user.phone', {
          header: 'Số điện thoại',
          enableColumnFilter: true,
-
-         cell: ({ getValue }) => getValue() ?? <span className='italic text-muted-foreground'>Chưa cập nhật</span>
+         cell: ({ getValue }) =>
+            getValue() ?? (
+               <Typography variant='p' color='muted'>
+                  Chưa cập nhật
+               </Typography>
+            )
       }),
       columnHelper.accessor('user.role', {
          header: 'Vai trò',

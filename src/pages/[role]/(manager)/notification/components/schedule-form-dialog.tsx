@@ -2,7 +2,8 @@ import { Box, Button, Calendar, Dialog, DialogContent, DialogFooter, Form, FormF
 import TimePicker from '@/components/ui/@custom/time-picker'
 import { TimeSendSchema } from '@/schemas/notification.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { compareDesc, format, isAfter, isBefore } from 'date-fns'
+import { format, isAfter } from 'date-fns'
+import { pick } from 'lodash'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -10,7 +11,7 @@ import { z } from 'zod'
 type ScheduleFormDialogProps = {
    openState: boolean
    defaultValue?: string
-   timeEnd?: string
+   maxValue?: string | Date
    onOpenStateChange: React.Dispatch<React.SetStateAction<boolean>>
    onValueChange: (value: string | null) => void
 }
@@ -19,7 +20,7 @@ type FormValue = z.infer<ReturnType<typeof TimeSendSchema>>
 
 const ScheduleFormDialog: React.FC<ScheduleFormDialogProps> = (props) => {
    const form = useForm<FormValue>({
-      resolver: zodResolver(TimeSendSchema({ timeEnd: props.timeEnd }))
+      resolver: zodResolver(TimeSendSchema(pick(props, ['maxValue'])))
    })
 
    useEffect(() => {
@@ -43,7 +44,7 @@ const ScheduleFormDialog: React.FC<ScheduleFormDialogProps> = (props) => {
 
    return (
       <Dialog open={props.openState} onOpenChange={props.onOpenStateChange}>
-         <DialogContent className='w-fit pt-10'>
+         <DialogContent className='w-full max-w-xl pt-10 sm:max-w-xs'>
             <Form {...form}>
                <form
                   onSubmit={(e) => {
@@ -52,7 +53,7 @@ const ScheduleFormDialog: React.FC<ScheduleFormDialogProps> = (props) => {
                   }}
                   className='flex flex-col items-stretch gap-6'
                >
-                  <Box className='flex divide-x divide-border sm:flex-col'>
+                  <Box className='grid grid-cols-2 divide-x divide-border sm:grid-cols-1 sm:gap-y-4 sm:divide-x-0'>
                      <FormField
                         name='date'
                         control={form.control}
@@ -61,9 +62,10 @@ const ScheduleFormDialog: React.FC<ScheduleFormDialogProps> = (props) => {
                               <Calendar
                                  mode='single'
                                  selected={new Date(field.value)}
-                                 className='w-fit py-0'
+                                 className='w-full py-0'
+                                 fromDate={new Date()}
                                  onSelect={field.onChange}
-                                 disabled={(date) => isBefore(date, new Date()) || isAfter(date, new Date(props.timeEnd))}
+                                 disabled={(date) => isAfter(date, new Date(props.maxValue))}
                               />
                               <FormMessage />
                            </FormItem>
@@ -80,7 +82,7 @@ const ScheduleFormDialog: React.FC<ScheduleFormDialogProps> = (props) => {
                                     field.onChange(value)
                                  }}
                               />
-                              <FormMessage />
+                              <FormMessage className='pl-4' />
                            </FormItem>
                         )}
                      />

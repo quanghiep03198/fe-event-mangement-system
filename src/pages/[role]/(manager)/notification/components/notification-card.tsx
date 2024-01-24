@@ -30,7 +30,7 @@ const NotificationCard: React.FC<{ data: NotificationInterface }> = ({ data }) =
 
    return (
       <Card
-         className={cn('space-y-2 p-4 duration-200 ease-in-out hover:bg-accent/50', { 'bg-accent': selectedNotification?.id === data.id })}
+         className={cn('m-0 flex flex-col gap-y-2 p-4 duration-200 ease-in-out hover:bg-accent/50', { 'bg-accent': selectedNotification?.id === data.id })}
          onClick={(e) => {
             e.currentTarget.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
             setSelectedNotification(data)
@@ -65,7 +65,7 @@ const NotificationCard: React.FC<{ data: NotificationInterface }> = ({ data }) =
    )
 }
 
-const SenderInfoHoverCard: React.FC<{ data: Partial<UserInterface> }> = ({ data }) => (
+export const SenderInfoHoverCard: React.FC<{ data: Partial<UserInterface> }> = ({ data }) => (
    <HoverCard>
       <HoverCardTrigger asChild>
          <Button variant='link' className='h-fit gap-x-2 p-0 capitalize text-foreground'>
@@ -95,11 +95,11 @@ const SenderInfoHoverCard: React.FC<{ data: Partial<UserInterface> }> = ({ data 
    </HoverCard>
 )
 
-const EventInfoHoverCard: React.FC<{ data: Partial<EventInterface> }> = ({ data }) => (
+export const EventInfoHoverCard: React.FC<{ data: Partial<EventInterface>; buttonText?: string }> = ({ data, buttonText }) => (
    <HoverCard openDelay={2} closeDelay={2}>
       <HoverCardTrigger asChild>
          <Button variant='link' className='h-fit w-fit gap-x-2 p-0 text-xs text-foreground'>
-            {data?.name}
+            {buttonText ?? data?.name}
          </Button>
       </HoverCardTrigger>
       <HoverCardContent align='start' className='max-w-[12rem] space-y-2'>
@@ -111,8 +111,8 @@ const EventInfoHoverCard: React.FC<{ data: Partial<EventInterface> }> = ({ data 
             <Box
                className={cn('h-2 w-2 rounded-full bg-success ring-2 ring-border', {
                   'bg-success': data?.status === EventStatus.ACTIVE,
-                  'bg-yellow-500': data.status === EventStatus.UPCOMING,
-                  'bg-destructive': data.status === EventStatus.INACTIVE
+                  'bg-yellow-500': data?.status === EventStatus.UPCOMING,
+                  'bg-destructive': data?.status === EventStatus.INACTIVE
                })}
             />
             {EventStatusValues.get(data?.status ?? 2)}

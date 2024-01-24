@@ -1,5 +1,7 @@
+import { areaOptions } from '@/common/constants/area-options'
+import { UserRoleEnum } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
-import { cn } from '@/common/utils/cn'
+import useCloudinaryUpload from '@/common/hooks/use-cloudinary'
 import {
    Box,
    Button,
@@ -15,37 +17,40 @@ import {
    Input,
    InputFieldControl,
    Label,
-   Typography,
-   buttonVariants
+   SelectFieldControl,
+   TextareaFieldControl,
+   Typography
 } from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
 import { useCreateEventMutation } from '@/redux/apis/event.api'
-import { useAppSelector } from '@/redux/hook'
 import { CreateEventSchema } from '@/schemas/event.schema'
-import { Cloudinary } from '@/services/cloudinary.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Fragment, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import UserComboboxFieldControl from '../components/user-combobox-field-control'
 
 type FormValue = z.infer<typeof CreateEventSchema>
 
 const CreateEventPage = () => {
-   const form = useForm<FormValue>({ resolver: zodResolver(CreateEventSchema) })
-   const [createEvent, { isLoading }] = useCreateEventMutation()
-   const navigate = useNavigate()
-   const user = useAppSelector((state) => state.auth.user)
    const [image, setImage] = useState<string>('')
    const [fileValue, setFileValue] = useState<string>('')
+   const form = useForm<FormValue>({ resolver: zodResolver(CreateEventSchema) })
 
-   console.log(image)
+   const navigate = useNavigate()
+   const [createEvent, { isLoading }] = useCreateEventMutation()
+   const [uploadImage, isUploading, isUploadError] = useCloudinaryUpload()
 
    const handleCreateEvent = async (data: FormValue) => {
-      const banner = await Cloudinary.upload(data.banner[0])
-
-      toast.promise(createEvent({ ...data, banner, user_id: user?.id }).unwrap(), {
+      toast.loading('Đang tải lên ảnh ...')
+      const banner = await uploadImage(data.banner[0])
+      if (isUploadError) {
+         toast.error('Tải lên ảnh thất bại')
+         return
+      }
+      toast.promise(createEvent({ ...data, banner }).unwrap(), {
          loading: 'Đang tạo sự kiện ...',
          success: () => {
             navigate(Paths.EVENTS_LIST)
@@ -61,27 +66,52 @@ const CreateEventPage = () => {
             <Box className='flex items-center justify-between border-b py-4'>
                <Box className='space-y-2'>
                   <Typography variant='h6'>Thêm sự kiện</Typography>
-                  <p className='text-sm text-muted-foreground'>Nhập thông tin để đăng tải sự kiện</p>
+                  <Typography variant='small' color='muted'>
+                     Nhập thông tin để đăng tải sự kiện
+                  </Typography>
                </Box>
-               <Label
-                  htmlFor='submit'
-                  className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'gap-x-2 sm:hidden', { 'pointer-events-none opacity-50': isLoading })}
-               >
-                  <Icon name='CheckCircle' />
-                  Lưu
-               </Label>
+               <Button type='submit' size='sm' disabled={isLoading || isUploading} className='w-fit gap-x-2 sm:hidden'>
+                  <Icon name='PlusCircle' />
+                  Thêm sự kiện
+               </Button>
             </Box>
 
             <Box className='space-y-10'>
                <Box className='grid grid-cols-6 gap-x-6 gap-y-10 sm:grid-cols-1 sm:gap-x-0'>
                   <Box className='col-span-full w-full'>
-                     <InputFieldControl name='name' control={form.control} label='Tên sự kiện' />
+                     <InputFieldControl
+                        name='name'
+                        control={form.control}
+                        label='Tên sự kiện'
+                        placeholder='Nhập tên sự kiện'
+                        description='Tên hiển thị sự kiện trên hệ thống'
+                     />
                   </Box>
                   <Box className='col-span-full w-full'>
-                     <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' />
+                     <UserComboboxFieldControl
+                        label='Người tổ chức'
+                        form={form}
+                        path='id'
+                        control={form.control}
+                        name='user_id'
+                        restrictRole={UserRoleEnum.STAFF}
+                        description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện'
+                     />
                   </Box>
                   <Box className='col-span-full w-full'>
-                     <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' />
+                     <InputFieldControl
+                        name='contact'
+                        control={form.control}
+                        placeholder='Nhập một số điện thoại'
+                        label='Số điện thoại liên hệ'
+                        description='Số điện thoại người dùng có thể liên hệ để được hỗ trợ'
+                     />
+                  </Box>
+                  <Box className='col-span-full w-full'>
+                     <SelectFieldControl name='area' control={form.control} placeholder='Chọn khu vực' label='Khu vực tổ chức' options={areaOptions} />
+                  </Box>
+                  <Box className='col-span-full w-full'>
+                     <InputFieldControl name='location' control={form.control} placeholder='Nhập một địa điểm' label='Địa điểm tổ chức' />
                   </Box>
                   <Box className='col-span-3'>
                      <DatePickerFieldControl name='start_time' control={form.control} label='Ngày bắt đầu' />
@@ -124,13 +154,17 @@ const CreateEventPage = () => {
                         )}
                      />
                   </Box>
+                  <Box className='col-span-full space-y-2'>
+                     <TextareaFieldControl name='description' placeholder='Mô tả ngắn về sự kiện' control={form.control} label='Mô tả' rows={5} />
+                  </Box>
                   <Box className='col-span-full'>
                      <EditorFieldControl name='content' form={form} label='Nội dung' />
                   </Box>
                </Box>
 
-               <Button type='submit' id='submit' disabled={isLoading} className='hidden w-full sm:inline-flex'>
-                  Lưu
+               <Button type='submit' id='submit' disabled={isLoading} className='hidden w-fit gap-x-2 sm:inline-flex sm:w-full'>
+                  <Icon name='PlusCircle' />
+                  Thêm sự kiện
                </Button>
             </Box>
          </form>

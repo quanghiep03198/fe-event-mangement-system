@@ -9,7 +9,7 @@ type AuthSliceState = {
    user: Omit<UserInterface, 'password'> | null
    authenticated: boolean
 }
-type SigninResponseData = SuccessResponse<{ user: Omit<UserInterface, 'password'>; access_token: string }>
+type SigninResponseData = HttpResponse<{ user: Omit<UserInterface, 'password'>; access_token: string }>
 
 /**
  * Async thunk actions

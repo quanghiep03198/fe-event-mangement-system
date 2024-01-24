@@ -1,11 +1,13 @@
 import { Paths } from '@/common/constants/pathnames'
 import { Box, Button, Form, InputFieldControl, Typography } from '@/components/ui'
+import axiosInstance from '@/configs/axios.config'
 import { useUpdateUserInfoMutation } from '@/redux/apis/auth.api'
+import { useAppSelector } from '@/redux/hook'
 import { ChangePasswordSchema } from '@/schemas/auth.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { pick } from 'lodash'
-
-import React from 'react'
+import { debounce, pick } from 'lodash'
+import * as qs from 'qs'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -15,8 +17,11 @@ import { z } from 'zod'
 type FormValue = z.infer<typeof ChangePasswordSchema>
 
 const ChangePasswordPanel: React.FunctionComponent = () => {
+   const isCorrectCurrentPasswordRef = useRef<boolean>(false)
+   const user = useAppSelector((state) => state.auth.user)
    const form = useForm<FormValue>({
-      resolver: zodResolver(ChangePasswordSchema)
+      resolver: zodResolver(ChangePasswordSchema),
+      mode: 'onBlur'
    })
    const [changePassword, { isLoading }] = useUpdateUserInfoMutation()
    const navigate = useNavigate()
@@ -25,12 +30,21 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
       toast.promise(changePassword(pick(data, ['password'])).unwrap(), {
          loading: 'Đang cập nhật mật khẩu ...',
          success: () => {
-            navigate(Paths.ACCOUNT_SETTINGS)
+            navigate({ pathname: Paths.ACCOUNT_SETTINGS, search: qs.stringify({ tab: 'account-settings' }) })
             return 'Cập nhật mật khẩu thành công'
          },
          error: 'Đổi mật khẩu thất bại'
       })
    }
+
+   const handleCheckCurrentPassword: React.ChangeEventHandler<HTMLInputElement> = debounce(async (e) => {
+      try {
+         const response = (await axiosInstance.post('/check-password', { email: user.email, password: e.target.value })) as HttpResponse<boolean>
+         isCorrectCurrentPasswordRef.current = response.metadata
+      } catch (error) {
+         form.setError('currentPassword', error.response.data.metadata)
+      }
+   }, 500)
 
    return (
       <Box className='min-h-[75vh] space-y-6 rounded-lg border p-6'>
@@ -42,6 +56,15 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
          </Box>
          <Form {...form}>
             <StyledForm onSubmit={form.handleSubmit(handleChangePassword)}>
+               <InputFieldControl
+                  name='currentPassword'
+                  type='password'
+                  control={form.control}
+                  label='Mật khẩu hiện tại'
+                  placeholder='******'
+                  description='Mật khẩu hiện tại của bạn đang sử dụng'
+                  onChange={handleCheckCurrentPassword}
+               />
                <InputFieldControl
                   name='password'
                   type='password'

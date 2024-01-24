@@ -12,7 +12,7 @@ export type SelectFieldControlProps<T extends FieldValues> = BaseFieldControl<T>
    }
 
 export function SelectFieldControl<T extends FieldValues>(props: SelectFieldControlProps<T>) {
-   const { control, name, hidden, layout, className, defaultValue, onValueChange, ...restProps } = props
+   const { control, name, hidden, layout, className, defaultValue, placeholder, onValueChange, ...restProps } = props
 
    return (
       <FormField
@@ -34,7 +34,7 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                      {...restProps}
                   >
                      <SelectTrigger className={className}>
-                        <SelectValue placeholder={props.placeholder} />
+                        <SelectValue placeholder={placeholder} />
                      </SelectTrigger>
                      <SelectContent>
                         <SelectGroup>

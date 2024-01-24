@@ -55,8 +55,8 @@ export const extensions = [
       }
    }),
    Placeholder.configure({
-      placeholder: 'Nhập gì đó ...',
-      emptyEditorClass: 'top-0 text-muted-foreground/50 before:pointer-event-none before:content-[attr(data-placeholder)]'
+      placeholder: 'Bắt đầu nhập ...',
+      emptyEditorClass: 'top-0 text-muted-foreground font-normal text-sm before:pointer-event-none before:content-[attr(data-placeholder)]'
    }),
    Underline.configure(),
    TextAlign.configure({

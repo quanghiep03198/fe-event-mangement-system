@@ -14,7 +14,7 @@ export const notificationApi = createApi({
    endpoints: (build) => ({
       getAllNotificationToUser: build.query<Pagination<NotificationInterface>, { userId: number; params: AxiosRequestConfig['params'] }>({
          query: ({ userId, params }) => ({ url: `/notification/settings/${userId}`, method: 'GET', params: { ...params, page: params.page ?? 1 } }),
-         transformResponse: (response: SuccessResponse<Pagination<NotificationInterface>>, _meta, args): Pagination<NotificationInterface> => {
+         transformResponse: (response: HttpResponse<Pagination<NotificationInterface>>, _meta, args): Pagination<NotificationInterface> => {
             if (args.params.type === 'all')
                return {
                   ...response.metadata,
@@ -26,7 +26,7 @@ export const notificationApi = createApi({
       }),
       getNotificationDetails: build.query<NotificationInterface, string>({
          query: (id) => ({ url: `/notification/show/${id}`, method: 'GET' }),
-         transformResponse: (response: SuccessResponse<NotificationInterface>): NotificationInterface => response.metadata!,
+         transformResponse: (response: HttpResponse<NotificationInterface>): NotificationInterface => response.metadata!,
          providesTags: (response) => [{ id: response?.id, type: 'Notification' }, ...tagTypes]
       }),
       createNotification: build.mutation<unknown, Omit<NotificationInterface, 'id'>>({

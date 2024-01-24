@@ -25,7 +25,7 @@ export const attendanceApi = createApi({
       return {
          getAttendeesByEvent: build.query<Atteendees[], { eventId: string; params?: AxiosRequestConfig['params'] }>({
             query: ({ eventId, params }) => ({ url: `/attendances/join/${eventId}`, method: 'GET', params }),
-            transformResponse: (response: SuccessResponse<Atteendees[]>, _meta, _args) =>
+            transformResponse: (response: HttpResponse<Atteendees[]>, _meta, _args) =>
                response.metadata?.map((item) => ({ ...item, user: { ...item.user, role: UserRoleValues.get(item.user.role!) } })) as any[],
             providesTags: (result, _error, _arg) => {
                return Array.isArray(result) ? [...result?.map(({ id }) => ({ type: 'Attendance' as const, id })), ...tagTypes] : tagTypes

@@ -1,24 +1,25 @@
+import { UserRoleEnum } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
+import useCloudinaryUpload from '@/common/hooks/use-cloudinary'
 import { cn } from '@/common/utils/cn'
 import {
    Box,
    Button,
    DatePickerFieldControl,
-   Editor,
    Form,
    FormMessage,
    Icon,
    Image,
    InputFieldControl,
    Label,
-   Typography,
-   buttonVariants
+   SelectFieldControl,
+   TextareaFieldControl,
+   Typography
 } from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
 import { useGetEventDetailsQuery, useUpdateEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
 import { UpdateEventSchema } from '@/schemas/event.schema'
-import { Cloudinary } from '@/services/cloudinary.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
@@ -26,6 +27,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import UserComboboxFieldControl from '../components/user-combobox-field-control'
+import { areaOptions } from '@/common/constants/area-options'
 
 type FormValue = z.infer<typeof UpdateEventSchema>
 
@@ -35,6 +38,8 @@ const EditEvent = () => {
    const navigate = useNavigate()
    const user = useAppSelector((state) => state.auth.user)
    const [image, setImage] = useState<string>('')
+   const [uploadImage, isUploading, isUploadError] = useCloudinaryUpload()
+
    const form = useForm<FormValue>({
       resolver: zodResolver(UpdateEventSchema)
    })
@@ -46,7 +51,9 @@ const EditEvent = () => {
          form.reset({
             name: data.name,
             location: data.location,
+            user_id: data.user_id,
             contact: data.contact,
+            description: data.description,
             start_time: new Date(data.start_time),
             end_time: new Date(data.end_time)
          } as FormValue)
@@ -55,16 +62,24 @@ const EditEvent = () => {
       }
    }, [data])
 
-   const handleUpdateEvent = async (payload: FormValue) => {
-      if (payload.banner instanceof FileList) payload.banner = await Cloudinary.upload(payload.banner[0])
+   const handleUpdateEvent = async (data: FormValue) => {
+      let banner
+      if (data.banner instanceof FileList) {
+         toast.loading('Đang tải lên ảnh ...')
+         banner = await uploadImage(data.banner[0])
+         if (isUploadError) toast.error('Tải lên ảnh thất bại')
+         return
+      }
+
+      if (banner) data.banner = banner
       toast.promise(
          updateEvent({
             id,
             payload: {
-               ...payload,
+               ...data,
                user_id: user?.id,
-               start_time: format(payload.start_time, 'yyyy/MM/dd HH:mm:ss'),
-               end_time: format(payload.end_time, 'yyyy/MM/dd HH:mm:ss')
+               start_time: format(data.start_time, 'yyyy/MM/dd HH:mm:ss'),
+               end_time: format(data.end_time, 'yyyy/MM/dd HH:mm:ss')
             }
          }).unwrap(),
          {
@@ -84,28 +99,39 @@ const EditEvent = () => {
             <Box className='flex w-full items-center justify-between border-b py-4'>
                <Box className='space-y-2'>
                   <Typography variant='h6'>Cập nhật sự kiện</Typography>
-                  <Typography variant='p' color='muted' className='text-sm'>
+                  <Typography variant='small' color='muted'>
                      Nhập thông tin để cập nhật sự kiện
                   </Typography>
                </Box>
-               <Label
-                  htmlFor='submit'
-                  className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'gap-x-2 sm:hidden', { 'pointer-events-none opacity-50': isLoading })}
-               >
+               <Button type='submit' size='sm' disabled={isLoading || isUploading} className='w-fit gap-x-2 sm:hidden'>
                   <Icon name='CheckCircle' />
-                  Lưu
-               </Label>
+                  Lưu lại
+               </Button>
             </Box>
             <Box className='space-y-10'>
-               <Box className='grid grid-cols-6 gap-y-10 sm:grid-cols-1'>
+               <Box className='grid grid-cols-6 gap-x-6 gap-y-10 sm:grid-cols-1 sm:gap-x-0'>
                   <Box className='col-span-full'>
-                     <InputFieldControl name='name' control={form.control} label='Tên sự kiện' />
+                     <InputFieldControl name='name' control={form.control} label='Tên sự kiện' placeholder='Nhập tên ...' />
                   </Box>
                   <Box className='col-span-full'>
-                     <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' />
+                     <UserComboboxFieldControl
+                        label='Người tổ chức'
+                        path='id'
+                        name='user_id'
+                        form={form}
+                        control={form.control}
+                        restrictRole={UserRoleEnum.STAFF}
+                        description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện'
+                     />
                   </Box>
                   <Box className='col-span-full'>
-                     <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' />
+                     <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' placeholder='Nhập một số điện thoại' />
+                  </Box>
+                  <Box className='col-span-full w-full'>
+                     <SelectFieldControl name='area' control={form.control} placeholder='Chọn khu vực' label='Khu vực tổ chức' options={areaOptions} />
+                  </Box>
+                  <Box className='col-span-full'>
+                     <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' placeholder='Nhập một địa điểm' />
                   </Box>
                   <Box className='col-span-3 sm:col-span-full'>
                      <DatePickerFieldControl name='start_time' control={form.control} label='Ngày bắt đầu' />
@@ -138,12 +164,18 @@ const EditEvent = () => {
                      </Box>
                      {form.getFieldState('banner').error && <FormMessage>{form.getFieldState('banner').error?.message}</FormMessage>}
                   </Box>
+
+                  {/* Description */}
+                  <Box className='col-span-full'>
+                     <TextareaFieldControl name='description' control={form.control} label='Mô tả' rows={5} placeholder='Mô tả ngắn về sự kiện' />
+                  </Box>
                   <Box className='col-span-full'>
                      <EditorFieldControl defaultValue={data?.content} name='content' form={form} label='Nội dung' />
                   </Box>
                </Box>
-               <Button id='submit' type='submit' className='hidden w-full sm:inline-flex'>
-                  Lưu
+               <Button id='submit' type='submit' className='hidden w-full gap-x-2 sm:inline-flex'>
+                  <Icon name='CheckCircle' />
+                  Lưu lại
                </Button>
             </Box>
          </form>

@@ -1,5 +1,5 @@
+import { EventInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
-import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import {
    Button,
    Command,
@@ -12,6 +12,9 @@ import {
    FormField,
    FormItem,
    FormMessage,
+   HoverCard,
+   HoverCardContent,
+   HoverCardTrigger,
    Icon,
    Label,
    Popover,
@@ -19,37 +22,49 @@ import {
    PopoverTrigger,
    ScrollArea,
    Typography
-} from '..'
+} from '@/components/ui'
+import { useGetEventsQuery } from '@/redux/apis/event.api'
+import React, { memo, useMemo, useState } from 'react'
+import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 
-type ComboboxFieldControlProps<T extends FieldValues> = BaseFieldControl<T> & {
+interface EventAutoCompleteFieldControlProps<T extends FieldValues> extends BaseFieldControl<T> {
    form: UseFormReturn<T>
-   onInput?: (value: string) => unknown
-   onSelect?: (value: string) => unknown
-   options: Array<{
-      label: string
-      value: PathValue<T, Path<T>>
-   }>
 }
 
-export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxFieldControlProps<T>) {
-   const { form, name, control, options, label, description, placeholder, layout, hidden, onInput, onSelect } = props
+function EventAutoCompleteFieldControl<T>(props: EventAutoCompleteFieldControlProps<T>) {
+   const { form, name, label, placeholder, description } = props
+
+   const [eventSearchTerm, setEventSearchTerm] = useState<string>('')
+   const events = useGetEventsQuery(
+      { page: 1, limit: 10, search: eventSearchTerm },
+      { selectFromResult: ({ data }) => (data as Pagination<EventInterface>)?.docs ?? [] }
+   )
+
+   const options = useMemo(() => {
+      return Array.isArray(events) ? events.map((item) => ({ label: item.name, value: String(item.id) as PathValue<T, Path<T>> })) : []
+   }, [events])
 
    return (
       <FormField
          name={name}
-         control={control}
+         control={form.control}
          render={({ field }) => {
             return (
-               <FormItem className={cn({ hidden, 'grid grid-cols-[1fr_2fr] items-center gap-2 space-y-0': layout === 'horizontal' })}>
+               <FormItem>
                   {label && <Label>{label}</Label>}
                   <FormControl>
                      <Popover>
                         <PopoverTrigger asChild>
                            <FormControl>
-                              <Button variant='outline' role='combobox' className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}>
-                                 {field.value ? options.find((option) => option.value === field.value)?.label : placeholder}
-                                 <Icon name='ChevronsUpDown' />
-                              </Button>
+                              <HoverCard>
+                                 <HoverCardTrigger asChild type='button'>
+                                    <Button variant='outline' role='combobox' className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}>
+                                       {field.value ? options.find((option) => option.value === field.value)?.label : placeholder}
+                                       <Icon name='ChevronsUpDown' />
+                                    </Button>
+                                 </HoverCardTrigger>
+                                 <HoverCardContent></HoverCardContent>
+                              </HoverCard>
                            </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className='w-full p-0' align='start'>
@@ -58,7 +73,7 @@ export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxField
                                  placeholder={placeholder}
                                  className='h-9'
                                  onInput={(e) => {
-                                    if (onInput) onInput(e.currentTarget.value)
+                                    setEventSearchTerm(e.currentTarget.value)
                                  }}
                               />
                               <CommandEmpty>Không có dữ liệu</CommandEmpty>
@@ -66,12 +81,11 @@ export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxField
                                  <ScrollArea className='flex h-56 flex-col items-stretch gap-y-px'>
                                     {options.map((option) => (
                                        <CommandItem
-                                          key={option.value}
+                                          key={option.value as string}
                                           value={option.label}
                                           className='line-clamp-1 flex items-center gap-x-4'
                                           onSelect={() => {
-                                             form.setValue(name, option.value)
-                                             if (onSelect) onSelect(option.value)
+                                             form.setValue(name, option.value as PathValue<T, Path<T>>)
                                           }}
                                        >
                                           <Typography variant='small' className='flex-1'>
@@ -95,4 +109,4 @@ export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxField
    )
 }
 
-export default ComboboxFieldControl
+export default memo(EventAutoCompleteFieldControl)

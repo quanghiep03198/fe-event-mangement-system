@@ -1,7 +1,11 @@
+import { metadata } from '@/configs/metadata.config'
 import Regex from '@/common/constants/regex'
+import axiosInstance from '@/configs/axios.config'
+import { debounce, pick } from 'lodash'
 import * as z from 'zod'
+import { useEffect, useState } from 'react'
 
-export const SigninSchema = z.object({
+export const LoginSchema = z.object({
    email: z.string({ required_error: 'Vui lòng nhập email' }).email('Email không đúng định dạng'),
    password: z.string({ required_error: 'Vui lòng nhập mật khẩu' })
 })
@@ -29,6 +33,8 @@ export const RegisterSchema = z
 
 export const ChangePasswordSchema = z
    .object({
+      currentPassword: z.string({ required_error: 'Vui lòng nhập mật khẩu hiện tại' }),
+
       password: z
          .string({ required_error: 'Vui lòng nhập mật khẩu' })
          .min(6, { message: 'Mật khẩu phải có tối thiểu 6 ký tự' })
@@ -44,3 +50,23 @@ export const ChangePasswordSchema = z
          path: ['confirmPassword']
       }
    )
+
+export const recoverPasswordSchema = z.object({
+   email: z
+      .string({ required_error: 'Vui lòng nhập email' })
+      .email({ message: 'Email không đúng định dạng' })
+      .regex(Regex.email, { message: 'Email không đúng định dạng' })
+})
+
+export const resetPasswordSchema = z
+   .object({
+      token: z.string({ required_error: 'Vui lòng nhập mã xác thực' }),
+      password: z
+         .string({ required_error: 'Vui lòng nhập mật khẩu mới' })
+         .regex(Regex.password, { message: 'Mật khẩu mới phải có ít nhất 1 ký tự viết hoa, và 1 chữ số' }),
+      confirmPassword: z.string({ required_error: 'Vui lòng nhập mật khẩu xác thực' })
+   })
+   .refine((data) => data.password === data.confirmPassword, {
+      message: 'Mật khẩu xác nhận không khớp',
+      path: ['confirmPassword']
+   })

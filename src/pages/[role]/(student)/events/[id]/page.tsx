@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
-import FeedbackFormModal from '../../components/shared/feedback-form-modal'
+import FeedbackFormModal from '../../my-events/components/feedback-form-modal'
 import Breadcrumbs from './components/breadcrumbs'
 
 const EventDetailsPage: React.FunctionComponent = () => {
@@ -25,7 +25,7 @@ const EventDetailsPage: React.FunctionComponent = () => {
 
    const handleJoinInEvent = () => {
       if (!authenticated) {
-         navigate(Paths.SIGNIN)
+         navigate(Paths.LOGIN)
          return
       }
 

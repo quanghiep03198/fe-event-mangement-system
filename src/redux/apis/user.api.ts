@@ -20,7 +20,7 @@ export const userApi = createApi({
       getUsers: build.query<OptionalPagination<UserInterface>, RequestParams>({
          query: (params) => ({ url: '/participants', method: 'GET', params }),
          providesTags: tagTypes,
-         transformResponse: (response: SuccessResponse<OptionalPagination<UserInterface>>, _meta, args) => {
+         transformResponse: (response: HttpResponse<OptionalPagination<UserInterface>>, _meta, args) => {
             // With pagination
             if (typeof args.pagination === 'undefined') {
                const data = response?.metadata as UserListWithPagination
@@ -33,29 +33,35 @@ export const userApi = createApi({
             return response?.metadata as Array<UserInterface>
          }
       }),
-      addUser: build.mutation<SuccessResponse<UserInterface>, Pick<UserInterface, 'name' | 'email' | 'phone' | 'role'>>({
+      getUserInformation: build.query<UserInterface, string>({
+         query: (id) => ({ url: `/participants/${id}`, method: 'GET' }),
+         transformResponse: (response: HttpResponse<UserInterface>) => response.metadata,
+         providesTags: (_response, _meta, arg) => [{ type: 'Users', id: arg }]
+      }),
+      addUser: build.mutation<HttpResponse<UserInterface>, Pick<UserInterface, 'name' | 'email' | 'phone' | 'role'>>({
          query: (payload) => ({ url: '/participants', method: 'POST', data: payload }),
-         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+         invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       }),
       importUsersList: build.mutation<unknown, FormData>({
          query: (payload) => ({ url: '/importUser', method: 'POST', data: payload }),
-         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+         invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       }),
       updateUser: build.mutation<
-         SuccessResponse<UserInterface>,
+         HttpResponse<UserInterface>,
          {
             id: Required<number>
             payload: Partial<UserInterface>
          }
       >({
          query: ({ id, payload }) => ({ url: `/participants/${id}`, method: 'PUT', data: payload }),
-         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+         invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       }),
-      deleteUser: build.mutation<SuccessResponse<undefined>, number>({
+      deleteUser: build.mutation<HttpResponse<undefined>, number>({
          query: (id) => ({ url: `/participants/${id}`, method: 'DELETE' }),
-         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+         invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       })
    })
 })
 
-export const { useGetUsersQuery, useAddUserMutation, useUpdateUserMutation, useDeleteUserMutation, useImportUsersListMutation } = userApi
+export const { useGetUsersQuery, useGetUserInformationQuery, useAddUserMutation, useUpdateUserMutation, useDeleteUserMutation, useImportUsersListMutation } =
+   userApi

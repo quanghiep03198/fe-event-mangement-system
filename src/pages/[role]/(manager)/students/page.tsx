@@ -90,6 +90,7 @@ const StudentsListPage: React.FunctionComponent = () => {
          header: 'Họ tên',
          enableColumnFilter: true,
          enableSorting: true,
+         size: 256,
          cell: ({ row }) => {
             return (
                <Box className='flex items-center gap-x-2'>
@@ -118,7 +119,15 @@ const StudentsListPage: React.FunctionComponent = () => {
          enableSorting: true,
          cell: ({ getValue }) => {
             const value = getValue()
-            return <span className='uppercase'>{value}</span>
+            return value ? (
+               <Typography variant='p' className='uppercase'>
+                  {value}
+               </Typography>
+            ) : (
+               <Typography variant='p' color='muted' className='first-letter:uppercase'>
+                  Chưa cập nhật
+               </Typography>
+            )
          }
       }),
       columnHelper.accessor('role', {
@@ -179,6 +188,7 @@ const StudentsListPage: React.FunctionComponent = () => {
                columns={columns as ColumnDef<TableDataType>[]}
                data={data as UserInterface[]}
                loading={isLoading}
+               enableColumnResizing
                slot={
                   <>
                      <Tooltip content='Tải file mẫu'>

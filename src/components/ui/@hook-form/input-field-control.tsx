@@ -46,7 +46,7 @@ export function InputFieldControl<T extends FieldValues>(
                         }}
                         disabled={disabled}
                         type={type ?? 'text'}
-                        onChange={(event) => handleChange(event, field)}
+                        onChange={(e) => handleChange(e, field)}
                         className={className}
                         {...restProps}
                      />

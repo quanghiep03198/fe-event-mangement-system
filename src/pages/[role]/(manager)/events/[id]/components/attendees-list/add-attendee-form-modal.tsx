@@ -43,6 +43,7 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 import { z } from 'zod'
+import UserComboboxFieldControl from '../../../components/user-combobox-field-control'
 
 type AddAttendeeFormModalProps = {
    open: boolean
@@ -87,76 +88,13 @@ const AddAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
             </DialogHeader>
             <Form {...form}>
                <DialogForm onSubmit={form.handleSubmit(handleAddAttendee)}>
-                  <FormField
+                  <UserComboboxFieldControl
+                     path='email'
                      name='email'
+                     form={form}
                      control={form.control}
-                     render={({ field }) => {
-                        return (
-                           <FormItem>
-                              <FormControl>
-                                 <Popover>
-                                    <PopoverTrigger asChild>
-                                       <FormControl>
-                                          <Button
-                                             variant='outline'
-                                             role='combobox'
-                                             className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
-                                          >
-                                             {field.value ? selectedUser.name : 'Chọn người tham gia'}
-                                             <Icon name='ChevronsUpDown' />
-                                          </Button>
-                                       </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className='w-auto p-0' align='start'>
-                                       <Command>
-                                          <CommandInput
-                                             placeholder=''
-                                             className='h-9'
-                                             onInput={_.debounce((e) => {
-                                                setSearchTerm(e.target.value)
-                                             })}
-                                          />
-                                          <CommandEmpty>Không có dữ liệu</CommandEmpty>
-                                          <CommandGroup>
-                                             <ScrollArea className='h-56'>
-                                                {options.map((option) => (
-                                                   <CommandItem
-                                                      value={option.email}
-                                                      key={option.id}
-                                                      onSelect={(value) => {
-                                                         form.setValue('email', value)
-                                                         setSelectedUser(option)
-                                                      }}
-                                                   >
-                                                      <Box className='flex items-start gap-x-4'>
-                                                         <Avatar className='h-8 w-8'>
-                                                            <AvatarImage src={option.avatar} />
-                                                            <AvatarFallback>A</AvatarFallback>
-                                                         </Avatar>
-                                                         <Box className='space-y-1'>
-                                                            <Typography variant='small'>{option.name}</Typography>
-                                                            <Typography variant='small' className='text-xs' color='muted'>
-                                                               {option.email}
-                                                            </Typography>
-                                                         </Box>
-                                                      </Box>
-                                                      <Icon
-                                                         name='Check'
-                                                         className={cn('ml-auto', option.email === field.value ? 'opacity-100' : 'opacity-0')}
-                                                      />
-                                                   </CommandItem>
-                                                ))}
-                                             </ScrollArea>
-                                          </CommandGroup>
-                                       </Command>
-                                    </PopoverContent>
-                                 </Popover>
-                              </FormControl>
-                              <FormDescription>Người dùng được chọn sau khi thêm sẽ tham gia vào sự kiện</FormDescription>
-                              <FormMessage />
-                           </FormItem>
-                        )
-                     }}
+                     label='Người tham gia'
+                     description='Người dùng được chọn sau khi thêm sẽ tham gia vào sự kiện'
                   />
                   <Button type='submit' className='gap-x-2'>
                      {isLoading ? <Icon name='ArrowUpCircle' className='animate-spin' /> : <Icon name='PlusCircle' />} Thêm

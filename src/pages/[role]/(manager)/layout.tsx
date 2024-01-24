@@ -35,7 +35,7 @@ const navigation: Array<MenuNavigationItem> = [
    },
    {
       id: 4,
-      icon: 'UsersRound',
+      icon: 'Users',
       name: 'Sinh viên',
       path: Paths.STUDENTS_LIST,
       roles: [UserRoleEnum.MANAGER]
@@ -52,8 +52,7 @@ const navigation: Array<MenuNavigationItem> = [
 const Layout: React.FunctionComponent = () => {
    const [open, setOpen] = useState<boolean>(false)
    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
-   const isLargeScreen = useMediaQuery(BreakPoints.LARGE)
-   const isExtraLargeScreen = useMediaQuery(BreakPoints.EXTRA_LARGE)
+   const isLargeScreen = useMediaQuery('(min-width: 1024px)')
 
    return (
       <>
@@ -70,9 +69,9 @@ const Layout: React.FunctionComponent = () => {
             >
                <StaticNavSidebar navigation={navigation} isCollapsed={isCollapsed} />
             </ResizablePanel>
-            <ResizableHandle withHandle={isLargeScreen || isExtraLargeScreen} />
+            <ResizableHandle withHandle={isLargeScreen} />
             <ResizablePanel>
-               <Box className='h-screen max-w-full overflow-y-scroll bg-background scrollbar-thin scrollbar-thumb-secondary'>
+               <Box className='h-screen max-w-full overflow-y-scroll bg-background scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border scrollbar-thumb-rounded-xl dark:scrollbar-thumb-secondary'>
                   <NavHeader openState={open} onOpenStateChange={setOpen} />
                   <Box as='section' className='p-10 sm:p-2 md:p-4'>
                      <ErrorBoundary>

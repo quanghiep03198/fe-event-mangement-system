@@ -4,9 +4,10 @@ export const Paths = {
    REDIRECT: '/',
 
    /** Auth routes */
-   SIGNIN: '/signin',
-   SIGNUP: '/signup',
-   RECOVER_PASSOWRD: '/forgot-password',
+   LOGIN: '/login',
+   REGISTER: '/register',
+   RECOVER_PASSOWRD: '/recover-password',
+   RESET_PASSOWRD: '/reset-password',
 
    /** User preferences routes */
    ACCOUNT_SETTINGS: '/account-settings',

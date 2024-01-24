@@ -3,13 +3,16 @@ import { compareAsc, format, parse } from 'date-fns'
 import * as z from 'zod'
 
 const BaseEventSchema = z.object({
-   name: z.string({ required_error: 'Vui lòng nhập tên sự kiện' }).min(1, { message: 'Vui lòng nhập tên sự kiện' }),
-   location: z.string({ required_error: 'Vui lòng nhập địa điệm tổ chức' }).min(1, { message: 'Vui lòng nhập địa điệm tổ chức' }),
+   name: z.string({ required_error: 'Vui lòng nhập tên sự kiện' }),
+   location: z.string({ required_error: 'Vui lòng nhập địa điệm tổ chức' }),
+   area: z.string({ required_error: 'Vui chọn khu vực tổ chức' }),
    contact: z
       .string({ required_error: 'Vui lòng nhập số điện thoại liên hệ' })
       .min(1, { message: 'Vui lòng nhập số điện thoại liên hệ' })
       .regex(Regex.phone, { message: 'Số điện thoại không đúng định dạng' }),
+   user_id: z.string({ required_error: 'Vui lòng chọn người tổ chức' }).or(z.number({ required_error: 'Vui lòng chọn người tổ chức' })),
    content: z.string({ required_error: 'Vui lòng nhập nội dung' }),
+   description: z.string({ required_error: 'Vui lòng nhập mô tả' }),
    banner: z.any({ required_error: 'Vui lòng tải lên ảnh' }),
    start_time: z.date({ required_error: 'Vui lòng chọn ngày bắt đầu' }),
    end_time: z.date({ required_error: 'Vui lòng chọn ngày kết thúc' })
@@ -46,5 +49,3 @@ export const UpdateEventSchema = z
          path: ['end_time']
       }
    )
-
-console.log(parse(format(new Date(), 'yyyy/MM/dd HH:mm:ss'), 'yyyy/MM/dd HH:mm:ss', new Date()))

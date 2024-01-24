@@ -5,7 +5,7 @@ import { UserRoleEnum } from '../constants/enums'
 import { Control, FieldValues, Path } from 'react-hook-form'
 
 declare global {
-   type SuccessResponse<T> = {
+   type HttpResponse<T> = {
       status: 'success' | 'error'
       message: string
       statusCode: HttpStatus
@@ -13,7 +13,7 @@ declare global {
    }
 
    type ErrorResponse = {
-      data: SuccessResponse<undefined>
+      data: HttpResponse<undefined>
       status: HttpStatus
    }
 

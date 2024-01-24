@@ -20,7 +20,7 @@ const Navigation = () => {
             navigate(Paths.MANAGER_DASHBOARD)
             break
          default:
-            navigate(Paths.SIGNIN)
+            navigate(Paths.LOGIN)
             break
       }
    }, [user])

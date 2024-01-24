@@ -3,8 +3,8 @@ import { Paths } from '@/common/constants/pathnames'
 export const metadata = {
    [Paths.EVENTS_DETAILS + '/:id']: 'Sự kiện',
    /* AUTH */
-   [Paths.SIGNIN]: 'Đăng nhập',
-   [Paths.SIGNUP]: 'Đăng ký tài khoản',
+   [Paths.LOGIN]: 'Đăng nhập',
+   [Paths.REGISTER]: 'Đăng ký tài khoản',
 
    /* ERROR */
    [Paths.NOT_FOUND]: '404 - Page not found',

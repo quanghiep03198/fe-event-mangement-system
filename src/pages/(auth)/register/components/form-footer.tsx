@@ -9,7 +9,7 @@ const FormFooter: React.FunctionComponent = () => {
          <Divider>hoặc</Divider>
          <Paragraph className='text-center'>
             Đã có tài khoản?{' '}
-            <Link to={Paths.SIGNIN} className='font-medium text-primary'>
+            <Link to={Paths.LOGIN} className='font-medium text-primary'>
                Đăng nhập
             </Link>
          </Paragraph>

@@ -149,7 +149,7 @@ const EditNotificationPage: React.FunctionComponent = () => {
             openState={scheduleDialogOpen}
             onOpenStateChange={setScheduleDialogOpen}
             onValueChange={setTimeSend}
-            timeEnd={notificationDetails?.event?.end_time as string}
+            maxValue={notificationDetails?.event?.end_time as string}
          />
       </>
    )

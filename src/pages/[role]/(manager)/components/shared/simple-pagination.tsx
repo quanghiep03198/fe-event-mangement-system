@@ -1,6 +1,7 @@
 import useQueryParams from '@/common/hooks/use-query-params'
 import { FeedbackInterface } from '@/common/types/entities'
 import { Box, Button, Icon, Typography } from '@/components/ui'
+import Tooltip from '@/components/ui/@override/tooltip'
 import * as qs from 'qs'
 import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,6 +25,7 @@ const SimplePagination: React.FC<Pick<Pagination<FeedbackInterface>, 'hasNextPag
             >
                <Icon name='ChevronLeft' />
             </Button>
+
             <Button
                variant='ghost'
                size='icon'

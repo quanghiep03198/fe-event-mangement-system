@@ -26,7 +26,7 @@ const NotificationListPanel: React.FunctionComponent = () => {
    }, [data])
 
    return (
-      <Box className='relative flex h-[32rem] flex-col @container'>
+      <Box className='relative flex flex-col @container'>
          <Box className='flex h-16 items-center justify-between border-b p-4'>
             <Box className='w-full @xl:w-auto'>
                <SearchBox onSearchOptionsChange={setAdvancedSearchOptions} />
@@ -41,24 +41,30 @@ const NotificationListPanel: React.FunctionComponent = () => {
             </Box>
          </Box>
 
-         <Box className='relative z-10 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-secondary'>
-            {isLoading ? (
-               Array.apply(null, Array(3)).map(() => (
-                  <Box className='flex flex-col gap-2 rounded-lg border p-4'>
-                     <Skeleton className='h-2 w-1/4 rounded-lg' />
-                     <Skeleton className='h-2 w-1/3 rounded-lg' />
-                     <Skeleton className='h-2 w-1/2 rounded-lg' />
-                     <Skeleton className='mt-2 h-2 w-full rounded-lg' />
-                     <Skeleton className='h-2 w-full rounded-lg' />
+         <Box className='flex-1 py-4'>
+            <Box className='max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-thumb-rounded-xl dark:scrollbar-thumb-secondary'>
+               {isLoading ? (
+                  <Box className='flex max-h-full flex-col gap-y-2 px-4'>
+                     {Array.apply(null, Array(3)).map(() => (
+                        <Box className='flex flex-col gap-2 rounded-lg border p-4'>
+                           <Skeleton className='h-2 w-1/4 rounded-lg' />
+                           <Skeleton className='h-2 w-1/3 rounded-lg' />
+                           <Skeleton className='h-2 w-1/2 rounded-lg' />
+                           <Skeleton className='mt-2 h-2 w-full rounded-lg' />
+                           <Skeleton className='h-2 w-full rounded-lg' />
+                        </Box>
+                     ))}
                   </Box>
-               ))
-            ) : Array.isArray(data?.docs) && data?.docs.length > 0 ? (
-               <Box className='flex flex-col gap-y-2 p-4'>{data?.docs?.map((item) => <NotificationCard data={item} key={item.id} />)} </Box>
-            ) : (
-               <Box className='flex h-full items-center justify-center gap-x-4 text-sm text-muted-foreground'>
-                  <Icon name='MailX' size={56} strokeWidth={1} />
-               </Box>
-            )}
+               ) : Array.isArray(data?.docs) && data?.docs.length > 0 ? (
+                  <Box className='m-0 flex h-full basis-full flex-col gap-y-2 px-4'>
+                     {data?.docs?.map((item) => <NotificationCard data={item} key={item.id} />)}{' '}
+                  </Box>
+               ) : (
+                  <Box className='flex h-full items-center justify-center gap-x-4 text-sm text-muted-foreground'>
+                     <Icon name='MailX' size={56} strokeWidth={1} />
+                  </Box>
+               )}
+            </Box>
          </Box>
 
          <Box className='flex w-full items-center justify-end border-t px-4 py-2 @xl:hidden'>

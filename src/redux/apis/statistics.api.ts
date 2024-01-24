@@ -14,7 +14,7 @@ export const statisticApi = createApi({
    endpoints: (build) => ({
       getStatistics: build.query<StatisticsInterface, void>({
          query: () => ({ url: '/statistics', method: 'GET' }),
-         transformResponse: (response: SuccessResponse<StatisticsInterface>) => {
+         transformResponse: (response: HttpResponse<StatisticsInterface>) => {
             const data = response.metadata
             return {
                ...data!,
@@ -27,7 +27,7 @@ export const statisticApi = createApi({
       }),
       getStudentStatistics: build.query<Array<{ name: string; total: number }>, AxiosRequestConfig['params']>({
          query: (params) => ({ url: '/eventStatisticsStudent', method: 'GET', params }),
-         transformResponse: (response: SuccessResponse<Array<{ name: string; total: number }>>) => {
+         transformResponse: (response: HttpResponse<Array<{ name: string; total: number }>>) => {
             return response.metadata as Array<{ name: string; total: number }>
          },
          providesTags: tagTypes

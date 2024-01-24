@@ -26,7 +26,7 @@ const ThemeSelect: React.FunctionComponent = () => {
                </Button>
             </DropdownMenuTrigger>
          </Tooltip>
-         <DropdownMenuContent className='w-48'>
+         <DropdownMenuContent className='w-48' align='end'>
             <DropdownMenuLabel>Theme</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={theme} onValueChange={(theme) => setTheme(theme as Theme)}>

@@ -9,7 +9,7 @@ const Tooltip: React.FC<TooltipProps> = (props) => {
             <TooltipTrigger asChild={props.asChild} type='button'>
                {props.children}
             </TooltipTrigger>
-            <TooltipContent side={props.side} hidden={props.hidden}>
+            <TooltipContent className='z-[100]' side={props.side} hidden={props.hidden}>
                {props.content}
             </TooltipContent>
          </TooltipWrapper>

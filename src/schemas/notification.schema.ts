@@ -1,4 +1,4 @@
-import { format, isAfter, isBefore } from 'date-fns'
+import { addMinutes, format, isAfter, isBefore } from 'date-fns'
 import { z } from 'zod'
 
 export const NotificationSchema = z.object({
@@ -27,8 +27,12 @@ export const TimeSendSchema = (context) =>
             path: ['time']
          }
       )
-      .refine((data) => isBefore(new Date(data.date + ' ' + data.time), new Date(context.timeEnd)), {
+      .refine((data) => isBefore(new Date(data.date + ' ' + data.time), new Date(context.maxValue)), {
          message: 'Thời gian gửi phải trong thời gian diễn ra sự kiện',
+         path: ['time']
+      })
+      .refine((data) => isAfter(new Date(data.date + ' ' + data.time), addMinutes(new Date(), 5)), {
+         message: 'Thời gian lên lịch tối thiểu từ 5 phút',
          path: ['time']
       })
 

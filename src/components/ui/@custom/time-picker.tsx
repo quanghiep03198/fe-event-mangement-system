@@ -1,7 +1,7 @@
 import Regex from '@/common/constants/regex'
 import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, ScrollArea, Toggle, Typography } from '..'
+import { Box, Icon, ScrollArea, Toggle, Typography } from '..'
 import { TimeObject, getCurrentDate, parseTime } from '@/common/utils/time'
 
 type TimePickerProps = {
@@ -34,10 +34,11 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
 
    return (
       <Box className='px-3'>
-         <Typography variant='small' className='mb-3 rounded-lg border p-2 text-center'>
+         <Typography variant='small' className='mb-3 flex items-center justify-center gap-x-2 rounded-lg border p-2 text-center'>
+            <Icon name='Clock' />
             {time ? format(getCurrentDate(time), 'HH:mm') : '--:--:--'}
          </Typography>
-         <Box className='grid grid-cols-2'>
+         <Box className='grid grid-cols-2 divide-x divide-border'>
             <ScrollArea className='h-56'>
                <Box className='flex flex-col items-center justify-center gap-y-1 p-2'>
                   {Array.apply(null, Array(24)).map((_, i) => (
@@ -58,10 +59,10 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
 }
 
 const ToggleButton: React.FC<ToggleButtonProps> = ({ value, pressed, onPressedChange }) => {
-   const ref = useRef<typeof Toggle.prototype>(null)
+   const ref = useRef<HTMLButtonElement>(null)
 
    useEffect(() => {
-      if (pressed && ref.current) ref.current.scrollIntoView()
+      if (pressed && ref.current) ref.current.scrollIntoView({ block: 'center' })
    }, [pressed])
 
    return (

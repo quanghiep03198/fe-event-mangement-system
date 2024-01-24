@@ -3,9 +3,11 @@ import axiosBaseQuery from '../helper'
 import { FeedbackInterface } from '@/common/types/entities'
 import { AxiosRequestConfig } from 'axios'
 import { ResponsiveContainer } from 'recharts'
+import { eventApi } from './event.api'
+import { URLSearchParams } from 'url'
 
 const reducerPath = 'feedbacks/api' as const
-const tagTypes = ['Feedback'] as const
+const tagTypes = ['Feedback', 'Event'] as const
 
 export const feedbackApi = createApi({
    reducerPath,
@@ -15,16 +17,20 @@ export const feedbackApi = createApi({
    endpoints: (build) => ({
       getAllFeedbackByEvent: build.query<Pagination<FeedbackInterface>, { eventId: string; params?: AxiosRequestConfig['params'] }>({
          query: ({ eventId, params }) => ({ url: `/feedback/${eventId}`, method: 'GET', params }),
-         transformResponse: (response: SuccessResponse<Pagination<FeedbackInterface>>) => response.metadata,
+         transformResponse: (response: HttpResponse<Pagination<FeedbackInterface>>) => response.metadata,
          providesTags: tagTypes
       }),
       getFeedbackDetails: build.query<FeedbackInterface, string | number>({
          query: (id) => ({ url: `/feedback/show/${id}`, method: 'GET' }),
-         transformResponse: (response: SuccessResponse<FeedbackInterface>) => response.metadata,
+         transformResponse: (response: HttpResponse<FeedbackInterface>) => response.metadata,
          providesTags: (result, _error, _arg) => (result ? [{ type: 'Feedback' as const, id: result?.id }, ...tagTypes] : tagTypes)
       }),
       createFeedback: build.mutation<unknown, { event_id: string; content?: string }>({
          query: (payload) => ({ url: '/feedback', method: 'POST', data: payload }),
+         onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+            await queryFulfilled
+            dispatch(eventApi.endpoints.getJoinedEvents.initiate({}))
+         },
          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),
       updateFeedback: build.mutation<unknown, { id: number; payload: Partial<FeedbackInterface> }>({

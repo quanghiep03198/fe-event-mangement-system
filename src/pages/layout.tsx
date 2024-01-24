@@ -11,7 +11,7 @@ const RootLayout: React.FunctionComponent = () => {
    const navigate = useNavigate()
 
    useLayoutEffect(() => {
-      if (authenticated && ([Paths.SIGNIN, Paths.SIGNUP] as Array<string>).includes(pathname)) navigate(-1)
+      if (authenticated && ([Paths.LOGIN, Paths.REGISTER] as Array<string>).includes(pathname)) navigate(-1)
       const currentPath = Object.keys(metadata).find((path) => !!matchPath(path, pathname))
       document.title = metadata[currentPath as keyof typeof metadata] ?? 'Sự kiện Poly'
    }, [pathname])

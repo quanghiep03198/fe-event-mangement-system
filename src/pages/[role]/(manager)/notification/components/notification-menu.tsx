@@ -1,7 +1,7 @@
 import { cn } from '@/common/utils/cn'
 import { buttonVariants, Icon } from '@/components/ui'
 import { IconProps } from '@/components/ui/@shadcn/icon'
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
 import * as qs from 'qs'
@@ -72,4 +72,4 @@ const NotificationMenu: React.FunctionComponent = () => {
 const Menu = tw.ul`flex flex-col gap-y-1 items-stretch justify-start`
 const MenuItem = tw.li`whitespace-nowrap w-full gap-x-2 [&>:first-child]:w-full`
 
-export default NotificationMenu
+export default memo(NotificationMenu)

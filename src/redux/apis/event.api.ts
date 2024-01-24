@@ -25,7 +25,7 @@ export const eventApi = createApi({
       return {
          getEvents: build.query<OptionalPagination<EventInterface>, RequestParams>({
             query: (params) => ({ url: '/event', method: 'GET', params }),
-            transformResponse: (response: SuccessResponse<OptionalPagination<EventInterface>>, _meta, args) => {
+            transformResponse: (response: HttpResponse<OptionalPagination<EventInterface>>, _meta, args) => {
                // With pagination
                if (typeof args.pagination === 'undefined') return response.metadata as Pagination<EventInterface>
                return Array.isArray(response.metadata)
@@ -45,7 +45,7 @@ export const eventApi = createApi({
          }),
          getRecentEvents: build.query<EventInterface[], void>({
             query: () => ({ url: '/getNearstEvent', method: 'GET' }),
-            transformResponse: (response: SuccessResponse<EventInterface[]>) => {
+            transformResponse: (response: HttpResponse<EventInterface[]>) => {
                if (!Array.isArray(response.metadata)) {
                   return [] as EventInterface[]
                }
@@ -60,7 +60,7 @@ export const eventApi = createApi({
          }),
          getJoinedEvents: build.query<Pagination<EventInterface>, RequestParams>({
             query: (params) => ({ url: '/eventJoin', method: 'GET', params }),
-            transformResponse: (response: SuccessResponse<Pagination<EventInterface>>) => response.metadata,
+            transformResponse: (response: HttpResponse<Pagination<EventInterface>>) => response.metadata,
             providesTags: [{ type: 'Event', id: 'JOINED_EVENTS_LIST' }]
          }),
          participateInEvent: build.mutation<unknown, { user_id: number; event_id: number }>({
@@ -69,7 +69,7 @@ export const eventApi = createApi({
          }),
          getEventDetails: build.query<EventInterface, string>({
             query: (id) => ({ url: `/event/${id}`, method: 'GET' }),
-            transformResponse: (response: SuccessResponse<EventInterface>) => {
+            transformResponse: (response: HttpResponse<EventInterface>) => {
                return response.metadata!
             },
             providesTags: (result, _error, _arg) => (result ? [{ type: 'Event' as const, id: result?.id }] : tagTypes)
