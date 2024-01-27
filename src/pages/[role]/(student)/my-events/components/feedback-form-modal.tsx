@@ -77,60 +77,26 @@ const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
 
    return (
       <Dialog open={props.open} onOpenChange={props.onOpenChange} defaultOpen={false}>
-         <DialogContent>
+         <DialogContent className='max-h-[calc(100vh-2rem)] w-full max-w-2xl overflow-y-auto scrollbar-none sm:max-w-full'>
             <DialogHeader className='text-start'>
                <DialogTitle>Feedback sự kiện</DialogTitle>
                <DialogDescription>Đóng góp ý kiến để chúng tôi cải thiện chất lượng sự kiện tốt hơn</DialogDescription>
             </DialogHeader>
             <Form {...form}>
                <DialogForm onSubmit={form.handleSubmit(handleSendFeedback)}>
-                  <FormItem>
-                     <Label>Họ tên</Label>
-                     <Input defaultValue={props.sender.name} />
-                  </FormItem>
-                  <FormItem>
-                     <Label>Email</Label>
-                     <Input defaultValue={props.sender.email} />
-                  </FormItem>
                   <FormField
                      name='rating'
                      control={form.control}
                      render={({ field }) => (
                         <FormItem>
                            <FormLabel className='block'>Đánh giá</FormLabel>
-                           <StarRatingRadioGroup name='rating' field={field} defaultValue={'0'} />
+                           <StarRatingRadioGroup name='rating' field={field} />
                            <FormMessage />
                         </FormItem>
-                        // <FormItem>
-                        //    <FormLabel className='block'>Đánh giá</FormLabel>
-                        //    <FormControl>
-                        //       <RadioGroup
-                        //          className='relative inline-flex items-center gap-x-1'
-                        //          onValueChange={(value) => {
-                        //             field.onChange(value)
-                        //          }}
-                        //       >
-                        //          {ratingValues.map((item) => (
-                        //             <FormItem key={item.id}>
-                        //                <FormControl>
-                        //                   <RadioGroupItem value={item.value} className='hidden' />
-                        //                </FormControl>
-                        //                <FormLabel>
-                        //                   <Icon
-                        //                      stroke='hsl(var(--primary))'
-                        //                      name='Star'
-                        //                      fill={+field.value! >= +item.value ? 'hsl(var(--primary))' : 'hsl(var(--background))'}
-                        //                   />
-                        //                </FormLabel>
-                        //             </FormItem>
-                        //          ))}
-                        //       </RadioGroup>
-                        //    </FormControl>
-                        //    <FormMessage />
-                        // </FormItem>
                      )}
                   />
                   <TextareaFieldControl name='content' control={form.control} label='Nội dung' rows={5} />
+                  <TextareaFieldControl name='recommend' control={form.control} label='Đề xuất' rows={5} />
                   <Box className='flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2'>
                      <Button type='submit' className='gap-x-2' disabled={isLoading}>
                         <Icon name='Send' /> Gửi
@@ -143,6 +109,6 @@ const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
    )
 }
 
-const DialogForm = tw.form`flex flex-col items-stretch gap-y-6`
+const DialogForm = tw.form`flex flex-col items-stretch gap-y-6 mt-6`
 
 export default FeedbackFormModal

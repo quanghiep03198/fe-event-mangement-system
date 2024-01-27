@@ -1,12 +1,13 @@
 import useQueryParams from '@/common/hooks/use-query-params'
 import { FeedbackInterface } from '@/common/types/entities'
+import { cn } from '@/common/utils/cn'
 import { Avatar, AvatarFallback, AvatarImage, Box, Button, Icon, ScrollArea, Separator, Textarea, Toggle, Typography } from '@/components/ui'
 import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteFeedbackMutation, useGetFeedbackDetailsQuery } from '@/redux/apis/feedback.api'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 
@@ -75,9 +76,24 @@ const FeedbackDetails: React.FunctionComponent = () => {
             )}
 
             <Box className='flex flex-1 flex-col gap-y-4 p-3'>
-               <StarRatingRadioGroup defaultValue={data?.rating ? String(data.rating) : '4'} disabled />
+               <StarRatingRadioGroup defaultValue={String(data?.rating)} />
                <ScrollArea className='h-[calc(55vh-4.75rem)]'>
-                  <Typography variant='small'>{data?.content}</Typography>
+                  <Box className='flex flex-col gap-y-6'>
+                     <Box>
+                        <Typography variant='small' className='font-bold'>
+                           Phản hồi
+                        </Typography>
+                        <Typography variant='small'>{data?.content}</Typography>
+                     </Box>
+                     <Box>
+                        <Typography variant='small' className='font-bold'>
+                           Đề xuất
+                        </Typography>
+                        <Typography variant='small' color={data?.recommend ? 'default' : 'muted'} className={cn({ italic: !data?.recommend })}>
+                           {data?.recommend ?? 'Không có'}
+                        </Typography>
+                     </Box>
+                  </Box>
                </ScrollArea>
             </Box>
 

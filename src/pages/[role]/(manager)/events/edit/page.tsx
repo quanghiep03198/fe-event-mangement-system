@@ -17,50 +17,58 @@ import {
    Typography
 } from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
+import { useGetAllAreasQuery, useGetAreaQuery } from '@/redux/apis/area.api'
 import { useGetEventDetailsQuery, useUpdateEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
 import { UpdateEventSchema } from '@/schemas/event.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import UserComboboxFieldControl from '../components/user-combobox-field-control'
-import { areaOptions } from '@/common/constants/area-options'
 
 type FormValue = z.infer<typeof UpdateEventSchema>
 
 const EditEvent = () => {
-   const { id } = useParams()
-   const { data } = useGetEventDetailsQuery(id!)
-   const navigate = useNavigate()
-   const user = useAppSelector((state) => state.auth.user)
-   const [image, setImage] = useState<string>('')
-   const [uploadImage, isUploading, isUploadError] = useCloudinaryUpload()
-
    const form = useForm<FormValue>({
       resolver: zodResolver(UpdateEventSchema)
    })
+   const [image, setImage] = useState<string>('')
+   const { id } = useParams()
+   const navigate = useNavigate()
+   const selectedAreaId = useWatch({ name: 'area', control: form.control, exact: true })
 
+   const { data: selectedArea } = useGetAreaQuery(selectedAreaId, { skip: !selectedAreaId, refetchOnMountOrArgChange: true })
+   const { data: eventDetails } = useGetEventDetailsQuery(id!)
+   const { data: areas } = useGetAllAreasQuery({ pagination: false })
    const [updateEvent, { isLoading }] = useUpdateEventMutation()
+   const [uploadImage, isUploading, isUploadError] = useCloudinaryUpload()
+   const user = useAppSelector((state) => state.auth.user)
+
+   const areaOptions = useMemo(() => (Array.isArray(areas) ? areas.map((item) => ({ label: item.name, value: item.id })) : []), [areas])
 
    useEffect(() => {
-      if (data) {
+      if (eventDetails) {
          form.reset({
-            name: data.name,
-            location: data.location,
-            user_id: data.user_id,
-            contact: data.contact,
-            description: data.description,
-            start_time: new Date(data.start_time),
-            end_time: new Date(data.end_time)
+            name: eventDetails.name,
+            location: eventDetails.location,
+            user_id: eventDetails.user_id,
+            contact: eventDetails.contact,
+            description: eventDetails.description,
+            start_time: new Date(eventDetails.start_time),
+            end_time: new Date(eventDetails.end_time)
          } as FormValue)
 
-         setImage(data?.banner)
+         setImage(eventDetails?.banner)
       }
-   }, [data])
+   }, [eventDetails])
+
+   useEffect(() => {
+      form.setValue('location', selectedArea?.address)
+   }, [selectedArea])
 
    const handleUpdateEvent = async (data: FormValue) => {
       let banner
@@ -120,7 +128,9 @@ const EditEvent = () => {
                         name='user_id'
                         form={form}
                         control={form.control}
+                        defaultValue={String(eventDetails?.user_id)}
                         restrictRole={UserRoleEnum.STAFF}
+                        placeholder='Chọn người tổ chức'
                         description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện'
                      />
                   </Box>
@@ -170,7 +180,7 @@ const EditEvent = () => {
                      <TextareaFieldControl name='description' control={form.control} label='Mô tả' rows={5} placeholder='Mô tả ngắn về sự kiện' />
                   </Box>
                   <Box className='col-span-full'>
-                     <EditorFieldControl defaultValue={data?.content} name='content' form={form} label='Nội dung' />
+                     <EditorFieldControl defaultValue={eventDetails?.content} name='content' form={form} label='Nội dung' />
                   </Box>
                </Box>
                <Button id='submit' type='submit' className='hidden w-full gap-x-2 sm:inline-flex'>

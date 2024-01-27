@@ -20,6 +20,7 @@ const NotificationListPage = lazy(() => import('@/pages/[role]/(manager)/notific
 const CreateNotification = lazy(() => import('@/pages/[role]/(manager)/notification/create/page'))
 const EditNotificationPage = lazy(() => import('@/pages/[role]/(manager)/notification/edit/page'))
 const EventDetailsPage = lazy(() => import('@/pages/[role]/(manager)/events/[id]/page'))
+const AreasListPage = lazy(() => import('@/pages/[role]/(manager)/areas/page'))
 
 const managerRoutes: RouteObject = {
    path: Paths.MANAGER,
@@ -107,6 +108,14 @@ const managerRoutes: RouteObject = {
          element: (
             <RoleGuard roles={[UserRoleEnum.MANAGER, UserRoleEnum.STAFF]}>
                <EditNotificationPage />
+            </RoleGuard>
+         )
+      },
+      {
+         path: Paths.AREAS_LIST,
+         element: (
+            <RoleGuard roles={[UserRoleEnum.MANAGER]}>
+               <AreasListPage />
             </RoleGuard>
          )
       }

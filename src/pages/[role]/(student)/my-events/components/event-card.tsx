@@ -14,15 +14,19 @@ const EventCard: React.FC<{ data: EventInterface; onSelectEventToFeedback: React
    const prefetchPage = usePrefetch('getEventDetails')
 
    return (
-      <Box className='grid h-fit grid-cols-[1fr_2fr] gap-6 rounded-lg border p-4 shadow md:grid-cols-[1fr_3fr]'>
-         <Image src={data?.banner} className='aspect-square h-[12rem] w-full min-w-[12rem] max-w-[12rem] rounded-lg object-cover object-center' width='100%' />
+      <Box className='grid h-fit grid-cols-1 gap-4 rounded-lg border p-2 shadow xl:grid-cols-[1fr_2fr] xl:gap-6'>
+         <Image
+            src={data?.banner}
+            className='aspect-video h-[12rem] w-full min-w-[12rem] max-w-full rounded-lg object-cover object-center lg:max-w-full xl:aspect-square xl:max-w-[12rem]'
+            width='100%'
+         />
 
          <Box className='flex flex-col justify-between'>
             <Box className='mb-6 space-y-2'>
                <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data?.id))} className='underline-offset-2 hover:underline'>
                   <Typography className='capitalize'>{data?.name}</Typography>
                </Link>
-               <Typography variant='small' className='flex items-center gap-x-2 text-sm'>
+               <Typography variant='small' className='flex items-center gap-x-2' color='muted'>
                   <Icon name='Clock' />
                   {format(data?.start_time, 'dd/MM/yyyy')} - {format(data?.end_time, 'dd/MM/yyyy')}
                </Typography>

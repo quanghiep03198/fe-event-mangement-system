@@ -37,7 +37,6 @@ const AvatarUpload: React.FunctionComponent = () => {
    const [updateUserInfo] = useUpdateUserInfoMutation()
 
    const handleImageChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-      // console.log(e.target.files)
       if (e.currentTarget.files instanceof FileList) {
          setImage(URL.createObjectURL(e.target.files[0]))
          setOpen(true)

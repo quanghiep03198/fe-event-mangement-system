@@ -7,6 +7,7 @@ import { statisticApi } from './apis/statistics.api'
 import { feedbackApi } from './apis/feedback.api'
 import { attendanceApi } from './apis/attendance.api'
 import { notificationApi } from './apis/notification.api'
+import { areaApi } from './apis/area.api'
 
 const rootReducer = combineReducers({
    [authSlice.name]: authSlice.reducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
    [userApi.reducerPath]: userApi.reducer,
    [feedbackApi.reducerPath]: feedbackApi.reducer,
    [attendanceApi.reducerPath]: attendanceApi.reducer,
-   [notificationApi.reducerPath]: notificationApi.reducer
+   [notificationApi.reducerPath]: notificationApi.reducer,
+   [areaApi.reducerPath]: areaApi.reducer
 })
 
 export default rootReducer

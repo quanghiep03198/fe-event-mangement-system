@@ -30,7 +30,7 @@ export function GlobalFilterPopover<T>(props: GlobalFilterProps<T>) {
       <Popover>
          <Tooltip content='Tìm kiếm'>
             <PopoverTrigger asChild>
-               <Button variant='outline' size='icon' className='hidden h-8 w-8 sm:inline-flex'>
+               <Button variant='outline' size='icon' className='h-8 w-8'>
                   <Icon name='Search' />
                </Button>
             </PopoverTrigger>

@@ -6,6 +6,7 @@ import { TableContext } from '../context/table.context'
 import { GlobalFilter, GlobalFilterPopover } from './global-filter'
 import { TableViewOptions } from './table-view-options'
 import { unknown } from 'zod'
+import { cn } from '@/common/utils/cn'
 
 type TableToolbarProps<TData> = {
    table: Table<TData>
@@ -24,14 +25,14 @@ export default function TableToolbar<TData>(props: TableToolbarProps<TData>) {
       <Box className='flex items-center justify-between sm:justify-end'>
          <GlobalFilter table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
          <Box className='flex items-center gap-x-2'>
-            {isFiltered && (
-               <Tooltip content='Xóa lọc'>
-                  <Button variant='destructive' size='icon' onClick={onClearAllFilters} className='h-8 w-8'>
-                     <Icon name='X' />
-                  </Button>
-               </Tooltip>
-            )}
-            <GlobalFilterPopover table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
+            <Tooltip content='Xóa lọc'>
+               <Button variant='destructive' size='icon' onClick={onClearAllFilters} className={cn('h-8 w-8', !isFiltered && 'hidden')}>
+                  <Icon name='X' />
+               </Button>
+            </Tooltip>
+            <Box className='hidden sm:block'>
+               <GlobalFilterPopover table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
+            </Box>
             <Tooltip content={isFilterOpened ? 'Đóng bộ lọc' : 'Mở bộ lọc'}>
                <Toggle
                   variant='outline'

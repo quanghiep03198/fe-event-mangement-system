@@ -1,23 +1,23 @@
-import { areaOptions } from '@/common/constants/area-options'
 import { EventStatusValues } from '@/common/constants/constants'
 import { EventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import useQueryParams from '@/common/hooks/use-query-params'
 import { cn } from '@/common/utils/cn'
-import { Box, Button, Icon, Input, Typography, buttonVariants } from '@/components/ui'
-import { debounce, isEmpty } from 'lodash'
+import { Box, Button, Icon, Typography, buttonVariants } from '@/components/ui'
+import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
+import { useGetAllAreasQuery } from '@/redux/apis/area.api'
 import * as qs from 'qs'
 import { NavLink, matchPath, useLocation, useNavigate } from 'react-router-dom'
 
 const postedTimeOptions: Record<'label' | 'value', string>[] = [
-   { label: 'Mới nhất', value: 'latest' },
-   { label: 'Cũ nhất', value: 'oldest' }
+   { label: 'Cũ nhất', value: 'latest' },
+   { label: 'Mới nhất', value: 'oldest' }
 ]
 
 const Sidebar: React.FunctionComponent = () => {
-   const [params, setParams, removeParam] = useQueryParams('search', 'sort', 'status', 'area')
+   const [params, setParam, removeParam] = useQueryParams('search', 'sort', 'status', 'area')
+   const { data: areas } = useGetAllAreasQuery({ pagination: false })
    const { pathname } = useLocation()
-   const navigate = useNavigate()
 
    const handleRemoveFilter: React.MouseEventHandler<HTMLElement> = (e) => {
       e.stopPropagation()
@@ -26,47 +26,34 @@ const Sidebar: React.FunctionComponent = () => {
 
    return (
       <Box as='aside' className='flex flex-col items-stretch px-2'>
-         <Box className='relative mb-6 sm:col-span-4'>
-            <Input
-               className='pl-8'
-               type='search'
-               placeholder='Tìm kiếm ...'
-               onChange={debounce((e) => {
-                  setParams('search', e.target.value)
-                  if (isEmpty(e.target.value)) removeParam('search')
-               })}
-            />
-            <Icon name='Search' className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground/50' />
-         </Box>
-
-         <Box className='space-y-2 border-b py-6'>
-            <Typography variant='h6' color='muted' className='text-base'>
+         <Box className='space-y-2 border-b pb-6'>
+            <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
+               <Icon name='MenuSquare' />
                Menu
             </Typography>
             <Box className='flex flex-col gap-y-1'>
                <NavLink
                   to={Paths.EVENTS_BOARD}
                   className={({ isActive }) =>
-                     cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-x-2 text-base font-normal', { 'text-primary hover:text-primary': isActive })
+                     cn(buttonVariants({ variant: 'ghost' }), 'justify-start text-base font-normal', { 'text-primary hover:text-primary': isActive })
                   }
                >
-                  <Icon name='Home' />
                   Trang chủ
                </NavLink>
                <NavLink
                   to={Paths.MY_EVENTS}
                   className={({ isActive }) =>
-                     cn(buttonVariants({ variant: 'ghost' }), 'justify-start gap-x-2 text-base font-normal', { 'text-primary hover:text-primary': isActive })
+                     cn(buttonVariants({ variant: 'ghost' }), 'justify-start text-base font-normal', { 'text-primary hover:text-primary': isActive })
                   }
                >
-                  <Icon name='CalendarCheck' />
                   Sự kiện của tôi
                </NavLink>
             </Box>
          </Box>
 
          <Box className='space-y-2 border-b py-6'>
-            <Typography variant='h6' color='muted' className='text-base'>
+            <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
+               <Icon name='CalendarDays' />
                Ngày đăng
             </Typography>
             <Box className='flex flex-col gap-y-1'>
@@ -75,7 +62,7 @@ const Sidebar: React.FunctionComponent = () => {
                      variant={params.area === option.value ? 'secondary' : 'ghost'}
                      className={cn('justify-start gap-x-2 text-base font-normal')}
                      disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
-                     onClick={() => navigate({ search: qs.stringify({ ...params, sort: option.value }) })}
+                     onClick={() => setParam('sort', option.value)}
                   >
                      {option.label}
                      {params.sort === option.value && (
@@ -89,7 +76,8 @@ const Sidebar: React.FunctionComponent = () => {
          </Box>
 
          <Box className='space-y-2 border-b py-6'>
-            <Typography variant='h6' color='muted' className='text-base'>
+            <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
+               <Icon name='CheckSquare' />
                Trạng thái
             </Typography>
             <Box className='flex flex-col items-stretch gap-y-1'>
@@ -100,7 +88,7 @@ const Sidebar: React.FunctionComponent = () => {
                         variant={+params.status === status ? 'secondary' : 'ghost'}
                         className={cn('justify-start gap-x-2 text-base font-normal')}
                         disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
-                        onClick={() => navigate({ search: qs.stringify({ ...params, status: status }) })}
+                        onClick={() => setParam('status', status)}
                      >
                         {EventStatusValues.get(status as number)}
                         {+params.status === status && (
@@ -112,26 +100,37 @@ const Sidebar: React.FunctionComponent = () => {
                   ))}
             </Box>
          </Box>
+         <Box className='space-y-2 border-b py-6'>
+            <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
+               <Icon name='MessagesSquare' />
+               Đánh giá
+            </Typography>
+            <StarRatingRadioGroup defaultValue='5' onValueChange={(value) => setParam('rating', value)} />
+         </Box>
          <Box className='space-y-2 py-6'>
-            <Typography variant='h6' color='muted' className='text-base'>
-               Địa điểm
+            <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
+               <Icon name='MapPin' />
+               Khu vực
             </Typography>
             <Box className='flex flex-col gap-y-1'>
-               {areaOptions.map((option) => (
-                  <Button
-                     variant={params.area === option.value ? 'secondary' : 'ghost'}
-                     className={cn('justify-start gap-x-2 text-base font-normal')}
-                     disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
-                     onClick={() => navigate({ search: qs.stringify({ ...params, area: option.value }) })}
-                  >
-                     {option.label}
-                     {params.area === option.value && (
-                        <Box className='ml-auto' data-key='area' onClick={handleRemoveFilter}>
-                           <Icon name='X' />
-                        </Box>
-                     )}
-                  </Button>
-               ))}
+               {Array.isArray(areas) &&
+                  areas.map((option) => (
+                     <Button
+                        variant={params.area === String(option.id) ? 'secondary' : 'ghost'}
+                        className={cn('justify-start gap-x-2 text-base font-normal')}
+                        disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
+                        onClick={() => {
+                           setParam('area', option.id)
+                        }}
+                     >
+                        {option.name}
+                        {params.area === String(option.id) && (
+                           <Box className='ml-auto' data-key='area' onClick={handleRemoveFilter}>
+                              <Icon name='X' />
+                           </Box>
+                        )}
+                     </Button>
+                  ))}
             </Box>
          </Box>
       </Box>

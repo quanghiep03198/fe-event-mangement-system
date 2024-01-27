@@ -41,6 +41,13 @@ const navigation: Array<MenuNavigationItem> = [
       roles: [UserRoleEnum.MANAGER]
    },
    {
+      id: 4,
+      icon: 'Building2',
+      name: 'Cơ sở',
+      path: Paths.AREAS_LIST,
+      roles: [UserRoleEnum.MANAGER]
+   },
+   {
       id: 5,
       icon: 'BellRing',
       name: 'Thông báo',

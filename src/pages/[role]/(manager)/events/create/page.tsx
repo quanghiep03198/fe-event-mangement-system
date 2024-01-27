@@ -1,4 +1,4 @@
-import { areaOptions } from '@/common/constants/area-options'
+// import { areaOptions } from '@/common/constants/area-options'
 import { UserRoleEnum } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import useCloudinaryUpload from '@/common/hooks/use-cloudinary'
@@ -25,12 +25,13 @@ import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-cont
 import { useCreateEventMutation } from '@/redux/apis/event.api'
 import { CreateEventSchema } from '@/schemas/event.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Fragment, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import UserComboboxFieldControl from '../components/user-combobox-field-control'
+import { useGetAllAreasQuery, useGetAreaQuery } from '@/redux/apis/area.api'
 
 type FormValue = z.infer<typeof CreateEventSchema>
 
@@ -38,10 +39,13 @@ const CreateEventPage = () => {
    const [image, setImage] = useState<string>('')
    const [fileValue, setFileValue] = useState<string>('')
    const form = useForm<FormValue>({ resolver: zodResolver(CreateEventSchema) })
-
+   const selectedAreaId = useWatch({ name: 'area', control: form.control })
    const navigate = useNavigate()
+   const { data: selectedArea } = useGetAreaQuery(selectedAreaId, { skip: !selectedAreaId })
    const [createEvent, { isLoading }] = useCreateEventMutation()
    const [uploadImage, isUploading, isUploadError] = useCloudinaryUpload()
+   const { data: areas } = useGetAllAreasQuery({ pagination: false })
+   const areaOptions = useMemo(() => (Array.isArray(areas) ? areas.map((item) => ({ label: item.name, value: item.id })) : []), [areas])
 
    const handleCreateEvent = async (data: FormValue) => {
       toast.loading('Đang tải lên ảnh ...')
@@ -59,6 +63,10 @@ const CreateEventPage = () => {
          error: 'Tạo sự kiện thất bại'
       })
    }
+
+   useEffect(() => {
+      form.setValue('location', selectedArea?.address)
+   }, [selectedArea])
 
    return (
       <Form {...form}>
@@ -95,6 +103,7 @@ const CreateEventPage = () => {
                         control={form.control}
                         name='user_id'
                         restrictRole={UserRoleEnum.STAFF}
+                        placeholder='Chọn người tổ chức'
                         description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện'
                      />
                   </Box>

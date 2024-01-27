@@ -1,3 +1,5 @@
+import { BreakPoints } from '@/common/constants/enums'
+import useMediaQuery from '@/common/hooks/use-media-query'
 import {
    Box,
    Button,
@@ -16,7 +18,7 @@ import { useGetEventsQuery } from '@/redux/apis/event.api'
 import { useGetUsersQuery } from '@/redux/apis/user.api'
 import { FilterNotificationSchema } from '@/schemas/notification.schema'
 import { debounce } from 'lodash'
-import { memo, useRef, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import tw from 'tailwind-styled-components'
 import { z } from 'zod'
@@ -40,6 +42,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
    const { data: users } = useGetUsersQuery({ pagination: false, search: searchEvent })
    const form = useForm<Partial<FormValue>>()
    const formRef = useRef<HTMLFormElement>(null)
+   const isSmallScreen = useMediaQuery(BreakPoints.SMALL)
+   const isMediumScreen = useMediaQuery('(min-width:600px) and (max-width:767px)')
 
    const handleSearch = (data: FormValue) => {
       handleSearchOptionsChange(data)
@@ -53,6 +57,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
       setOpen(false)
       setSearchEvent('')
    }
+
+   const alignOffset = useMemo(() => (isSmallScreen ? -36 : isMediumScreen ? -8 : 0), [isSmallScreen, isMediumScreen])
+   const alignment = useMemo(() => (isSmallScreen || isMediumScreen ? 'end' : 'center'), [isSmallScreen, isMediumScreen])
 
    return (
       <Box className='group relative w-full rounded-lg border @xs:basis-full'>
@@ -69,7 +76,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
                   <Icon name='SlidersHorizontal' size={14} />
                </Button>
             </PopoverTrigger>
-            <PopoverContent align='center' className='w-96 xl:w-fit' sideOffset={12}>
+            <PopoverContent align={alignment} className='w-96 sm:w-[calc(100vw-1rem)] md:w-full xl:w-fit' alignOffset={alignOffset} sideOffset={16}>
                <Form {...form}>
                   <SearchForm ref={formRef} onSubmit={form.handleSubmit(handleSearch)}>
                      <Box className='col-span-full xl:col-span-1'>

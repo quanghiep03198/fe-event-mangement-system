@@ -2,6 +2,8 @@ import { NotificationInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosRequestConfig } from 'axios'
 import axiosBaseQuery from '../helper'
+import { z } from 'zod'
+import { NotificationSchema } from '@/schemas/notification.schema'
 
 const reducerPath = 'notifiction/api' as const
 const tagTypes = ['Notification'] as const
@@ -29,11 +31,11 @@ export const notificationApi = createApi({
          transformResponse: (response: HttpResponse<NotificationInterface>): NotificationInterface => response.metadata!,
          providesTags: (response) => [{ id: response?.id, type: 'Notification' }, ...tagTypes]
       }),
-      createNotification: build.mutation<unknown, Omit<NotificationInterface, 'id'>>({
+      createNotification: build.mutation<unknown, z.infer<typeof NotificationSchema>>({
          query: (payload) => ({ url: '/notification', method: 'POST', data: payload }),
          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),
-      editNotification: build.mutation<unknown, { id: string; payload: Partial<NotificationInterface> }>({
+      editNotification: build.mutation<unknown, { id: string; payload: z.infer<ReturnType<typeof NotificationSchema.partial>> }>({
          query: ({ id, payload }) => ({ url: `/notification/${id}`, method: 'PATCH', data: payload }),
          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),

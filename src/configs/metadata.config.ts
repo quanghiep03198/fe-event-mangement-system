@@ -1,7 +1,7 @@
 import { Paths } from '@/common/constants/pathnames'
 
 export const metadata = {
-   [Paths.EVENTS_DETAILS + '/:id']: 'Sự kiện',
+   [Paths.EVENTS_DETAILS]: 'Sự kiện',
    /* AUTH */
    [Paths.LOGIN]: 'Đăng nhập',
    [Paths.REGISTER]: 'Đăng ký tài khoản',
@@ -19,6 +19,7 @@ export const metadata = {
    [Paths.STUDENTS_LIST]: 'Sinh viên',
    [Paths.NOTIFICATION_LIST]: 'Thông báo',
    [Paths.CREATE_NOTIFICATION]: 'Tạo thông báo',
+   [Paths.AREAS_LIST]: 'Cơ sở',
 
    /* NAVIGATION */
    [Paths.REDIRECT]: 'Đang chuyển hướng ...',

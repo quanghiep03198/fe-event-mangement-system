@@ -4,6 +4,8 @@ import _ from 'lodash'
 import axiosBaseQuery from '../helper'
 import { UserRoleEnum } from '@/common/constants/enums'
 import { AxiosRequestConfig } from 'axios'
+import { z } from 'zod'
+import { UpdateUserSchema, UserSchema } from '@/schemas/user.schema'
 
 type UserListWithPagination = Exclude<OptionalPagination<UserInterface>, Array<UserInterface>>
 type RequestParams = Partial<PaginationPayload> & { role?: UserRoleEnum; pagination?: boolean } & AxiosRequestConfig['params']
@@ -38,7 +40,7 @@ export const userApi = createApi({
          transformResponse: (response: HttpResponse<UserInterface>) => response.metadata,
          providesTags: (_response, _meta, arg) => [{ type: 'Users', id: arg }]
       }),
-      addUser: build.mutation<HttpResponse<UserInterface>, Pick<UserInterface, 'name' | 'email' | 'phone' | 'role'>>({
+      addUser: build.mutation<HttpResponse<UserInterface>, z.infer<typeof UserSchema>>({
          query: (payload) => ({ url: '/participants', method: 'POST', data: payload }),
          invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       }),
@@ -50,7 +52,7 @@ export const userApi = createApi({
          HttpResponse<UserInterface>,
          {
             id: Required<number>
-            payload: Partial<UserInterface>
+            payload: z.infer<typeof UpdateUserSchema>
          }
       >({
          query: ({ id, payload }) => ({ url: `/participants/${id}`, method: 'PUT', data: payload }),

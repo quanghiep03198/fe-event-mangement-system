@@ -1,5 +1,5 @@
 import Regex from '@/common/constants/regex'
-import { compareAsc, format, parse } from 'date-fns'
+import { compareAsc, format } from 'date-fns'
 import * as z from 'zod'
 
 const BaseEventSchema = z.object({
@@ -14,8 +14,8 @@ const BaseEventSchema = z.object({
    content: z.string({ required_error: 'Vui lòng nhập nội dung' }),
    description: z.string({ required_error: 'Vui lòng nhập mô tả' }),
    banner: z.any({ required_error: 'Vui lòng tải lên ảnh' }),
-   start_time: z.date({ required_error: 'Vui lòng chọn ngày bắt đầu' }),
-   end_time: z.date({ required_error: 'Vui lòng chọn ngày kết thúc' })
+   start_time: z.date({ required_error: 'Vui lòng chọn ngày bắt đầu' }).or(z.string({ required_error: 'Vui lòng chọn ngày bắt đầu' })),
+   end_time: z.date({ required_error: 'Vui lòng chọn ngày kết thúc' }).or(z.string({ required_error: 'Vui lòng chọn ngày kết thúc' }))
 })
 
 export const CreateEventSchema = z

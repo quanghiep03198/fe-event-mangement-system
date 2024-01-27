@@ -30,5 +30,6 @@ export const breadcrumbs = {
    [Paths.ACCOUNT_SETTINGS]: [
       { path: Paths.ACCOUNT_SETTINGS, name: 'Cài đặt' },
       { path: Paths.ACCOUNT_SETTINGS, name: 'Tài khoản' }
-   ]
+   ],
+   [Paths.AREAS_LIST]: [{ path: Paths.AREAS_LIST, name: 'Cơ sở' }]
 }

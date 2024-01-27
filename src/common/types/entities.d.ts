@@ -50,7 +50,8 @@ export interface StatisticsInterface {
 
 export interface FeedbackInterface extends BaseEntityInterface {
    id: number
-   rating:number,
+   rating: number
+   recommend: string | null
    content: string
    user_id: number
    event_id: number
@@ -62,10 +63,6 @@ export interface FeedbackInterface extends BaseEntityInterface {
    read?: boolean
 }
 
-/**
- * @description
- * preset: 0 (now), 8 (after 8h), 12 (after 12h), 24 (after 1d) from now
- */
 export interface NotificationInterface extends BaseEntityInterface {
    title: string
    content: string
@@ -77,4 +74,9 @@ export interface NotificationInterface extends BaseEntityInterface {
    deleted_at: Date | null
    sent_at: Date | string | null
    user_join: Partial<UserInterface>[]
+}
+
+export interface AreaInterface extends BaseEntityInterface {
+   name: string
+   address: string
 }

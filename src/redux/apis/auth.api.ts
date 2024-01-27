@@ -1,9 +1,9 @@
 import { UserInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axiosBaseQuery from '../helper'
+import { z } from 'zod'
+import { LoginSchema, RegisterSchema } from '@/schemas/auth.schema'
 
-type SigninMetadata = { user: Omit<UserInterface, 'password'>; access_token: string }
-type SigninPayload = Pick<UserInterface, 'email' | 'password'>
 type SignupPayload = Pick<UserInterface, 'email' | 'name' | 'phone' | 'password'>
 type SignupMetadata = Omit<UserInterface, 'password'>
 
@@ -16,7 +16,13 @@ export const authApi = createApi({
    baseQuery: axiosBaseQuery(),
    endpoints: (build) => {
       return {
-         signin: build.mutation<HttpResponse<SigninMetadata>, SigninPayload>({
+         login: build.mutation<
+            HttpResponse<{
+               user: Omit<UserInterface, 'password'>
+               access_token: string
+            }>,
+            z.infer<typeof LoginSchema>
+         >({
             query: (payload) => ({ url: '/login', method: 'POST', data: payload }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                const { data } = await queryFulfilled
@@ -29,11 +35,11 @@ export const authApi = createApi({
             transformResponse: (response: HttpResponse<Partial<UserInterface>>) => response.metadata!,
             invalidatesTags: tagTypes
          }),
-         signup: build.mutation<HttpResponse<SignupMetadata>, SignupPayload>({
+         signup: build.mutation<HttpResponse<SignupMetadata>, z.infer<typeof RegisterSchema>>({
             query: (payload) => ({ url: '/register', method: 'POST', data: payload })
          })
       }
    }
 })
 
-export const { useSigninMutation, useSignupMutation, useUpdateUserInfoMutation } = authApi
+export const { useLoginMutation, useSignupMutation, useUpdateUserInfoMutation } = authApi

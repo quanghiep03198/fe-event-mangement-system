@@ -28,6 +28,7 @@ export const Paths = {
    NOTIFICATION_LIST: '/manager/notification',
    CREATE_NOTIFICATION: '/manager/notification/create',
    EDIT_NOTIFICATION: '/manager/notification/:id/edit',
+   AREAS_LIST: '/manager/areas',
 
    /** Student routes */
    EVENTS_BOARD: '/student/events',

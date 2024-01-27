@@ -1,8 +1,10 @@
-import { EventStatusValues } from '@/common/constants/constants'
-import { EventInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { format } from 'date-fns'
 import axiosBaseQuery from '../helper'
+import { z } from 'zod'
+import { EventStatusValues } from '@/common/constants/constants'
+import { EventInterface } from '@/common/types/entities'
+import { CreateEventSchema, UpdateEventSchema } from '@/schemas/event.schema'
 
 type RequestParams = {
    search?: string
@@ -72,19 +74,19 @@ export const eventApi = createApi({
             transformResponse: (response: HttpResponse<EventInterface>) => {
                return response.metadata!
             },
-            providesTags: (result, _error, _arg) => (result ? [{ type: 'Event' as const, id: result?.id }] : tagTypes)
+            providesTags: (result, _error, _args) => (result ? [{ type: 'Event' as const, id: result?.id }] : tagTypes)
          }),
-         createEvent: build.mutation({
+         createEvent: build.mutation<unknown, Omit<z.infer<typeof CreateEventSchema>, 'banner'> & { banner: string }>({
             query: (payload) => ({ url: `/event`, method: 'POST', data: payload }),
-            invalidatesTags: (_result, error, _arg) => (error ? [] : tagTypes)
+            invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
          }),
-         updateEvent: build.mutation({
+         updateEvent: build.mutation<unknown, { id: string; payload: z.infer<typeof UpdateEventSchema> }>({
             query: ({ id, payload }) => ({ url: `/event/${id}`, method: 'PATCH', data: payload }),
-            invalidatesTags: (_result, error, _arg) => (error ? [] : tagTypes)
+            invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
          }),
-         deleteEvent: build.mutation({
+         deleteEvent: build.mutation<HttpResponse<EventInterface>, string | number>({
             query: (id) => ({ url: `/event/${id}`, method: 'DELETE' }),
-            invalidatesTags: (_result, error) => (error ? [] : tagTypes)
+            invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
          })
       }
    }

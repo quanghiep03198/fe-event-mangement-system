@@ -2,19 +2,16 @@ import useQueryParams from '@/common/hooks/use-query-params'
 import { calculatePaginationRange } from '@/common/utils/calculate-pagination-range'
 import { cn } from '@/common/utils/cn'
 import { Box, Button, Icon, buttonVariants } from '@/components/ui'
-import _ from 'lodash'
 import * as qs from 'qs'
 import React from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
 
-type PaginationProps = Pick<Pagination<unknown>, 'page' | 'totalPages' | 'hasNextPage' | 'hasPrevPage'> & { onPrefetch?: () => void }
+type PaginationProps = Omit<Pagination<unknown>, 'docs'> & { onPrefetch?: () => void }
 
 const Pagination: React.FC<PaginationProps> = (props) => {
    const { page, totalPages, hasNextPage, hasPrevPage, onPrefetch: handlePrefetch } = props
    const navigate = useNavigate()
-   const [params] = useQueryParams()
-   const currentPage = params.page ? Number(params.page) : 1
    const paginationRange = calculatePaginationRange(page, totalPages)
 
    return (

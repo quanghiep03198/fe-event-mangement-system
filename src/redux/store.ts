@@ -9,6 +9,7 @@ import { statisticApi } from './apis/statistics.api'
 import { feedbackApi } from './apis/feedback.api'
 import { attendanceApi } from './apis/attendance.api'
 import { notificationApi } from './apis/notification.api'
+import { areaApi } from './apis/area.api'
 
 const persistConfig = {
    key: 'root',
@@ -31,7 +32,8 @@ const store = configureStore({
          attendanceApi.middleware,
          statisticApi.middleware,
          feedbackApi.middleware,
-         notificationApi.middleware
+         notificationApi.middleware,
+         areaApi.middleware
       ])
 } as ConfigureStoreOptions)
 

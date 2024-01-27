@@ -1,7 +1,7 @@
 import { cn } from '@/common/utils/cn'
 import React from 'react'
 import { FieldValues, Path, PathValue } from 'react-hook-form'
-import { FormDescription, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '..'
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '..'
 
 export type SelectFieldControlProps<T extends FieldValues> = BaseFieldControl<T> &
    React.ComponentProps<typeof Select> & {
@@ -33,18 +33,18 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                      }}
                      {...restProps}
                   >
-                     <SelectTrigger className={className}>
-                        <SelectValue placeholder={placeholder} />
-                     </SelectTrigger>
+                     <FormControl>
+                        <SelectTrigger className={className}>
+                           <SelectValue placeholder={placeholder} />
+                        </SelectTrigger>
+                     </FormControl>
                      <SelectContent>
-                        <SelectGroup>
-                           {Array.isArray(props.options) &&
-                              props.options.map((option) => (
-                                 <SelectItem key={option?.value} value={String(option?.value)}>
-                                    {option?.label}
-                                 </SelectItem>
-                              ))}
-                        </SelectGroup>
+                        {Array.isArray(props.options) &&
+                           props.options.map((option) => (
+                              <SelectItem key={option?.value} value={String(option?.value)}>
+                                 {option?.label}
+                              </SelectItem>
+                           ))}
                      </SelectContent>
                   </Select>
                   {props.description && <FormDescription>{props.description}</FormDescription>}

@@ -5,6 +5,8 @@ import { AxiosRequestConfig } from 'axios'
 import { ResponsiveContainer } from 'recharts'
 import { eventApi } from './event.api'
 import { URLSearchParams } from 'url'
+import { z } from 'zod'
+import { FeedbackSchema } from '@/schemas/feedback.schema'
 
 const reducerPath = 'feedbacks/api' as const
 const tagTypes = ['Feedback', 'Event'] as const
@@ -25,7 +27,7 @@ export const feedbackApi = createApi({
          transformResponse: (response: HttpResponse<FeedbackInterface>) => response.metadata,
          providesTags: (result, _error, _arg) => (result ? [{ type: 'Feedback' as const, id: result?.id }, ...tagTypes] : tagTypes)
       }),
-      createFeedback: build.mutation<unknown, { event_id: string; content?: string }>({
+      createFeedback: build.mutation<unknown, z.infer<typeof FeedbackSchema> & { event_id: string }>({
          query: (payload) => ({ url: '/feedback', method: 'POST', data: payload }),
          onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
             await queryFulfilled

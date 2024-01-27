@@ -1,15 +1,3 @@
-import { Theme } from '@/common/constants/enums'
-import { Paths } from '@/common/constants/pathnames'
-import { useLocalStorage } from '@/common/hooks/use-storage'
-import useTheme from '@/common/hooks/use-theme'
-import { parseJSON } from '@/common/utils/json'
-import { Box, Button, Checkbox, Form as FormProvider, Icon, Image, InputFieldControl, Label, Typography } from '@/components/ui'
-import { GoogleIcon } from '@/components/ui/@custom/icons'
-import ThemeSelect from '@/pages/components/theme-select'
-import { useSigninMutation } from '@/redux/apis/auth.api'
-import { useAppDispatch } from '@/redux/hook'
-import { signinWithGoogle } from '@/redux/slices/auth.slice'
-import { LoginSchema } from '@/schemas/auth.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useGoogleLogin } from '@react-oauth/google'
 import { AnyAction } from '@reduxjs/toolkit'
@@ -19,38 +7,49 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 import { z } from 'zod'
+import { Theme } from '@/common/constants/enums'
+import { Paths } from '@/common/constants/pathnames'
+import { useLocalStorage } from '@/common/hooks/use-storage'
+import useTheme from '@/common/hooks/use-theme'
+import { parseJSON } from '@/common/utils/json'
+import { Box, Button, Checkbox, Form as FormProvider, Icon, Image, InputFieldControl, Label, Typography } from '@/components/ui'
+import { GoogleIcon } from '@/components/ui/@custom/icons'
+import ThemeSelect from '@/pages/components/theme-select'
+import { useLoginMutation } from '@/redux/apis/auth.api'
+import { useAppDispatch } from '@/redux/hook'
+import { loginWithGoogle } from '@/redux/slices/auth.slice'
+import { LoginSchema } from '@/schemas/auth.schema'
 import { Divider } from '../../../components/ui/@custom/divider'
 
 type FormValue = z.infer<typeof LoginSchema>
 
-const Signin: React.FunctionComponent = () => {
+const LoginPage: React.FunctionComponent = () => {
    const form = useForm<FormValue>({
       resolver: zodResolver(LoginSchema)
    })
    const { theme } = useTheme()
-   const [signinWithEmail, { isLoading }] = useSigninMutation()
+   const [loginWithEmail, { isLoading }] = useLoginMutation()
    const [savedAccount, setAccountToSave, removeSavedAccount] = useLocalStorage<string | null>('account', parseJSON(localStorage.getItem('account')))
    const dispatch = useAppDispatch()
    const navigate = useNavigate()
 
-   const handleSigninWithGoogle = useGoogleLogin({
+   const handleLoginWithGoogle = useGoogleLogin({
       onSuccess: async (response) => {
-         try {
-            const data = (await dispatch(
-               signinWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction
-            ).unwrap()) as unknown as HttpResponse<any>
-            window.localStorage.setItem('access_token', `Bearer ${data?.metadata?.access_token}`)
-            toast.success('Đăng nhập thành công')
-            navigate(Paths.HOME)
-         } catch (error) {
-            toast.error('Failed to login!')
-         }
+         toast.promise(dispatch(loginWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction).unwrap(), {
+            loading: 'Đang xác thực thông tin ...',
+            success: () => {
+               navigate(Paths.HOME)
+               return 'Đăng nhập thành công'
+            }
+         })
+         // const data = await dispatch(loginWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction).unwrap()
+         // window.localStorage.setItem('access_token', `Bearer ${data?.metadata?.access_token}`)
       },
       onError: () => toast.error('Đăng nhập thất bại')
    })
 
-   const handleSigninWithEmail = (data: Required<FormValue>) => {
-      toast.promise(signinWithEmail(data).unwrap(), {
+   const handleLoginWithEmail = (data: Required<FormValue>) => {
+      toast.promise(loginWithEmail(data).unwrap(), {
          loading: 'Đang đăng nhập...',
          success: ({ message }) => {
             navigate(Paths.HOME)
@@ -84,7 +83,7 @@ const Signin: React.FunctionComponent = () => {
             </Typography>
             <Box className='flex w-full flex-col items-stretch gap-y-6 rounded-xl border bg-background p-8 sm:p-4'>
                <FormProvider {...form}>
-                  <Form onSubmit={form.handleSubmit(handleSigninWithEmail)}>
+                  <Form onSubmit={form.handleSubmit(handleLoginWithEmail)}>
                      <InputFieldControl
                         name={'email'}
                         type='email'
@@ -110,7 +109,7 @@ const Signin: React.FunctionComponent = () => {
                   </Form>
                </FormProvider>
                <Divider>hoặc đăng nhập với</Divider>
-               <Button variant='default' className='w-full gap-x-2' onClick={() => handleSigninWithGoogle()}>
+               <Button variant='default' className='w-full gap-x-2' onClick={() => handleLoginWithGoogle()}>
                   <GoogleIcon />
                   Google
                </Button>
@@ -125,4 +124,4 @@ const Signin: React.FunctionComponent = () => {
 
 export const Form = tw.form`flex flex-col gap-6 w-[28rem] sm:w-full md:w-full mx-auto`
 
-export default Signin
+export default LoginPage

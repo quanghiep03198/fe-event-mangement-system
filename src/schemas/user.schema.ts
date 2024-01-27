@@ -12,7 +12,8 @@ export const UserSchema = z.object({
 })
 
 export const AddUserSchema = z.object({
-   email: z.string({ required_error: 'Vui lòng nhập email' }).regex(Regex.email, { message: 'Email phải có định dạng "xxx@gmail.com" hoặc "xxx@fpt.edu.vn"' })
+   email: z.string({ required_error: 'Vui lòng nhập email' }).email()
+   // .regex(Regex.email, { message: 'Email phải có định dạng "xxx@gmail.com" hoặc "xxx@fpt.edu.vn"' })
 })
 
 export const UpdateUserSchema = z.object({

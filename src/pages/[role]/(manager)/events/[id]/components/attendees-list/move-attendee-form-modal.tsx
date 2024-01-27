@@ -53,7 +53,7 @@ const MoveAttendeeToEventModal: React.FC<ChangeAttendeeToEventModalProps> = (pro
                      control={form.control}
                      label='Sự kiện'
                      placeholder='Chọn sự kiện ...'
-                     onInput={debounce((value) => setEventSearchTerm(value), 500)}
+                     onInput={debounce((value) => setEventSearchTerm(value), 200)}
                      options={defaultEventOptions}
                      description='Sinh viên sẽ được chuyển đến sự kiện đã chọn'
                   />

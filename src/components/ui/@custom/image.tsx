@@ -1,30 +1,41 @@
 import { cn } from '@/common/utils/cn'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { Icon, Skeleton } from '..'
-import { isEmpty } from 'lodash'
 
-type ImageProps = { fallback?: string } & React.ImgHTMLAttributes<HTMLImageElement>
+type ImageProps = React.ImgHTMLAttributes<HTMLImageElement>
 
 export const Image: React.FC<ImageProps> = (props) => {
-   const [error, setError] = useState<boolean>(false)
+   const [isError, setIsError] = useState<boolean>(false)
+   const [isLoaded, setIsLoaded] = useState<boolean>(false)
+   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-   const handleError: React.ReactEventHandler<HTMLImageElement> = ({ currentTarget }) => {
+   const handleError: React.ReactEventHandler<HTMLImageElement> = async ({ currentTarget }) => {
       currentTarget.onerror = null // prevents looping
-      if (props.fallback) {
-         currentTarget.src = props.fallback
-      }
-      setError(true)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      await Promise.resolve(setTimeout(() => setIsLoaded(true), 0))
+      if (props.src) setIsError(true)
    }
 
-   if ((error && !props.fallback) || isEmpty(props.src))
-      return (
+   return (
+      <Fragment>
+         <Skeleton style={{ width: props.width, height: props.height }} className={cn(props.className, { hidden: isLoaded })} />
          <div
-            className={cn(props.className, '!m-0 flex items-center justify-center rounded-lg bg-accent/50')}
+            className={cn(props.className, '!m-0 items-center justify-center rounded-lg bg-accent/50', {
+               hidden: Boolean(props.src) && !isError,
+               flex: !Boolean(props.src) || isError
+            })}
             style={{ width: props.width, height: props.height }}
          >
             <Icon name='Image' size={32} strokeWidth={1} className='text-muted-foreground/50' />
          </div>
-      )
-
-   return <img loading='lazy' className={cn(props.className)} src={props.src} onError={handleError} width={props.width} height={props.height} />
+         <img
+            className={cn({ hidden: !isLoaded || isError || !Boolean(props.src) }, props.className)}
+            src={props.src}
+            onLoad={() => setIsLoaded(true)}
+            onError={handleError}
+            width={props.width}
+            height={props.height}
+         />
+      </Fragment>
+   )
 }

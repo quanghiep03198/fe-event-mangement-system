@@ -14,11 +14,12 @@ type SigninResponseData = HttpResponse<{ user: Omit<UserInterface, 'password'>; 
 /**
  * Async thunk actions
  */
-export const signinWithGoogle = createAsyncThunk<SigninResponseData, string>('auth/google', async (oauth2Token: string, { rejectWithValue, signal }) => {
+export const loginWithGoogle = createAsyncThunk<SigninResponseData, string>('auth/google', async (oauth2Token: string, { rejectWithValue, signal }) => {
    try {
       const BASE_URL = import.meta.env.VITE_API_URL
-      const response = await axios.get(BASE_URL + '/auth/google', { headers: { Authorization: oauth2Token }, signal })
-      return response.data
+      const { data } = await axios.get(BASE_URL + '/auth/google', { headers: { Authorization: oauth2Token }, signal })
+      window.localStorage.setItem('access_token', `Bearer ${data?.metadata?.access_token}`)
+      return data
    } catch (error) {
       rejectWithValue(null)
    }
@@ -35,11 +36,11 @@ export const authSlice = createSlice({
       signout: () => initialState
    },
    extraReducers: (build) => {
-      build.addCase(signinWithGoogle.fulfilled, (_state, action: PayloadAction<Record<string, any>>) => {
+      build.addCase(loginWithGoogle.fulfilled, (_state, action: PayloadAction<Record<string, any>>) => {
          const payload = _.pick(action.payload?.metadata?.user, authStateFields) as Omit<UserInterface, 'password'>
          return { user: payload, authenticated: true }
       })
-      build.addMatcher(authApi.endpoints.signin.matchFulfilled, (_state: AuthSliceState, action: PayloadAction<SigninResponseData>) => {
+      build.addMatcher(authApi.endpoints.login.matchFulfilled, (_state: AuthSliceState, action: PayloadAction<SigninResponseData>) => {
          const payload = _.pick(action.payload?.metadata?.user, authStateFields) as Omit<UserInterface, 'password'>
          return {
             user: { ...payload, avatar: !payload.avatar ? generatePicture(payload?.name) : payload.avatar },

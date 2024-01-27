@@ -1,8 +1,7 @@
 /* eslint-disable */
 
-import { EventStatus, FeedbackStatus, JoinEventStatus } from '@/common/constants/enums'
+import { EventStatus, JoinEventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
-import { UserInterface } from '@/common/types/entities'
 import { Badge, Box, Button, Icon } from '@/components/ui'
 import { useGetEventDetailsQuery, useParticipateInEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
@@ -11,7 +10,6 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
-import FeedbackFormModal from '../../my-events/components/feedback-form-modal'
 import Breadcrumbs from './components/breadcrumbs'
 
 const EventDetailsPage: React.FunctionComponent = () => {
@@ -19,8 +17,6 @@ const EventDetailsPage: React.FunctionComponent = () => {
    const { data: eventDetails } = useGetEventDetailsQuery(id!)
    const { user, authenticated } = useAppSelector((state) => state.auth)
    const [participateInEvent] = useParticipateInEventMutation()
-   const [openFeedbackFormState, setOpenFeedbackFormState] = useState<boolean>(false)
-
    const navigate = useNavigate()
 
    const handleJoinInEvent = () => {
@@ -38,7 +34,7 @@ const EventDetailsPage: React.FunctionComponent = () => {
 
    return (
       <>
-         <Box className='mx-auto flex w-full max-w-7xl flex-col gap-y-10 p-4 py-10'>
+         <Box className='mx-auto flex w-full max-w-7xl flex-col gap-y-10'>
             {/* Top-bar */}
             <Box className='flex items-center justify-between sm:flex-col sm:items-start sm:gap-y-4'>
                <Breadcrumbs name={eventDetails?.name!} currentPath={Paths.EVENTS_BOARD + '/' + eventDetails?.id} />

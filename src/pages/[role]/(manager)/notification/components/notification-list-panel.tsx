@@ -1,12 +1,12 @@
 import useQueryParams from '@/common/hooks/use-query-params'
-import { Box, Icon, ScrollArea, Skeleton } from '@/components/ui'
+import { Box, Icon, Skeleton } from '@/components/ui'
 import { useGetAllNotificationToUserQuery } from '@/redux/apis/notification.api'
 import { useAppSelector } from '@/redux/hook'
 import React, { useContext, useEffect, useState } from 'react'
 import SimplePagination from '../../components/shared/simple-pagination'
+import { NotificationContext } from '../context/notification-context'
 import NotificationCard from './notification-card'
 import SearchBox from './search-box'
-import { NotificationContext } from '../context/notification-context'
 
 const NotificationListPanel: React.FunctionComponent = () => {
    const [params] = useQueryParams('type', 'page')
@@ -42,9 +42,9 @@ const NotificationListPanel: React.FunctionComponent = () => {
          </Box>
 
          <Box className='flex-1 py-4'>
-            <Box className='max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-thumb-rounded-xl dark:scrollbar-thumb-secondary'>
+            <Box className='h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-thumb-rounded-xl dark:scrollbar-thumb-secondary'>
                {isLoading ? (
-                  <Box className='flex max-h-full flex-col gap-y-2 px-4'>
+                  <Box className='flex  max-h-full flex-col gap-y-2 px-4'>
                      {Array.apply(null, Array(3)).map(() => (
                         <Box className='flex flex-col gap-2 rounded-lg border p-4'>
                            <Skeleton className='h-2 w-1/4 rounded-lg' />
@@ -60,7 +60,7 @@ const NotificationListPanel: React.FunctionComponent = () => {
                      {data?.docs?.map((item) => <NotificationCard data={item} key={item.id} />)}{' '}
                   </Box>
                ) : (
-                  <Box className='flex h-full items-center justify-center gap-x-4 text-sm text-muted-foreground'>
+                  <Box className='flex h-[50vh] items-center justify-center gap-x-4 text-sm text-muted-foreground'>
                      <Icon name='MailX' size={56} strokeWidth={1} />
                   </Box>
                )}

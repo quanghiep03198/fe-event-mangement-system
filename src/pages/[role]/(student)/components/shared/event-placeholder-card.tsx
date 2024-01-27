@@ -27,10 +27,10 @@ export const VerticalPlaceholderCard: React.FunctionComponent = () => {
 
 export const HorizontalPlaceholderCard: React.FunctionComponent = () => {
    return (
-      <Box className='grid h-fit grid-cols-[1fr_2fr] gap-6 rounded-lg border p-4 shadow md:grid-cols-[1fr_3fr]'>
-         <Skeleton className='h-52 w-52' />
+      <Box className='grid h-fit grid-cols-1 gap-4 rounded-lg border p-2 shadow xl:grid-cols-[1fr_2fr] xl:gap-6'>
+         <Skeleton className='aspect-video h-[12rem] w-full min-w-[12rem] max-w-full rounded-lg object-cover object-center lg:max-w-full xl:aspect-square xl:max-w-[12rem]' />
 
-         <Box className='flex flex-col justify-between'>
+         <Box className='flex max-w-full flex-col justify-between gap-y-6'>
             <Box className='space-y-2'>
                <Skeleton className='h-4 w-full' />
                <Skeleton className='h-3 w-1/2' />
@@ -39,8 +39,8 @@ export const HorizontalPlaceholderCard: React.FunctionComponent = () => {
                <Skeleton className='h-2 w-full' />
             </Box>
             <Box className='flex items-end justify-end gap-x-2 self-end'>
-               <Skeleton className='h-8 w-32' />
-               <Skeleton className='h-8 w-32' />
+               <Skeleton className='h-8 w-24 max-w-full' />
+               <Skeleton className='h-8 w-24 max-w-full' />
             </Box>
          </Box>
       </Box>

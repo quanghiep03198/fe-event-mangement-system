@@ -94,6 +94,7 @@ const AddAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
                      form={form}
                      control={form.control}
                      label='Người tham gia'
+                     placeholder='Chọn người tham gia'
                      description='Người dùng được chọn sau khi thêm sẽ tham gia vào sự kiện'
                   />
                   <Button type='submit' className='gap-x-2'>

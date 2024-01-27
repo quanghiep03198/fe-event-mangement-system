@@ -24,7 +24,7 @@ const DrawerSidebar: React.FC<DrawerSidebarProps> = (props) => {
 
    return (
       <Sheet open={props.open} onOpenChange={props.onOpenChange}>
-         <SheetContent className='flex max-w-sm flex-col items-stretch gap-y-6'>
+         <SheetContent className='flex max-w-sm flex-col items-stretch gap-y-6 lg:max-w-md'>
             <SheetHeader>
                <Link to={Paths.EVENTS_BOARD}>
                   <Image src={logo} className='max-w-[3rem]' />

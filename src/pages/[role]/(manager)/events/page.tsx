@@ -31,10 +31,10 @@ const EventListPage: React.FunctionComponent = () => {
    const handleDeleteEvent = useCallback(async () => {
       try {
          const response = await deleteEvent(selectedRowId).unwrap()
-         toast.success(response.message)
+         toast.success(response?.message)
       } catch (error) {
          const errorResponse = error as ErrorResponse
-         toast.error(errorResponse.data.message)
+         toast.error(errorResponse.data?.message)
       } finally {
          setSelectedRowId(null)
       }

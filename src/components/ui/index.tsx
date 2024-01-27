@@ -17,7 +17,6 @@ export {
    SelectScrollUpButton,
    SelectScrollDownButton
 } from './@shadcn/select'
-export { Separator } from './@shadcn/separator'
 export {
    Sheet,
    SheetPortal,
@@ -118,6 +117,7 @@ export { HoverCard, HoverCardTrigger, HoverCardContent } from './@shadcn/hover-c
 export { RadioGroup, RadioGroupItem } from './@shadcn/radio-group'
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './@shadcn/carousel'
 export { Switch } from './@shadcn/switch'
+export { Separator } from './@shadcn/separator'
 // #endregion
 
 // #region Form field controls
