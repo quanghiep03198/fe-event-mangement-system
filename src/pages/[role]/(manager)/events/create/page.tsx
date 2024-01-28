@@ -140,9 +140,9 @@ const CreateEventPage = () => {
                                     htmlFor='file'
                                     className='absolute inset-0 z-10 flex h-full w-full cursor-pointer items-center justify-center bg-neutral-950/50 bg-opacity-50 text-primary-foreground opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100'
                                  >
-                                    <Icon name='Camera' size={32} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
+                                    <Icon name='Camera' size={32} strokeWidth={1} className='translate-y-2 duration-500 group-hover:translate-y-0' />
                                  </Label>
-                                 <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height={320} />
+                                 <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height='100%' />
                                  <FormControl>
                                     <Input
                                        {...field}

@@ -1,13 +1,13 @@
+import { cn } from '@/common/utils/cn'
 import { Table as TableType, flexRender } from '@tanstack/react-table'
-import { memo, useContext } from 'react'
+import { useContext } from 'react'
 import tw from 'tailwind-styled-components'
 import { DataTableProps } from '.'
 import { Box, Icon, ScrollArea, ScrollBar, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../..'
 import { TableContext } from '../context/table.context'
+import ColumnResizer from './column-resizer'
 import { TableBodyLoading } from './table-body-loading'
 import { TableCellHead } from './table-cell-head'
-import { cn } from '@/common/utils/cn'
-import ColumnResizer from './column-resizer'
 
 interface TableProps<TData, TValue> extends Omit<DataTableProps<TData, TValue>, 'data' | 'slot'>, React.AllHTMLAttributes<HTMLTableElement> {
    table: TableType<TData>

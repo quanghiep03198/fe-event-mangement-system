@@ -7,6 +7,7 @@ import { Badge, Box, Button, Card, CardContent, CardDescription, CardFooter, Car
 import Tooltip from '@/components/ui/@override/tooltip'
 import { usePrefetch } from '@/redux/apis/event.api'
 import { format } from 'date-fns'
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 
 const EventCard: React.FC<{ data: EventInterface }> = ({ data }) => {
@@ -57,4 +58,4 @@ const EventCard: React.FC<{ data: EventInterface }> = ({ data }) => {
    )
 }
 
-export default EventCard
+export default memo(EventCard)

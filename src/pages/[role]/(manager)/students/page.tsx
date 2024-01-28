@@ -159,8 +159,8 @@ const StudentsListPage: React.FunctionComponent = () => {
             const id = getValue()
             return (
                <DataTableRowActions
-                  canEdit
-                  canDelete
+                  enableEditing
+                  enableDeleting
                   onEdit={() => {
                      setUserToUpdate(row.original)
                      setUpdateFormOpenState(true)

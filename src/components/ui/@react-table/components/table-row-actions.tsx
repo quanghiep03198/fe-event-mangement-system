@@ -1,13 +1,9 @@
-'use client'
-
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Icon } from '@/components/ui'
 
 type DataTableRowActionsProps = {
-   canDelete?: boolean
-   canEdit?: boolean
-   canViewDetails?: boolean
+   enableDeleting?: boolean
+   enableEditing?: boolean
    slot?: React.ReactNode
-   onViewDetails?: AnonymousFunction
    onDelete?: AnonymousFunction
    onEdit?: AnonymousFunction
 }
@@ -22,19 +18,9 @@ export const DataTableRowActions: React.FC<DataTableRowActionsProps> = (props) =
             </Button>
          </DropdownMenuTrigger>
          <DropdownMenuContent align='end'>
-            <DropdownMenuItem
-               disabled={!props.canViewDetails}
-               className='flex items-center gap-x-3'
-               onClick={() => {
-                  if (props.onViewDetails) props.onViewDetails()
-               }}
-            >
-               <Icon name='MousePointerClick' />
-               Chi tiết
-            </DropdownMenuItem>
             {props.slot}
             <DropdownMenuItem
-               disabled={!props.canEdit}
+               disabled={!props.enableEditing}
                className='flex items-center gap-x-3'
                onClick={() => {
                   if (props.onEdit) props.onEdit()
@@ -43,9 +29,9 @@ export const DataTableRowActions: React.FC<DataTableRowActionsProps> = (props) =
                <Icon name='Pencil' />
                Cập nhật
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+
             <DropdownMenuItem
-               disabled={!props.canDelete}
+               disabled={!props.enableDeleting}
                className='flex items-center gap-x-3'
                onClick={() => {
                   if (props.onDelete) props.onDelete()

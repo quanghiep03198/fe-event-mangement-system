@@ -15,7 +15,7 @@ import { useAppSelector } from '@/redux/hook'
 import EventCard from './components/event-card'
 
 const MyEventsPage: React.FunctionComponent = () => {
-   const [params, setParam] = useQueryParams('page')
+   const [params] = useQueryParams('page', 'search', 'sort', 'rating', 'area')
    const [openFeedbackFormState, setOpenFeedbackFormState] = useState<boolean>(false)
    const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
    const user = useAppSelector((state) => state.auth.user)

@@ -61,7 +61,7 @@ const Sidebar: React.FunctionComponent = () => {
                   <Button
                      variant={params.area === option.value ? 'secondary' : 'ghost'}
                      className={cn('justify-start gap-x-2 text-base font-normal')}
-                     disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
+                     disabled={Boolean(matchPath(Paths.EVENTS_DETAILS, pathname))}
                      onClick={() => setParam('sort', option.value)}
                   >
                      {option.label}
@@ -105,7 +105,11 @@ const Sidebar: React.FunctionComponent = () => {
                <Icon name='MessagesSquare' />
                Đánh giá
             </Typography>
-            <StarRatingRadioGroup defaultValue='5' onValueChange={(value) => setParam('rating', value)} />
+            <StarRatingRadioGroup
+               defaultValue='5'
+               onValueChange={(value) => setParam('rating', value)}
+               disabled={Boolean(matchPath(Paths.EVENTS_DETAILS, pathname))}
+            />
          </Box>
          <Box className='space-y-2 py-6'>
             <Typography variant='h6' color='muted' className='flex items-center gap-x-2 text-base'>
@@ -116,15 +120,15 @@ const Sidebar: React.FunctionComponent = () => {
                {Array.isArray(areas) &&
                   areas.map((option) => (
                      <Button
-                        variant={params.area === String(option.id) ? 'secondary' : 'ghost'}
+                        variant={params.area === option.name ? 'secondary' : 'ghost'}
                         className={cn('justify-start gap-x-2 text-base font-normal')}
-                        disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
+                        disabled={Boolean(matchPath(Paths.EVENTS_DETAILS, pathname))}
                         onClick={() => {
-                           setParam('area', option.id)
+                           setParam('area', option.name)
                         }}
                      >
                         {option.name}
-                        {params.area === String(option.id) && (
+                        {params.area === option.name && (
                            <Box className='ml-auto' data-key='area' onClick={handleRemoveFilter}>
                               <Icon name='X' />
                            </Box>

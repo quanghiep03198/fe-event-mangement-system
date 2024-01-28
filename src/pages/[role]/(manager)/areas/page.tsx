@@ -35,12 +35,13 @@ const AreasListPage: React.FunctionComponent = () => {
    const columns = [
       columnHelper.accessor('name', {
          header: 'Tên cơ sở',
+         size: 256,
          enableSorting: true,
          enableColumnFilter: true
       }),
       columnHelper.accessor('address', {
          header: 'Địa chỉ',
-         size: 384,
+         size: 320,
          enableSorting: true,
          enableColumnFilter: true
       }),
@@ -69,8 +70,8 @@ const AreasListPage: React.FunctionComponent = () => {
          cell: ({ row }) => {
             return (
                <DataTableRowActions
-                  canEdit={true}
-                  canDelete={true}
+                  enableEditing={true}
+                  enableDeleting={true}
                   onDelete={() => {
                      setSelectedArea(row.original)
                      setDeleteAreaDialogOpen(true)

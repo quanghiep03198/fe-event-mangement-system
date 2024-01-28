@@ -7,11 +7,13 @@ import { EventInterface } from '@/common/types/entities'
 import { CreateEventSchema, UpdateEventSchema } from '@/schemas/event.schema'
 
 type RequestParams = {
-   search?: string
+   pagination?: boolean
    page?: number
    limit?: number
-   pagination?: boolean
+   search?: string
    sort?: string
+   area?: string
+   rating?: number
 }
 
 const reducerPath = 'event/api' as const

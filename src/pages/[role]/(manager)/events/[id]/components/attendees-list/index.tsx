@@ -106,8 +106,8 @@ const ParticipantsList: React.FunctionComponent = () => {
             const id = getValue()
             return (
                <DataTableRowActions
-                  canEdit={true}
-                  canDelete={true}
+                  enableEditing={true}
+                  enableDeleting={true}
                   onEdit={() => {
                      setAttendeeToUpdate(row.original.user)
                      handleOpenUpdateFormModal(true)

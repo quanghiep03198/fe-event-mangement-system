@@ -2,10 +2,10 @@ import { EventStatusValues } from '@/common/constants/constants'
 import { EventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import { EventInterface } from '@/common/types/entities'
-import { Badge, Box, Button, DataTable, DataTableRowActions, Icon, Typography } from '@/components/ui'
+import { Badge, Box, Button, DataTable, DataTableRowActions, DropdownMenuItem, Icon, Typography } from '@/components/ui'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
-import { useDeleteEventMutation, useGetEventsQuery } from '@/redux/apis/event.api'
+import { useDeleteEventMutation, useGetEventsQuery, usePrefetch } from '@/redux/apis/event.api'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -27,6 +27,7 @@ const EventListPage: React.FunctionComponent = () => {
       setConfirmDialogOpenState(true)
       setSelectedRowId(id)
    }
+   const prefetch = usePrefetch('getEventDetails')
 
    const handleDeleteEvent = useCallback(async () => {
       try {
@@ -111,12 +112,21 @@ const EventListPage: React.FunctionComponent = () => {
             const id = cell.getValue()
             return (
                <DataTableRowActions
-                  canViewDetails={true}
-                  canEdit={true}
-                  canDelete={true}
-                  onViewDetails={() => navigate(Paths.EVENT_STATISTICS_DETAILS.replace(':id', id.toString()))}
+                  enableEditing={true}
+                  enableDeleting={true}
                   onEdit={() => navigate(Paths.EDIT_EVENT.replace(':id', id.toString()))}
                   onDelete={() => handleDeleteButtonClick(id)}
+                  slot={
+                     <DropdownMenuItem
+                        className='flex items-center gap-x-3'
+                        onClick={() => {
+                           navigate(Paths.EVENT_STATISTICS_DETAILS.replace(':id', id.toString()))
+                        }}
+                     >
+                        <Icon name='MousePointerClick' />
+                        Chi tiết
+                     </DropdownMenuItem>
+                  }
                />
             )
          }

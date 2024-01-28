@@ -14,13 +14,16 @@ import tw from 'tailwind-styled-components'
 const FeedbackDetails: React.FunctionComponent = () => {
    const [deleteFeedback] = useDeleteFeedbackMutation()
    const [open, setOpen] = useState<boolean>(false)
-   const [params] = useQueryParams('feedback')
+   const [params, _setParam, removeParam] = useQueryParams('feedback')
    const { data } = useGetFeedbackDetailsQuery(params.feedback)
 
    const handleDeleteFeedback = () => {
       toast.promise(deleteFeedback(data?.id).unwrap, {
          loading: 'Đang xóa feedback này ...',
-         success: 'Feedback đã được xóa',
+         success: () => {
+            removeParam('feedback')
+            return 'Feedback đã được xóa'
+         },
          error: 'Xóa feedback thất bại'
       })
    }
@@ -96,14 +99,6 @@ const FeedbackDetails: React.FunctionComponent = () => {
                   </Box>
                </ScrollArea>
             </Box>
-
-            <Box className='flex flex-col space-y-4 p-3'>
-               <Textarea rows={3} placeholder='Reply ...' />
-               <Button size='sm' className='gap-x-2 self-start'>
-                  <Icon name='Send' />
-                  Send
-               </Button>
-            </Box>
          </Box>
          <ConfirmDialog
             open={open}
@@ -120,29 +115,3 @@ const Paragraph = tw.p`text-sm`
 const Time = tw.time`text-xs capitalize text-muted-foreground`
 
 export default FeedbackDetails
-
-{
-   /* <List>
-   <ListItem>
-   </ListItem>
-   <ListItem>
-      <Typography className='text-base'>Đề xuất</Typography>
-      <Paragraph>
-        {data}
-      </Paragraph>
-   </ListItem>
-   <ListItem>
-      <Typography className='text-base'>Đồng ý giới thiệu cho bạn bè tham gia</Typography>
-      <RadioGroup defaultValue='comfortable' className='flex space-x-6'>
-         <Box className='flex items-center space-x-2'>
-            <RadioGroupItem value='default' id='r1' />
-            <Label htmlFor='r1'>Có</Label>
-         </Box>
-         <Box className='flex items-center space-x-2'>
-            <RadioGroupItem value='comfortable' id='r2' />
-            <Label htmlFor='r2'>Không</Label>
-         </Box>
-      </RadioGroup>
-   </ListItem>
-</List> */
-}

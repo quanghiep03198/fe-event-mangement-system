@@ -4,7 +4,7 @@ import useMediaQuery from '@/common/hooks/use-media-query'
 import { cn } from '@/common/utils/cn'
 import ErrorBoundary from '@/components/shared/error-boundary'
 import Loading from '@/pages/loading'
-import { Box, ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui'
+import { Box, Icon, ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui'
 import { Suspense, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import NavHeader from './components/nav-header'
@@ -82,7 +82,17 @@ const Layout: React.FunctionComponent = () => {
                   <NavHeader openState={open} onOpenStateChange={setOpen} />
                   <Box as='section' className='p-10 sm:p-2 md:p-4'>
                      <ErrorBoundary>
-                        <Suspense fallback={<Loading />}>
+                        <Suspense
+                           fallback={
+                              <>
+                                 <Loading />
+                                 <Box className='flex h-[calc(100vh-4rem)] items-center justify-center gap-x-2 text-muted-foreground'>
+                                    <Icon name='RotateCw' className='animate-spin' />
+                                    Đang tải
+                                 </Box>
+                              </>
+                           }
+                        >
                            <Outlet />
                         </Suspense>
                      </ErrorBoundary>

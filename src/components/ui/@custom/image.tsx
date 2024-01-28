@@ -10,15 +10,15 @@ export const Image: React.FC<ImageProps> = (props) => {
    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
    const handleError: React.ReactEventHandler<HTMLImageElement> = async ({ currentTarget }) => {
-      currentTarget.onerror = null // prevents looping
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
       await Promise.resolve(setTimeout(() => setIsLoaded(true), 0))
       if (props.src) setIsError(true)
+      currentTarget.onerror = null // prevents looping
    }
 
    return (
       <Fragment>
-         <Skeleton style={{ width: props.width, height: props.height }} className={cn(props.className, { hidden: isLoaded })} />
+         <Skeleton style={{ width: props.width, height: props.height }} className={cn('!m-0', props.className, { hidden: isLoaded })} />
          <div
             className={cn(props.className, '!m-0 items-center justify-center rounded-lg bg-accent/50', {
                hidden: Boolean(props.src) && !isError,
@@ -29,7 +29,7 @@ export const Image: React.FC<ImageProps> = (props) => {
             <Icon name='Image' size={32} strokeWidth={1} className='text-muted-foreground/50' />
          </div>
          <img
-            className={cn({ hidden: !isLoaded || isError || !Boolean(props.src) }, props.className)}
+            className={cn('!m-0', props.className, { hidden: !isLoaded || isError || !Boolean(props.src) })}
             src={props.src}
             onLoad={() => setIsLoaded(true)}
             onError={handleError}

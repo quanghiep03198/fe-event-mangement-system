@@ -35,7 +35,7 @@ export const userApi = createApi({
             return response?.metadata as Array<UserInterface>
          }
       }),
-      getUserInformation: build.query<UserInterface, string>({
+      getUserInformation: build.query<UserInterface, number>({
          query: (id) => ({ url: `/participants/${id}`, method: 'GET' }),
          transformResponse: (response: HttpResponse<UserInterface>) => response.metadata,
          providesTags: (_response, _meta, arg) => [{ type: 'Users', id: arg }]

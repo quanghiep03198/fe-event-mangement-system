@@ -27,7 +27,7 @@ import {
 import { useGetUserInformationQuery, useGetUsersQuery } from '@/redux/apis/user.api'
 
 import { debounce } from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FieldValues, Path, PathValue, UseFormReturn, useWatch } from 'react-hook-form'
 
 interface UserComboboxFieldControlProps<T extends FieldValues> extends BaseFieldControl<T> {
@@ -38,10 +38,12 @@ interface UserComboboxFieldControlProps<T extends FieldValues> extends BaseField
 
 function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
    const { form, name, label, placeholder, description, path, restrictRole } = props
-   const selectedUserId = useWatch({ name, control: form.control })
+
+   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
    const [searchTerm, setSearchTerm] = useState<string>('')
+   const currentValue = useWatch({ name: name, control: form.control })
    const { data: usersList } = useGetUsersQuery({ limit: 5, email: searchTerm, role: restrictRole }, { refetchOnMountOrArgChange: true })
-   const { data: selectedUser } = useGetUserInformationQuery(String(selectedUserId), { skip: !selectedUserId })
+   const { data: selectedUser, isLoading } = useGetUserInformationQuery(!isNaN(+currentValue) ? +currentValue : +selectedUserId)
 
    const userListOptions = useMemo(() => {
       return (usersList as Pagination<UserInterface>)?.docs ?? []
@@ -60,7 +62,7 @@ function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
                         <PopoverTrigger asChild>
                            <FormControl>
                               <Button variant='outline' role='combobox' className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}>
-                                 {field.value ? selectedUser?.name : placeholder}
+                                 {field.value && !isLoading ? selectedUser?.name : placeholder}
                                  <Icon name='ChevronsUpDown' />
                               </Button>
                            </FormControl>
@@ -81,6 +83,7 @@ function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
                                              onSelect={() => {
                                                 field.onChange(option[path])
                                                 form.setValue(name, option[path] as PathValue<T, Path<T>>)
+                                                setSelectedUserId(option.id)
                                              }}
                                           >
                                              <Avatar className='h-8 w-8'>

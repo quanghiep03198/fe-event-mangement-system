@@ -95,8 +95,8 @@ const StaffsListPage: React.FunctionComponent = () => {
             const id = getValue()!
             return (
                <DataTableRowActions
-                  canEdit
-                  canDelete
+                  enableEditing
+                  enableDeleting
                   onEdit={() => handleUpdateButtonClick(row.original)}
                   onDelete={() => {
                      setOpenConfirmState(true)
