@@ -1,20 +1,6 @@
 import { UserInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
-import {
-   Avatar,
-   AvatarFallback,
-   AvatarImage,
-   Badge,
-   Box,
-   Button,
-   DataTable,
-   DataTableRowActions,
-   DropdownMenuItem,
-   Icon,
-   Label,
-   Typography,
-   buttonVariants
-} from '@/components/ui'
+import { Avatar, AvatarFallback, AvatarImage, Badge, Box, Button, DataTable, DataTableRowActions, DropdownMenuItem, Icon, Typography } from '@/components/ui'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { type Atteendees, useGetAttendeesByEventQuery, useRemoveAttendanceFromEventMutation } from '@/redux/apis/attendance.api'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'

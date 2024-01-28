@@ -1,5 +1,4 @@
 import { Paths } from '@/common/constants/pathnames'
-import useQueryParams from '@/common/hooks/use-query-params'
 import { cn } from '@/common/utils/cn'
 import { Avatar, AvatarFallback, AvatarImage, Box, Button, Icon, Typography } from '@/components/ui'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'

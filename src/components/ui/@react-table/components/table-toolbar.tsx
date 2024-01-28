@@ -1,11 +1,10 @@
 import { Table } from '@tanstack/react-table'
-import React, { memo, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Box, Button, Icon, Toggle } from '../..'
 import Tooltip from '../../@override/tooltip'
 import { TableContext } from '../context/table.context'
 import { GlobalFilter, GlobalFilterPopover } from './global-filter'
 import { TableViewOptions } from './table-view-options'
-import { unknown } from 'zod'
 import { cn } from '@/common/utils/cn'
 
 type TableToolbarProps<TData> = {

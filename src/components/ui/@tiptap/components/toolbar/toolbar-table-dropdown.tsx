@@ -21,7 +21,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Editor } from '@tiptap/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import tw from 'tailwind-styled-components'
 import { z } from 'zod'
 
 type FormValue = z.infer<typeof TablePresetSchema>

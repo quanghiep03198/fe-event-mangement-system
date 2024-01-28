@@ -6,8 +6,7 @@ import { cn } from '@/common/utils/cn'
 import { Box, Button, Icon, Typography, buttonVariants } from '@/components/ui'
 import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
 import { useGetAllAreasQuery } from '@/redux/apis/area.api'
-import * as qs from 'qs'
-import { NavLink, matchPath, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, matchPath, useLocation } from 'react-router-dom'
 
 const postedTimeOptions: Record<'label' | 'value', string>[] = [
    { label: 'Cũ nhất', value: 'latest' },

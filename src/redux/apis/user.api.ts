@@ -1,6 +1,5 @@
 import { UserInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
-import _ from 'lodash'
 import axiosBaseQuery from '../helper'
 import { UserRoleEnum } from '@/common/constants/enums'
 import { AxiosRequestConfig } from 'axios'

@@ -1,4 +1,4 @@
-import { EventStatus, FeedbackStatus, JoinEventStatus, UserRoleEnum } from '../constants/enums'
+import { FeedbackStatus, JoinEventStatus, UserRoleEnum } from '../constants/enums'
 
 export interface BaseEntityInterface {
    id: number

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/ui'
-import useQueryParams from '@/common/hooks/use-query-params'
 
 export type StepItem = {
    index: number

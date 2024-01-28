@@ -1,4 +1,3 @@
-import useQueryParams from '@/common/hooks/use-query-params'
 import { calculatePaginationRange } from '@/common/utils/calculate-pagination-range'
 import { cn } from '@/common/utils/cn'
 import { Box, Button, Icon, buttonVariants } from '@/components/ui'

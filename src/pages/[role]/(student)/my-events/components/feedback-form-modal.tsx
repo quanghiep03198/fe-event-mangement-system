@@ -1,4 +1,3 @@
-import useQueryParams from '@/common/hooks/use-query-params'
 import { UserInterface } from '@/common/types/entities'
 import {
    Box,
@@ -9,28 +8,20 @@ import {
    DialogHeader,
    DialogTitle,
    Form,
-   FormControl,
    FormField,
    FormItem,
    FormLabel,
    FormMessage,
    Icon,
-   Input,
-   Label,
-   RadioGroup,
-   RadioGroupItem,
    TextareaFieldControl
 } from '@/components/ui'
 import StarRatingRadioGroup from '@/components/ui/@custom/star-rating'
-import { eventApi } from '@/redux/apis/event.api'
 import { useCreateFeedbackMutation } from '@/redux/apis/feedback.api'
 import { FeedbackSchema } from '@/schemas/feedback.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AnyAction } from '@reduxjs/toolkit'
 import { QueryActionCreatorResult } from '@reduxjs/toolkit/query'
 import React from 'react'
-import { ControllerRenderProps, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 import { z } from 'zod'

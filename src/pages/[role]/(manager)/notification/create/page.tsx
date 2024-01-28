@@ -1,7 +1,7 @@
 import { EventStatusValues } from '@/common/constants/constants'
 import { EventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
-import { EventInterface, NotificationInterface } from '@/common/types/entities'
+import { EventInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
 import {
    Box,
@@ -74,7 +74,7 @@ const CreateNotificationPage: React.FunctionComponent = () => {
             ...data,
             status: selectedEvent.status,
             time_send: timeSend ?? format(addMinutes(new Date(), 5), 'yyyy-MM-dd HH:mm:ss')
-         } as unknown as Omit<NotificationInterface, 'id'>).unwrap(),
+         }).unwrap(),
          {
             loading: 'Đang tạo thông báo ...',
             success: () => {

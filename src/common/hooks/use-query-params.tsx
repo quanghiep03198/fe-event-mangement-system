@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 export default function useQueryParams(...path: string[]): [Record<string, string>, (key: string, value: any) => void, (key: string) => void] {

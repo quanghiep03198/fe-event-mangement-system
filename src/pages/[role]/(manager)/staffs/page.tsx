@@ -7,7 +7,7 @@ import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteUserMutation, useGetUsersQuery } from '@/redux/apis/user.api'
 import { useAppSelector } from '@/redux/hook'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 import UpdateUserFormModal from '../components/shared/update-user-form-modal'
 import CreateUserFormModal from '../components/shared/create-user-form-modal'
@@ -69,7 +69,7 @@ const StaffsListPage: React.FunctionComponent = () => {
          enableSorting: true,
          cell: ({ getValue }) => {
             const value = getValue()
-            return Boolean(value) ? (
+            return value ? (
                value
             ) : (
                <Typography variant='small' color='muted' className='italic'>

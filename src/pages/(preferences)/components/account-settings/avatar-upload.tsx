@@ -15,7 +15,6 @@ import {
    Image,
    InputFieldControl,
    Label,
-   Typography,
    buttonVariants
 } from '@/components/ui'
 import { useUpdateUserInfoMutation } from '@/redux/apis/auth.api'

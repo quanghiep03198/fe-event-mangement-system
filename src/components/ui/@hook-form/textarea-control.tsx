@@ -1,6 +1,6 @@
 import { forwardRef, useId, useRef } from 'react'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Textarea } from '..'
-import { Control, FieldValues, Path } from 'react-hook-form'
+import { FieldValues } from 'react-hook-form'
 import { TextareaProps } from '../@shadcn/textarea'
 import { cn } from '@/common/utils/cn'
 

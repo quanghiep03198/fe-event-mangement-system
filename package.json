@@ -11,7 +11,7 @@
       "test:report": "npx vite preview --outDir ./html",
       "coverage": "vitest run --coverage",
       "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-      "lint:fix": "eslint --fix src --ext ts,tsx",
+      "lint:fix": "eslint src --ext ts,tsx --fix",
       "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css)\"",
       "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css)\""
    },
@@ -69,6 +69,7 @@
       "copy-to-clipboard": "^3.3.3",
       "date-fns": "^3.0.6",
       "embla-carousel-react": "^8.0.0-rc19",
+      "eslint-plugin-unused-imports": "^3.0.0",
       "lodash": "^4.17.21",
       "lucide-react": "^0.295.0",
       "nprogress": "^0.2.0",

@@ -30,7 +30,6 @@ import CreateUserFormModal from '../components/shared/create-user-form-modal'
 import UpdateUserFormModal from '../components/shared/update-user-form-modal'
 import { sampleData } from './data/sample-data'
 import { createFormData } from '@/common/utils/form-data'
-import _ from 'lodash'
 
 type TableDataType = UserInterface & { index: number }
 

@@ -1,4 +1,4 @@
-import { BreakPoints, UserRoleEnum } from '@/common/constants/enums'
+import { UserRoleEnum } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import useMediaQuery from '@/common/hooks/use-media-query'
 import { cn } from '@/common/utils/cn'

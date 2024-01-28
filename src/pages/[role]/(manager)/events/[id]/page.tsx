@@ -2,7 +2,7 @@ import { Badge, Box, Icon, Tabs, TabsContent, TabsList, TabsTrigger, Typography 
 import { useGetEventDetailsQuery } from '@/redux/apis/event.api'
 import { format } from 'date-fns'
 import { useCallback, useEffect } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import tw from 'tailwind-styled-components'
 import ParticipantsList from './components/attendees-list'
 import FeedbackList from './components/feedback-list'

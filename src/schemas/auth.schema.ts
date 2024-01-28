@@ -1,9 +1,5 @@
-import { metadata } from '@/configs/metadata.config'
 import Regex from '@/common/constants/regex'
-import axiosInstance from '@/configs/axios.config'
-import { debounce, pick } from 'lodash'
 import * as z from 'zod'
-import { useEffect, useState } from 'react'
 
 export const LoginSchema = z.object({
    email: z.string({ required_error: 'Vui lòng nhập email' }).email('Email không đúng định dạng'),

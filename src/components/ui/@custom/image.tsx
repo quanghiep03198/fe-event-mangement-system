@@ -1,5 +1,5 @@
 import { cn } from '@/common/utils/cn'
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { Icon, Skeleton } from '..'
 
 type ImageProps = React.ImgHTMLAttributes<HTMLImageElement>
@@ -22,14 +22,14 @@ export const Image: React.FC<ImageProps> = (props) => {
          <div
             className={cn(props.className, '!m-0 items-center justify-center rounded-lg bg-accent/50', {
                hidden: Boolean(props.src) && !isError,
-               flex: !Boolean(props.src) || isError
+               flex: !props.src || isError
             })}
             style={{ width: props.width, height: props.height }}
          >
             <Icon name='Image' size={32} strokeWidth={1} className='text-muted-foreground/50' />
          </div>
          <img
-            className={cn('!m-0', props.className, { hidden: !isLoaded || isError || !Boolean(props.src) })}
+            className={cn('!m-0', props.className, { hidden: !isLoaded || isError || !props.src })}
             src={props.src}
             onLoad={() => setIsLoaded(true)}
             onError={handleError}

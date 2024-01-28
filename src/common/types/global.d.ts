@@ -1,5 +1,4 @@
 import HttpStatus from '@/common/constants/http-status'
-import { Icon } from '@/components/ui'
 import { icons } from 'lucide-react'
 import { UserRoleEnum } from '../constants/enums'
 import { Control, FieldValues, Path } from 'react-hook-form'

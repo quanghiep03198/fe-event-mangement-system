@@ -1,13 +1,8 @@
-import { Box, Button, Icon, buttonVariants } from '@/components/ui'
+import { Box, Button, Icon } from '@/components/ui'
 import React from 'react'
 import ThemeSelect from '../../../../components/theme-select'
-import NavbarBreadscrumb from './breadcrumbs'
-import Notification from './notification'
 import UserActions from '../../../../components/user-actions'
-import { Link } from 'react-router-dom'
-import { Paths } from '@/common/constants/pathnames'
-import { cn } from '@/common/utils/cn'
-import Tooltip from '@/components/ui/@override/tooltip'
+import NavbarBreadscrumb from './breadcrumbs'
 
 type NavbarProps = {
    openState: boolean

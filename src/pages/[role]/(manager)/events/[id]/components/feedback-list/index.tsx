@@ -1,7 +1,7 @@
 import { FeedbackInterface } from '@/common/types/entities'
 import { Box, Icon, ScrollArea } from '@/components/ui'
 import { useGetAllFeedbackByEventQuery } from '@/redux/apis/feedback.api'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Feedback from './feedback-card'
 import FeedbackDetails from './feedback-details'

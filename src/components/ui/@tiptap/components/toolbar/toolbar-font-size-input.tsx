@@ -1,6 +1,5 @@
 import { Box, Button, Icon, Input } from '@/components/ui'
 import { Editor } from '@tiptap/react'
-import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
 type FontSizeInputProps = {

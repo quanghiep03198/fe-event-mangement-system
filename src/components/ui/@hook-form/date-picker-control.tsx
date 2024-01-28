@@ -1,7 +1,7 @@
 import { cn } from '@/common/utils/cn'
 import { format } from 'date-fns'
 import { Button, Calendar, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Icon, Popover, PopoverContent, PopoverTrigger } from '..'
-import { Control, FieldValues, Path } from 'react-hook-form'
+import { FieldValues } from 'react-hook-form'
 
 type DatePickerFieldControlProps<T extends FieldValues> = BaseFieldControl<T>
 
