@@ -42,11 +42,11 @@ The Event Management System provides a comprehensive solution for managing event
    npm run dev
    ```
 
-5. Open your web browser and visit `http://localhost:3000` to access the application.
+5. Open your web browser and visit `http://localhost:5000` to access the application.
 
 ## Contributing
 
-We welcome contributions to the Internship Management System project. If you find any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request on GitHub.
+We welcome contributions to the Event Management System project. If you find any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request on GitHub.
 
 ## License
 
