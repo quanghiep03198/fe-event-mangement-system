@@ -41,14 +41,14 @@ const navigation: Array<MenuNavigationItem> = [
       roles: [UserRoleEnum.MANAGER]
    },
    {
-      id: 4,
+      id: 5,
       icon: 'Building2',
       name: 'Cơ sở',
       path: Paths.AREAS_LIST,
       roles: [UserRoleEnum.MANAGER]
    },
    {
-      id: 5,
+      id: 6,
       icon: 'BellRing',
       name: 'Thông báo',
       path: Paths.NOTIFICATION_LIST,
@@ -70,7 +70,7 @@ const Layout: React.FunctionComponent = () => {
                collapsedSize={4}
                maxSize={20}
                collapsible={true}
-               className={cn('sm:hidden md:hidden', isCollapsed && 'z-50 min-w-[4rem] transition-all duration-300 ease-in-out')}
+               className={cn('sm:hidden md:hidden', isCollapsed && 'z-50 min-w-[5rem] transition-all duration-300 ease-in-out')}
                onExpand={() => setIsCollapsed(false)}
                onCollapse={() => setIsCollapsed(true)}
             >

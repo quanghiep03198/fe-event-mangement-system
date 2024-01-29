@@ -5,7 +5,7 @@ import FormFooter from './components/form-footer'
 import FormHeader from './components/form-header'
 import FormBody from './components/form-body'
 
-const Signup: React.FunctionComponent = () => {
+const RegisterPage: React.FunctionComponent = () => {
    return (
       <Box className='relative flex h-screen w-full items-stretch overflow-hidden scrollbar-none'>
          <Box className='fixed right-2 top-2'>
@@ -21,4 +21,4 @@ const Signup: React.FunctionComponent = () => {
    )
 }
 
-export default Signup
+export default RegisterPage

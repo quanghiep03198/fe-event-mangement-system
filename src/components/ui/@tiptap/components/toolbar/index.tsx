@@ -54,6 +54,7 @@ const Toolbar: React.FC<ToolbarPluginProps> = ({ editor }) => {
                   <Toggle
                      size='sm'
                      variant='outline'
+                     type='button'
                      pressed={editor.isActive('blockquote')}
                      onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
                   >
@@ -63,7 +64,13 @@ const Toolbar: React.FC<ToolbarPluginProps> = ({ editor }) => {
 
                {/* Toggle italic */}
                <Tooltip content='Nghiêng'>
-                  <Toggle size='sm' variant='outline' pressed={editor.isActive('italic')} onPressedChange={() => editor.chain().focus().toggleItalic().run()}>
+                  <Toggle
+                     size='sm'
+                     type='button'
+                     variant='outline'
+                     pressed={editor.isActive('italic')}
+                     onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+                  >
                      <Icon name='Italic' />
                   </Toggle>
                </Tooltip>
@@ -117,7 +124,7 @@ const Toolbar: React.FC<ToolbarPluginProps> = ({ editor }) => {
 
                {/* Horizontal ruler */}
                <Tooltip content='Đường kẻ ngang'>
-                  <Button variant='outline' type='button' size='icon' className='h-8 w-8' onClick={() => editor.commands.setHorizontalRule()}>
+                  <Button variant='outline' size='icon' className='h-8 w-8' onClick={() => editor.commands.setHorizontalRule()}>
                      <Icon name='PencilLine' />
                   </Button>
                </Tooltip>

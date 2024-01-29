@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = (props) => {
          <Box className='mx-auto flex max-w-7xl items-center justify-between p-3'>
             <Fragment>
                <Link to={Paths.EVENTS_BOARD} className='sm:hidden md:hidden lg:hidden'>
-                  <Image src={logo} className='max-w-[9rem] sm:max-w-[3rem]' />
+                  <Image src={logo} className='max-w-[144px] sm:max-w-[48px]' />
                </Link>
                <Button
                   variant='outline'

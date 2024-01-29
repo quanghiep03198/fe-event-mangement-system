@@ -43,7 +43,11 @@ const AreasListPage: React.FunctionComponent = () => {
          header: 'Địa chỉ',
          size: 320,
          enableSorting: true,
-         enableColumnFilter: true
+         enableColumnFilter: true,
+         cell: ({ getValue }) => {
+            const value = getValue()
+            return <span className='capitalize'>{value}</span>
+         }
       }),
       columnHelper.accessor('created_at', {
          header: 'Ngày tạo',

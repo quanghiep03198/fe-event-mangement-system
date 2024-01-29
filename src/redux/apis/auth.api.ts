@@ -2,9 +2,8 @@ import { UserInterface } from '@/common/types/entities'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axiosBaseQuery from '../helper'
 import { z } from 'zod'
-import { LoginSchema, RegisterSchema } from '@/schemas/auth.schema'
+import { LoginSchema } from '@/schemas/auth.schema'
 
-type SignupPayload = Pick<UserInterface, 'email' | 'name' | 'phone' | 'password'>
 type SignupMetadata = Omit<UserInterface, 'password'>
 
 const reducerPath = 'auth/api' as const
@@ -34,12 +33,9 @@ export const authApi = createApi({
             query: (payload) => ({ url: '/updateUser', method: 'PATCH', data: payload }),
             transformResponse: (response: HttpResponse<Partial<UserInterface>>) => response.metadata!,
             invalidatesTags: tagTypes
-         }),
-         signup: build.mutation<HttpResponse<SignupMetadata>, z.infer<typeof RegisterSchema>>({
-            query: (payload) => ({ url: '/register', method: 'POST', data: payload })
          })
       }
    }
 })
 
-export const { useLoginMutation, useSignupMutation, useUpdateUserInfoMutation } = authApi
+export const { useLoginMutation, useUpdateUserInfoMutation } = authApi

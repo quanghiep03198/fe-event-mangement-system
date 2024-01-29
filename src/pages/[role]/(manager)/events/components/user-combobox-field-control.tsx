@@ -33,11 +33,12 @@ import { FieldValues, Path, PathValue, UseFormReturn, useWatch } from 'react-hoo
 interface UserComboboxFieldControlProps<T extends FieldValues> extends BaseFieldControl<T> {
    form: UseFormReturn<T>
    path?: keyof UserInterface
+   canReset?: boolean
    restrictRole?: UserRoleEnum
 }
 
 function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
-   const { form, name, label, placeholder, description, path, restrictRole } = props
+   const { form, name, label, placeholder, description, path, restrictRole, canReset } = props
 
    const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
    const [searchTerm, setSearchTerm] = useState<string>('')
@@ -96,7 +97,22 @@ function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
                                                    {option?.email}
                                                 </Typography>
                                              </Box>
-                                             <Icon name='Check' className={cn('ml-auto', option[path] === field.value ? 'visible' : 'invisible')} />
+                                             {canReset ? (
+                                                <Button
+                                                   size='icon'
+                                                   type='button'
+                                                   variant='ghost'
+                                                   onClick={(e) => {
+                                                      e.stopPropagation()
+                                                      form.setValue(name, undefined)
+                                                   }}
+                                                   className={cn('ml-auto h-6 w-6 rounded-full', option[path] === field.value ? 'visible' : 'invisible')}
+                                                >
+                                                   <Icon name='X' />
+                                                </Button>
+                                             ) : (
+                                                <Icon name='Check' className={cn('ml-auto', option[path] === field.value ? 'visible' : 'invisible')} />
+                                             )}
                                           </CommandItem>
                                        )
                                     })}

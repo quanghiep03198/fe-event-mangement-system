@@ -13,7 +13,6 @@ export type SelectFieldControlProps<T extends FieldValues> = BaseFieldControl<T>
 
 export function SelectFieldControl<T extends FieldValues>(props: SelectFieldControlProps<T>) {
    const { control, name, hidden, layout, className, defaultValue, placeholder, onValueChange, ...restProps } = props
-
    return (
       <FormField
          name={name!}
@@ -31,7 +30,8 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                            onValueChange(value)
                         }
                      }}
-                     {...restProps}
+
+                     // {...restProps}
                   >
                      <FormControl>
                         <SelectTrigger className={className}>

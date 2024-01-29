@@ -6,7 +6,7 @@ import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteFeedbackMutation, useGetFeedbackDetailsQuery } from '@/redux/apis/feedback.api'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 
@@ -32,17 +32,17 @@ const FeedbackDetails: React.FunctionComponent = () => {
          <Box className='flex w-full flex-col items-stretch divide-y divide-border sm:hidden md:hidden'>
             <Box className='flex w-full basis-[4rem] items-center justify-end gap-x-1 p-4'>
                <Tooltip content='Đánh dấu là đã đọc'>
-                  <Toggle size='sm'>
+                  <Toggle size='sm' disabled={!params.feedback}>
                      <Icon name='MailCheck' />
                   </Toggle>
                </Tooltip>
                <Tooltip content='Reply'>
-                  <Toggle size='sm'>
+                  <Toggle size='sm' disabled={!params.feedback}>
                      <Icon name='Reply' />
                   </Toggle>
                </Tooltip>
                <Tooltip content='Reply all'>
-                  <Toggle size='sm'>
+                  <Toggle size='sm' disabled={!params.feedback}>
                      <Icon name='ReplyAll' />
                   </Toggle>
                </Tooltip>
@@ -51,6 +51,7 @@ const FeedbackDetails: React.FunctionComponent = () => {
                   <Button
                      size='icon'
                      variant='ghost'
+                     disabled={!params.feedback}
                      className='aspect-square h-8 w-8'
                      onClick={() => {
                         setOpen(true)
@@ -77,26 +78,34 @@ const FeedbackDetails: React.FunctionComponent = () => {
                </Box>
             )}
 
-            <Box className='flex flex-1 flex-col gap-y-4 p-3'>
-               <StarRatingRadioGroup defaultValue={String(data?.rating)} />
-               <ScrollArea className='h-[calc(55vh-4.75rem)]'>
-                  <Box className='flex flex-col gap-y-6'>
-                     <Box>
-                        <Typography variant='small' className='font-bold'>
-                           Phản hồi
-                        </Typography>
-                        <Typography variant='small'>{data?.content}</Typography>
-                     </Box>
-                     <Box>
-                        <Typography variant='small' className='font-bold'>
-                           Đề xuất
-                        </Typography>
-                        <Typography variant='small' color={data?.recommend ? 'default' : 'muted'} className={cn({ italic: !data?.recommend })}>
-                           {data?.recommend ?? 'Không có'}
-                        </Typography>
-                     </Box>
-                  </Box>
-               </ScrollArea>
+            <Box className={cn('flex flex-1 flex-col gap-y-4 p-3', { 'items-center justify-center': !data })}>
+               {data ? (
+                  <Fragment>
+                     <StarRatingRadioGroup defaultValue={String(data?.rating)} />
+                     <ScrollArea className='h-[calc(50vh-4.75rem)]'>
+                        <Box className='flex flex-col gap-y-6'>
+                           <Box>
+                              <Typography variant='small' className='font-bold'>
+                                 Phản hồi
+                              </Typography>
+                              <Typography variant='small'>{data?.content}</Typography>
+                           </Box>
+                           <Box>
+                              <Typography variant='small' className='font-bold'>
+                                 Đề xuất
+                              </Typography>
+                              <Typography variant='small' color={data?.recommend ? 'default' : 'muted'} className={cn({ italic: !data?.recommend })}>
+                                 {data?.recommend ?? 'Không có'}
+                              </Typography>
+                           </Box>
+                        </Box>
+                     </ScrollArea>
+                  </Fragment>
+               ) : (
+                  <Typography variant='small' color='muted'>
+                     Chưa có phản hôi nào.
+                  </Typography>
+               )}
             </Box>
          </Box>
          <ConfirmDialog

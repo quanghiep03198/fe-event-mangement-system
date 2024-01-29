@@ -42,8 +42,6 @@ const LoginPage: React.FunctionComponent = () => {
                return 'Đăng nhập thành công'
             }
          })
-         // const data = await dispatch(loginWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction).unwrap()
-         // window.localStorage.setItem('access_token', `Bearer ${data?.metadata?.access_token}`)
       },
       onError: () => toast.error('Đăng nhập thất bại')
    })
@@ -62,7 +60,7 @@ const LoginPage: React.FunctionComponent = () => {
    }
 
    useEffect(() => {
-      if (savedAccount) form.reset({ email: savedAccount ?? '' })
+      if (savedAccount) form.reset({ email: savedAccount })
    }, [savedAccount])
 
    const handleToggleSaveAccount = useCallback((checked: boolean) => {
@@ -76,7 +74,7 @@ const LoginPage: React.FunctionComponent = () => {
          <Box className='fixed right-4 top-4'>
             <ThemeSelect />
          </Box>
-         <Box className='mb-10 flex flex-col items-center justify-center sm:w-full md:w-full md:max-w-md'>
+         <Box className='mb-10 flex flex-col items-center justify-center gap-y-6 sm:w-full md:w-full md:max-w-md'>
             <Image src={theme === Theme.LIGHT ? '/logo.png' : 'logo.webp'} className='mb-10 max-w-[10rem]' />
             <Typography variant='h5' className='mb-6'>
                Đăng nhập vào tài khoản

@@ -18,7 +18,7 @@ export const areaApi = createApi({
          transformResponse: (response: HttpResponse<AreaInterface[]>) => response.metadata,
          providesTags: tagTypes
       }),
-      getArea: build.query<AreaInterface, string>({
+      getArea: build.query<AreaInterface, string | number>({
          query: (id) => ({ url: `/areas/${id}`, method: 'GET' }),
          transformResponse: (response: HttpResponse<AreaInterface>) => response.metadata,
          providesTags: (result) => (result ? [{ type: 'Areas', id: result.id }] : tagTypes)

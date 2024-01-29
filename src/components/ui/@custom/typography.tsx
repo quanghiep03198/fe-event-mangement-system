@@ -6,9 +6,7 @@ type TypographyProps = {
    as?: React.ElementType
 } & React.HTMLAttributes<HTMLElement> &
    VariantProps<typeof typographyVariants> &
-   React.PropsWithChildren &
-   React.PropsWithRef<any> &
-   React.PropsWithoutRef<any>
+   React.PropsWithChildren
 
 export const typographyVariants = cva('', {
    variants: {
@@ -40,7 +38,7 @@ export const typographyVariants = cva('', {
    }
 })
 
-export const Typography = forwardRef<any, TypographyProps>((props, ref) => {
+export const Typography = forwardRef<HTMLElement, TypographyProps>((props, ref) => {
    const { as = 'p', className, children, color, variant, ...restProps } = props
 
    const localRef = useRef(null)

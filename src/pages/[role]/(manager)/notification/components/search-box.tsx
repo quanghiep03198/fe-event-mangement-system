@@ -83,7 +83,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
                         <SelectFieldControl
                            name='type'
                            control={form.control}
-                           className='h-8'
                            defaultValue={filterTypeOptions[0].value}
                            label='Tìm kiếm'
                            layout='horizontal'
@@ -103,14 +102,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
                         />
                      </Box>
                      <Box className='col-span-full xl:col-span-1'>
-                        <InputFieldControl
-                           name='title'
-                           control={form.control}
-                           className='h-8'
-                           label='Tiêu đề'
-                           layout='horizontal'
-                           placeholder='Tiêu đề thông báo ...'
-                        />
+                        <InputFieldControl name='title' control={form.control} label='Tiêu đề' layout='horizontal' placeholder='Tiêu đề thông báo ...' />
                      </Box>
                      <Box className='col-span-full xl:col-span-1'>
                         <ComboboxFieldControl

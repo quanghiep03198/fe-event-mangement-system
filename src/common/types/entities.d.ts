@@ -30,6 +30,8 @@ export interface EventInterface extends BaseEntityInterface {
    status_join: JoinEventStatus
    status_feedBack_join: FeedbackStatus
    user_id: number
+   area_id: number
+   area?: AreaInterface
    user?: Partial<UserInterface>
    feedback?: FeedbackInterface[]
    attendances: Partial<UserInterface & { status_feedback: FeedbackStatus }>[]

@@ -37,17 +37,20 @@ const EventCard: React.FC<{ data: EventInterface }> = ({ data }) => {
             </CardDescription>
             <CardDescription className='flex items-center space-x-2'>
                <Icon name='User' className='basis-4' />
-               <span className='line-clamp-1'>{data?.user?.name}</span>
+               <span className='line-clamp-1'>{data?.user?.name ?? 'Chưa cập nhật'}</span>
             </CardDescription>
 
-            <Badge
-               variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
-               className='w-fit'
-            >
-               {EventStatusValues.get(data.status)}
-            </Badge>
+            <CardDescription className='flex items-center gap-x-2'>
+               <Icon name='Activity' />
+               <Badge
+                  variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
+                  className='w-fit'
+               >
+                  {EventStatusValues.get(data.status)}
+               </Badge>
+            </CardDescription>
 
-            <CardDescription className='line-clamp-2 h-9'>{data?.description ?? 'Chưa có mô tả'}</CardDescription>
+            <CardDescription className='my-2 line-clamp-2 h-9'>{data?.description ?? 'Chưa có mô tả'}</CardDescription>
          </CardContent>
          <CardFooter className={cn('mt-2 items-stretch gap-x-2 px-3')}>
             <Button asChild size='sm' variant='default' className='w-full' onMouseEnter={() => prefetchPage(String(data?.id))}>

@@ -25,17 +25,17 @@ const FeedbackList: React.FunctionComponent = () => {
                <SimplePagination hasNextPage={data?.hasNextPage} hasPrevPage={data?.hasPrevPage} totalDocs={data?.totalDocs} totalPages={data?.totalPages} />
             </Box>
             <Box className='py-4'>
-               <ScrollArea className='h-[calc(90vh-4.75rem)] px-4'>
-                  {Array.isArray(data?.docs) && data.totalDocs > 0 ? (
+               {Array.isArray(data?.docs) && data.totalDocs > 0 ? (
+                  <ScrollArea className='h-[calc(90vh-5rem)] px-4'>
                      <Box className='flex flex-col gap-y-4'>
                         {data.docs.map((item: FeedbackInterface) => (
                            <Feedback key={item.id} data={item} />
                         ))}
-                     </Box>
-                  ) : (
-                     <EmptySection />
-                  )}
-               </ScrollArea>
+                     </Box>{' '}
+                  </ScrollArea>
+               ) : (
+                  <EmptySection />
+               )}
             </Box>
          </Box>
 
@@ -46,8 +46,8 @@ const FeedbackList: React.FunctionComponent = () => {
 
 const EmptySection: React.FunctionComponent = () => {
    return (
-      <Box className='flex h-[calc(90vh-4.75rem)] w-full items-center justify-center gap-x-4 text-muted-foreground'>
-         <Icon name='MailX' size={32} strokeWidth={1} /> Chưa có phản hồi nào
+      <Box className='flex h-[calc(90vh-5rem)] w-full items-center justify-center gap-x-4 text-muted-foreground'>
+         <Icon name='MailX' size={32} strokeWidth={1} /> Chưa có phản hồi nào.
       </Box>
    )
 }

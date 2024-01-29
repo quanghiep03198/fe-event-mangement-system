@@ -17,14 +17,14 @@ import {
    Typography
 } from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
-import { useGetAllAreasQuery, useGetAreaQuery } from '@/redux/apis/area.api'
+import { useGetAllAreasQuery } from '@/redux/apis/area.api'
 import { useGetEventDetailsQuery, useUpdateEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
 import { UpdateEventSchema } from '@/schemas/event.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -39,9 +39,7 @@ const EditEvent = () => {
    const [image, setImage] = useState<string>('')
    const { id } = useParams()
    const navigate = useNavigate()
-   const selectedAreaId = useWatch({ name: 'area', control: form.control, exact: true })
 
-   const { data: selectedArea } = useGetAreaQuery(selectedAreaId, { skip: !selectedAreaId, refetchOnMountOrArgChange: true })
    const { data: eventDetails } = useGetEventDetailsQuery(id!)
    const { data: areas } = useGetAllAreasQuery({ pagination: false })
    const [updateEvent, { isLoading }] = useUpdateEventMutation()
@@ -58,6 +56,7 @@ const EditEvent = () => {
             user_id: eventDetails.user_id,
             contact: eventDetails.contact,
             description: eventDetails.description,
+            area: eventDetails.area?.id,
             start_time: new Date(eventDetails.start_time),
             end_time: new Date(eventDetails.end_time)
          } as FormValue)
@@ -66,12 +65,8 @@ const EditEvent = () => {
       }
    }, [eventDetails])
 
-   useEffect(() => {
-      form.setValue('location', selectedArea?.address)
-   }, [selectedArea])
-
    const handleUpdateEvent = async (data: FormValue) => {
-      let banner
+      let banner = null
       if (data.banner instanceof FileList) {
          toast.loading('Đang tải lên ảnh ...')
          banner = await uploadImage(data.banner[0])
@@ -85,7 +80,7 @@ const EditEvent = () => {
             id,
             payload: {
                ...data,
-               user_id: user?.id,
+               user_id: data?.user_id ?? user?.id,
                start_time: format(data.start_time, 'yyyy/MM/dd HH:mm:ss'),
                end_time: format(data.end_time, 'yyyy/MM/dd HH:mm:ss')
             }
@@ -128,6 +123,7 @@ const EditEvent = () => {
                         name='user_id'
                         form={form}
                         control={form.control}
+                        canReset={true}
                         defaultValue={String(eventDetails?.user_id)}
                         restrictRole={UserRoleEnum.STAFF}
                         placeholder='Chọn người tổ chức'

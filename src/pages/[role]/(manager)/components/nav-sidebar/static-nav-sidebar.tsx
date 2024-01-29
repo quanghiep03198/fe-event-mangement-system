@@ -42,9 +42,9 @@ const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isColla
          <Link to={Paths.HOME} className='translate-x-3'>
             <Image
                src={logo}
-               className={cn({
-                  'max-w-[40px] -translate-x-3': isCollapsed,
-                  'max-w-[160px]': !isCollapsed
+               className={cn('w-full object-cover object-center', {
+                  'max-w-[48px] -translate-x-3': isCollapsed,
+                  'max-w-[144px]': !isCollapsed
                })}
             />
          </Link>
@@ -54,21 +54,27 @@ const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isColla
                return (
                   <PrivateComponent key={item.id} roles={item.roles}>
                      <MenuItem>
-                        <Tooltip content={item.name} side='right' hidden={!isCollapsed} key={item.id}>
-                           <NavLink
-                              to={item.path}
-                              className={({ isActive }) =>
-                                 cn('flex w-[inherit] !text-base !font-normal', buttonVariants({ variant: 'ghost', size: isCollapsed ? 'icon' : 'default' }), {
-                                    'text-primary hover:text-primary': isActive || isAlsoActive,
-                                    'hover:text-foreground': !isActive,
-                                    'justify-start gap-x-2': !isCollapsed
-                                 })
-                              }
-                           >
-                              <Icon name={item.icon!} size={18} />
-                              <span className={cn({ hidden: isCollapsed })}>{item.name}</span>
-                           </NavLink>
-                        </Tooltip>
+                        {
+                           <Tooltip asChild={false} content={item.name} side='right' key={item.id}>
+                              <NavLink
+                                 to={item.path}
+                                 className={({ isActive }) =>
+                                    cn(
+                                       'flex w-[inherit] !text-base !font-normal',
+                                       buttonVariants({ variant: 'ghost', size: isCollapsed ? 'icon' : 'default' }),
+                                       {
+                                          'text-primary hover:text-primary': isActive || isAlsoActive,
+                                          'hover:text-foreground': !isActive,
+                                          'justify-start gap-x-3': !isCollapsed
+                                       }
+                                    )
+                                 }
+                              >
+                                 <Icon name={item.icon!} size={18} />
+                                 <span className={cn({ hidden: isCollapsed })}>{item.name}</span>
+                              </NavLink>
+                           </Tooltip>
+                        }
                      </MenuItem>
                   </PrivateComponent>
                )

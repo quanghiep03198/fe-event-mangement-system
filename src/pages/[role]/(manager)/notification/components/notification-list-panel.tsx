@@ -45,8 +45,8 @@ const NotificationListPanel: React.FunctionComponent = () => {
             <Box className='h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-thumb-rounded-xl dark:scrollbar-thumb-secondary'>
                {isLoading ? (
                   <Box className='flex  max-h-full flex-col gap-y-2 px-4'>
-                     {Array.apply(null, Array(3)).map(() => (
-                        <Box className='flex flex-col gap-2 rounded-lg border p-4'>
+                     {Array.apply(null, Array(3)).map((_, index) => (
+                        <Box key={index} className='flex flex-col gap-2 rounded-lg border p-4'>
                            <Skeleton className='h-2 w-1/4 rounded-lg' />
                            <Skeleton className='h-2 w-1/3 rounded-lg' />
                            <Skeleton className='h-2 w-1/2 rounded-lg' />
