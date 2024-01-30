@@ -55,12 +55,12 @@ const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isColla
                   <PrivateComponent key={item.id} roles={item.roles}>
                      <MenuItem>
                         {
-                           <Tooltip asChild={false} content={item.name} side='right' key={item.id}>
+                           <Tooltip asChild={false} content={item.name} side='right' key={item.id} hidden={!isCollapsed}>
                               <NavLink
                                  to={item.path}
                                  className={({ isActive }) =>
                                     cn(
-                                       'flex w-[inherit] !text-base !font-normal',
+                                       'flex w-[inherit] !text-base font-normal',
                                        buttonVariants({ variant: 'ghost', size: isCollapsed ? 'icon' : 'default' }),
                                        {
                                           'text-primary hover:text-primary': isActive || isAlsoActive,
@@ -85,7 +85,7 @@ const StaticNavSidebar: React.FC<StaticNavSidebarProps> = ({ navigation, isColla
 }
 
 const Image = tw.img`object-cover object-center`
-const Menu = tw.ul`flex flex-col space-y-2 mt-10 items-stretch`
+const Menu = tw.ul`flex flex-col space-y-1 mt-10 items-stretch`
 const MenuItem = tw.li`whitespace-nowrap font-normal w-full [&>:first-child]:w-full`
 
 export default StaticNavSidebar

@@ -22,7 +22,7 @@ const EventCard: React.FC<{ data: EventInterface; onSelectEventToFeedback: React
          />
 
          <Box className='flex flex-col justify-between'>
-            <Box className='mb-6 space-y-2'>
+            <Box className='mb-6 flex flex-col gap-y-2'>
                <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data?.id))} className='underline-offset-2 hover:underline'>
                   <Typography className='capitalize'>{data?.name}</Typography>
                </Link>
@@ -33,13 +33,16 @@ const EventCard: React.FC<{ data: EventInterface; onSelectEventToFeedback: React
                <Typography variant='small' color='muted' className='flex items-center gap-x-2'>
                   <Icon name='Users' /> {data?.attendances.length} người tham gia
                </Typography>
-               <Badge
-                  variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
-                  className='w-fit'
-               >
-                  {EventStatusValues.get(data.status)}
-               </Badge>
-               <Typography variant='small' color='muted' className='line-clamp-2 h-8 text-xs'>
+               <Box className='flex items-center gap-x-2'>
+                  <Icon name='Activity' className='text-muted-foreground' />
+                  <Badge
+                     variant={data?.status === EventStatus.ACTIVE ? 'success' : data?.status === EventStatus.UPCOMING ? 'warning' : 'destructive'}
+                     className='w-fit'
+                  >
+                     {EventStatusValues.get(data.status)}
+                  </Badge>
+               </Box>
+               <Typography variant='small' color='muted' className='line-clamp-2 block h-8 text-xs'>
                   {data.description ?? 'Chưa có mô tả'}
                </Typography>
             </Box>

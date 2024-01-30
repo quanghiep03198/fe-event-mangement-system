@@ -99,7 +99,7 @@ const CreateEventPage = () => {
                         path='id'
                         control={form.control}
                         name='user_id'
-                        restrictRole={UserRoleEnum.STAFF}
+                        roles={[UserRoleEnum.MANAGER, UserRoleEnum.STAFF]}
                         canReset={true}
                         placeholder='Chọn người tổ chức'
                         description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện. Bỏ trống nếu bạn là người tổ chức.'
@@ -116,7 +116,7 @@ const CreateEventPage = () => {
                   </Box>
                   <Box className='col-span-full w-full'>
                      <SelectFieldControl
-                        name='area'
+                        name='area_id'
                         control={form.control}
                         placeholder={'Chọn khu vực'}
                         label='Khu vực tổ chức'

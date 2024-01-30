@@ -25,7 +25,7 @@ const Footer: React.FunctionComponent = () => {
                   </ListItem>
                </List>
                <Box className='flex items-center gap-x-6'>
-                  <a href='https://www.facebook.com/fpt.poly'>
+                  <a href='https://www.facebook.com/fpt.poly' target='_blank'>
                      <FacebookIcon
                         width={20}
                         height={20}
@@ -36,7 +36,7 @@ const Footer: React.FunctionComponent = () => {
                         onMouseLeave={(e) => e.currentTarget.setAttribute('fill', 'hsl(var(--muted-foreground))')}
                      />
                   </a>
-                  <a href='https://www.youtube.com/channel/UCHXm-vzOfAuLucVBKDUfhvQ'>
+                  <a href='https://www.youtube.com/channel/UCHXm-vzOfAuLucVBKDUfhvQ' target='_blank'>
                      <YoutubeIcon
                         width={20}
                         height={20}
@@ -47,7 +47,7 @@ const Footer: React.FunctionComponent = () => {
                         onMouseLeave={(e) => e.currentTarget.setAttribute('fill', 'hsl(var(--muted-foreground))')}
                      />
                   </a>
-                  <a href='https://www.tiktok.com/@fpt.polytechnic.official'>
+                  <a href='https://www.tiktok.com/@fpt.polytechnic.official' target='_blank'>
                      <TiktokIcon
                         width={20}
                         height={20}
@@ -68,9 +68,9 @@ const Footer: React.FunctionComponent = () => {
                <Box className='grid w-full grid-cols-4 gap-x-6 gap-y-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3'>
                   {Array.isArray(areas) &&
                      areas.map((area) => (
-                        <HoverCard openDelay={200} closeDelay={200}>
+                        <HoverCard openDelay={200} closeDelay={200} key={area.id}>
                            <HoverCardTrigger asChild>
-                              <Button variant='link' className='justify-start whitespace-nowrap px-0 text-muted-foreground hover:text-foreground'>
+                              <Button variant='link' className='w-fit justify-start whitespace-nowrap px-0 text-muted-foreground hover:text-foreground'>
                                  {area.name}
                               </Button>
                            </HoverCardTrigger>

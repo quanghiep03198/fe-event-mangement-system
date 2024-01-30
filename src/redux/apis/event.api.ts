@@ -62,9 +62,20 @@ export const eventApi = createApi({
             },
             providesTags: [{ type: 'Event', id: 'RECENT_LIST' }]
          }),
-         getJoinedEvents: build.query<Pagination<EventInterface>, RequestParams>({
+         getJoinedEvents: build.query<OptionalPagination<EventInterface>, RequestParams>({
             query: (params) => ({ url: '/eventJoin', method: 'GET', params }),
-            transformResponse: (response: HttpResponse<Pagination<EventInterface>>) => response.metadata,
+            transformResponse: (response: HttpResponse<OptionalPagination<EventInterface>>, _meta, args) => {
+               // With pagination
+               if (typeof args?.pagination === 'undefined') return response.metadata as Pagination<EventInterface>
+               return Array.isArray(response.metadata)
+                  ? response.metadata?.map((item) => {
+                       return {
+                          ...item,
+                          status: EventStatusValues.get(item.status)
+                       }
+                    })
+                  : []
+            },
             providesTags: [{ type: 'Event', id: 'JOINED_EVENTS_LIST' }]
          }),
          participateInEvent: build.mutation<unknown, { user_id: number; event_id: number }>({

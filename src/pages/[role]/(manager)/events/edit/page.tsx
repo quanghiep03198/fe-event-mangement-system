@@ -56,7 +56,7 @@ const EditEvent = () => {
             user_id: eventDetails.user_id,
             contact: eventDetails.contact,
             description: eventDetails.description,
-            area: eventDetails.area?.id,
+            area_id: eventDetails.area?.id,
             start_time: new Date(eventDetails.start_time),
             end_time: new Date(eventDetails.end_time)
          } as FormValue)
@@ -125,16 +125,16 @@ const EditEvent = () => {
                         control={form.control}
                         canReset={true}
                         defaultValue={String(eventDetails?.user_id)}
-                        restrictRole={UserRoleEnum.STAFF}
+                        roles={[UserRoleEnum.MANAGER, UserRoleEnum.STAFF]}
                         placeholder='Chọn người tổ chức'
-                        description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện'
+                        description='Người dùng được chọn sau khi thêm sẽ trở thành người tổ chức sự kiện. Bỏ trống nếu bạn là người tổ chức.'
                      />
                   </Box>
                   <Box className='col-span-full'>
                      <InputFieldControl name='contact' control={form.control} label='Số điện thoại liên hệ' placeholder='Nhập một số điện thoại' />
                   </Box>
                   <Box className='col-span-full w-full'>
-                     <SelectFieldControl name='area' control={form.control} placeholder='Chọn khu vực' label='Khu vực tổ chức' options={areaOptions} />
+                     <SelectFieldControl name='area_id' control={form.control} placeholder='Chọn khu vực' label='Khu vực tổ chức' options={areaOptions} />
                   </Box>
                   <Box className='col-span-full'>
                      <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' placeholder='Nhập một địa điểm' />
@@ -154,7 +154,7 @@ const EditEvent = () => {
                            htmlFor='file'
                            className='absolute inset-0 z-10 flex h-full w-full cursor-pointer items-center justify-center bg-neutral-950/50 bg-opacity-50 text-primary-foreground opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100'
                         >
-                           <Icon name='Camera' size={48} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
+                           <Icon name='Camera' size={32} strokeWidth={1} className='translate-y-2 duration-200 group-hover:translate-y-0' />
                         </Label>
                         <Image src={image} className='absolute inset-0 h-full w-full object-cover object-center' width='100%' height={320} />
                         <InputFieldControl

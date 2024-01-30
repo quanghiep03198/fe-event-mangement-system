@@ -1,17 +1,15 @@
-import { UserInterface } from '@/common/types/entities'
 import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Form, Icon } from '@/components/ui'
 
 import { useAddAttendanceMutation } from '@/redux/apis/attendance.api'
-import { useGetUsersQuery } from '@/redux/apis/user.api'
 import { AddUserSchema } from '@/schemas/user.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
 import { z } from 'zod'
 import UserComboboxFieldControl from '../../../components/user-combobox-field-control'
+import { UserRoleEnum } from '@/common/constants/enums'
 
 type AddAttendeeFormModalProps = {
    open: boolean
@@ -23,10 +21,7 @@ type FormValue = z.infer<typeof AddUserSchema>
 const AddAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
    const form = useForm<FormValue>({ resolver: zodResolver(AddUserSchema) })
    const { id } = useParams()
-   const [searchTerm, setSearchTerm] = useState<string>('')
-   const { data: users } = useGetUsersQuery({ pagination: false, search: searchTerm })
    const [addAttendee, { isLoading }] = useAddAttendanceMutation()
-   const [selectedUser, setSelectedUser] = useState<UserInterface>()
 
    const handleAddAttendee = async (data: Required<FormValue>) => {
       toast.promise(addAttendee({ ...data, event_id: id! }).unwrap(), {
@@ -43,10 +38,6 @@ const AddAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
       })
    }
 
-   const options = useMemo(() => {
-      return (users as Array<UserInterface>) ?? []
-   }, [users])
-
    return (
       <Dialog {...props}>
          <DialogContent>
@@ -62,6 +53,7 @@ const AddAttendeeFormModal: React.FC<AddAttendeeFormModalProps> = (props) => {
                      form={form}
                      control={form.control}
                      label='Người tham gia'
+                     roles={[UserRoleEnum.MANAGER, UserRoleEnum.STAFF, UserRoleEnum.STUDENT]}
                      placeholder='Chọn người tham gia'
                      description='Người dùng được chọn sau khi thêm sẽ tham gia vào sự kiện'
                   />

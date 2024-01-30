@@ -17,7 +17,7 @@ export function GlobalFilter<T>(props: GlobalFilterProps<T>) {
             <DebouncedInput
                value={props.globalFilter ?? ''}
                onChange={(value) => props.onGlobalFilterChange(String(value))}
-               className='font-lg border p-2 pl-8 shadow'
+               className='font-lg h-8 w-full border p-2 pl-8 shadow'
                placeholder='Tìm kiếm ...'
             />
          </Box>

@@ -1,7 +1,7 @@
 import { cn } from '@/common/utils/cn'
 import React from 'react'
 import { FieldValues, Path, PathValue } from 'react-hook-form'
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '..'
+import { FormDescription, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '..'
 
 export type SelectFieldControlProps<T extends FieldValues> = BaseFieldControl<T> &
    React.ComponentProps<typeof Select> & {
@@ -23,21 +23,18 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                   <FormLabel>{props.label}</FormLabel>
                   <Select
                      {...field}
-                     defaultValue={defaultValue ?? String(field.value)}
                      onValueChange={(value) => {
                         field.onChange(value)
                         if (onValueChange) {
                            onValueChange(value)
                         }
                      }}
-
-                     // {...restProps}
+                     {...restProps}
                   >
-                     <FormControl>
-                        <SelectTrigger className={className}>
-                           <SelectValue placeholder={placeholder} />
-                        </SelectTrigger>
-                     </FormControl>
+                     <SelectTrigger className={className}>
+                        <SelectValue placeholder={placeholder} />
+                     </SelectTrigger>
+
                      <SelectContent>
                         {Array.isArray(props.options) &&
                            props.options.map((option) => (

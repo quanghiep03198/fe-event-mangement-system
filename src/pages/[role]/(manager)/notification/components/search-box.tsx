@@ -83,8 +83,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchOptionsChange: handleSear
                         <SelectFieldControl
                            name='type'
                            control={form.control}
-                           defaultValue={filterTypeOptions[0].value}
                            label='Tìm kiếm'
+                           placeholder='Chọn'
                            layout='horizontal'
                            options={filterTypeOptions}
                         />

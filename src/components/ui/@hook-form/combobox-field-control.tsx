@@ -46,7 +46,11 @@ export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxField
                      <Popover>
                         <PopoverTrigger asChild>
                            <FormControl>
-                              <Button variant='outline' role='combobox' className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}>
+                              <Button
+                                 variant='outline'
+                                 role='combobox'
+                                 className={cn('w-full justify-between hover:bg-background', !field.value && 'text-muted-foreground')}
+                              >
                                  {field.value ? options.find((option) => option.value === field.value)?.label : placeholder}
                                  <Icon name='ChevronsUpDown' />
                               </Button>

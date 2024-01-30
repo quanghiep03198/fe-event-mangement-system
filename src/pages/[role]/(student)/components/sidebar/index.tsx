@@ -58,6 +58,7 @@ const Sidebar: React.FunctionComponent = () => {
             <Box className='flex flex-col gap-y-1'>
                {postedTimeOptions.map((option) => (
                   <Button
+                     key={option.value}
                      variant={params.area === option.value ? 'secondary' : 'ghost'}
                      className={cn('justify-start gap-x-2 text-base font-normal')}
                      disabled={Boolean(matchPath(Paths.EVENTS_DETAILS, pathname))}
@@ -84,6 +85,7 @@ const Sidebar: React.FunctionComponent = () => {
                   .filter((status) => status !== EventStatus.INACTIVE && typeof status === 'number')
                   .map((status) => (
                      <Button
+                        key={status}
                         variant={+params.status === status ? 'secondary' : 'ghost'}
                         className={cn('justify-start gap-x-2 text-base font-normal')}
                         disabled={!!matchPath(Paths.EVENTS_DETAILS, pathname)}
@@ -119,6 +121,7 @@ const Sidebar: React.FunctionComponent = () => {
                {Array.isArray(areas) &&
                   areas.map((option) => (
                      <Button
+                        key={option.id}
                         variant={params.area === option.name ? 'secondary' : 'ghost'}
                         className={cn('justify-start gap-x-2 text-base font-normal')}
                         disabled={Boolean(matchPath(Paths.EVENTS_DETAILS, pathname))}

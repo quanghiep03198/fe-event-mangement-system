@@ -24,6 +24,7 @@ import {
    PopoverTrigger,
    Typography
 } from '@/components/ui'
+import Tooltip from '@/components/ui/@override/tooltip'
 import { useGetUserInformationQuery, useGetUsersQuery } from '@/redux/apis/user.api'
 
 import { debounce } from 'lodash'
@@ -34,16 +35,16 @@ interface UserComboboxFieldControlProps<T extends FieldValues> extends BaseField
    form: UseFormReturn<T>
    path?: keyof UserInterface
    canReset?: boolean
-   restrictRole?: UserRoleEnum
+   roles?: UserRoleEnum[]
 }
 
 function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
-   const { form, name, label, placeholder, description, path, restrictRole, canReset } = props
+   const { form, name, label, placeholder, description, path, roles, canReset } = props
 
    const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
    const [searchTerm, setSearchTerm] = useState<string>('')
    const currentValue = useWatch({ name: name, control: form.control })
-   const { data: usersList } = useGetUsersQuery({ limit: 5, email: searchTerm, role: restrictRole }, { refetchOnMountOrArgChange: true })
+   const { data: usersList } = useGetUsersQuery({ limit: 5, email: searchTerm, role: roles.join(',') })
    const { data: selectedUser, isLoading } = useGetUserInformationQuery(!isNaN(+currentValue) ? +currentValue : +selectedUserId)
 
    const userListOptions = useMemo(() => {
@@ -57,13 +58,36 @@ function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
          render={({ field }) => {
             return (
                <FormItem>
-                  <FormLabel>{label}</FormLabel>
+                  <Box className='flex items-center gap-x-2'>
+                     <FormLabel>{label}</FormLabel>
+                     {canReset && field.value && (
+                        <Tooltip content='Đặt lại'>
+                           <Button
+                              variant='ghost'
+                              size='icon'
+                              onClick={(e) => {
+                                 e.stopPropagation()
+                                 form.setValue(name, undefined)
+                              }}
+                              className={cn('h-6 w-6 rounded-full text-muted-foreground')}
+                           >
+                              <Icon name='X' size={14} />
+                           </Button>
+                        </Tooltip>
+                     )}
+                  </Box>
                   <FormControl>
                      <Popover>
                         <PopoverTrigger asChild>
                            <FormControl>
-                              <Button variant='outline' role='combobox' className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}>
-                                 {field.value && !isLoading ? selectedUser?.name : placeholder}
+                              <Button
+                                 variant='outline'
+                                 role='combobox'
+                                 className={cn('w-full justify-between hover:bg-background', !field.value && 'text-muted-foreground')}
+                              >
+                                 <Typography variant='small' className='inline-flex items-center gap-x-1'>
+                                    {field.value && !isLoading ? selectedUser?.name : placeholder}
+                                 </Typography>
                                  <Icon name='ChevronsUpDown' />
                               </Button>
                            </FormControl>
@@ -97,22 +121,8 @@ function UserComboboxFieldControl<T>(props: UserComboboxFieldControlProps<T>) {
                                                    {option?.email}
                                                 </Typography>
                                              </Box>
-                                             {canReset ? (
-                                                <Button
-                                                   size='icon'
-                                                   type='button'
-                                                   variant='ghost'
-                                                   onClick={(e) => {
-                                                      e.stopPropagation()
-                                                      form.setValue(name, undefined)
-                                                   }}
-                                                   className={cn('ml-auto h-6 w-6 rounded-full', option[path] === field.value ? 'visible' : 'invisible')}
-                                                >
-                                                   <Icon name='X' />
-                                                </Button>
-                                             ) : (
-                                                <Icon name='Check' className={cn('ml-auto', option[path] === field.value ? 'visible' : 'invisible')} />
-                                             )}
+
+                                             <Icon name='Check' className={cn('ml-auto', option[path] === field.value ? 'visible' : 'invisible')} />
                                           </CommandItem>
                                        )
                                     })}

@@ -4,15 +4,14 @@ import useQueryParams from '@/common/hooks/use-query-params'
 import { EventInterface } from '@/common/types/entities'
 import { Box, Icon, Typography } from '@/components/ui'
 import Pagination from '@/components/ui/@custom/pagination'
-import { useGetEventsQuery, useGetJoinedEventsQuery, usePrefetch } from '@/redux/apis/event.api'
+import { useGetJoinedEventsQuery, usePrefetch } from '@/redux/apis/event.api'
 import _ from 'lodash'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { EmptySection } from '../components/shared/empty-section'
-
-import Loading from './loading'
-import FeedbackFormModal from './components/feedback-form-modal'
 import { useAppSelector } from '@/redux/hook'
 import EventCard from './components/event-card'
+import FeedbackFormModal from './components/feedback-form-modal'
+import Loading from './loading'
 
 const MyEventsPage: React.FunctionComponent = () => {
    const [params] = useQueryParams('page', 'search', 'sort', 'rating', 'area')
@@ -25,10 +24,12 @@ const MyEventsPage: React.FunctionComponent = () => {
       ...params
    })
 
+   const eventsList = useMemo(() => data as Pagination<EventInterface>, [data])
+
    const prefetchNextPage = usePrefetch('getEvents')
 
    const handlePrefetchNextPage = useCallback(() => {
-      if (data?.hasNextPage) prefetchNextPage({ page: +params.page + 1 })
+      if (eventsList?.hasNextPage) prefetchNextPage({ page: +params.page + 1 })
    }, [prefetchNextPage, params])
 
    return (
@@ -40,11 +41,11 @@ const MyEventsPage: React.FunctionComponent = () => {
                </Typography>
                {isLoading ? (
                   <Loading />
-               ) : Array.isArray(data?.docs) && data?.docs.length === 0 ? (
+               ) : Array.isArray(eventsList?.docs) && eventsList?.docs.length === 0 ? (
                   <EmptySection />
                ) : (
                   <Box className='grid grid-cols-2 gap-4 sm:grid-cols-1 md:grid-cols-2 md:gap-x-4 lg:grid-cols-3'>
-                     {data.docs.map((item) => (
+                     {eventsList.docs.map((item) => (
                         <EventCard
                            key={item.id}
                            data={item}
@@ -57,7 +58,7 @@ const MyEventsPage: React.FunctionComponent = () => {
                   </Box>
                )}
             </Box>
-            <Pagination {..._.omit(data, ['docs'])} onPrefetch={handlePrefetchNextPage} />
+            <Pagination {..._.omit(eventsList, ['docs'])} onPrefetch={handlePrefetchNextPage} />
          </Box>
 
          <FeedbackFormModal

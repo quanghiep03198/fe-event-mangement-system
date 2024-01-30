@@ -1,33 +1,50 @@
 import { EventStatusValues } from '@/common/constants/constants'
-import { EventStatus } from '@/common/constants/enums'
+import { EventStatus, UserRoleEnum } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
+import useQueryParams from '@/common/hooks/use-query-params'
 import { EventInterface } from '@/common/types/entities'
-import { Badge, Box, Button, DataTable, DataTableRowActions, DropdownMenuItem, Icon, Typography } from '@/components/ui'
+import {
+   Badge,
+   Box,
+   Button,
+   DataTable,
+   DataTableRowActions,
+   DropdownMenuItem,
+   Icon,
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+   Typography
+} from '@/components/ui'
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
-import { useDeleteEventMutation, useGetEventsQuery, usePrefetch } from '@/redux/apis/event.api'
+import { useDeleteEventMutation, useGetEventsQuery, useGetJoinedEventsQuery } from '@/redux/apis/event.api'
+import { useAppSelector } from '@/redux/hook'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-type EventListWithoutPagination = Exclude<OptionalPagination<EventInterface>, Pagination<EventInterface>>
-
 const EventListPage: React.FunctionComponent = () => {
-   const { data, isLoading } = useGetEventsQuery({ pagination: false, limit: 10 })
-   const [deleteEvent] = useDeleteEventMutation()
    const [selectedRowId, setSelectedRowId] = useState<number | null>(null)
    const [confirmDialogOpenState, setConfirmDialogOpenState] = useState<boolean>(false)
    const navigate = useNavigate()
+   const [params, setParam] = useQueryParams('type')
 
-   const eventsList = useMemo(() => data as EventListWithoutPagination, [data])
+   const user = useAppSelector((state) => state.auth.user)
+   const { data: allEvents, isLoading } = useGetEventsQuery({ pagination: false, limit: 10 })
+   const { data: joinedEvents } = useGetJoinedEventsQuery({ pagination: false })
+   const [deleteEvent] = useDeleteEventMutation()
+
+   const eventsList = useMemo(() => (params.type === 'joined' ? joinedEvents : allEvents) as Array<EventInterface>, [params.type, allEvents, joinedEvents])
 
    const handleDeleteButtonClick = (id: number) => {
       setConfirmDialogOpenState(true)
       setSelectedRowId(id)
    }
-   const prefetch = usePrefetch('getEventDetails')
 
    const handleDeleteEvent = useCallback(async () => {
       try {
@@ -112,8 +129,8 @@ const EventListPage: React.FunctionComponent = () => {
             const id = cell.getValue()
             return (
                <DataTableRowActions
-                  enableEditing={true}
-                  enableDeleting={true}
+                  enableEditing={[UserRoleEnum.MANAGER, UserRoleEnum.STAFF].includes(user?.role)}
+                  enableDeleting={user?.role === UserRoleEnum.MANAGER}
                   onEdit={() => navigate(Paths.EDIT_EVENT.replace(':id', id.toString()))}
                   onDelete={() => handleDeleteButtonClick(id)}
                   slot={
@@ -135,16 +152,32 @@ const EventListPage: React.FunctionComponent = () => {
 
    return (
       <Box className='space-y-10'>
-         <Box className='space-y-1'>
-            <Typography variant='h6'>Danh sách sự kiện</Typography>
-            <Typography variant='small' color='muted'>
-               Danh sách liệt kê các sự kiện đã và đang tổ chức
-            </Typography>
+         <Box className='flex items-center sm:flex-col sm:items-stretch sm:gap-y-6'>
+            <Box className='flex-1 space-y-1'>
+               <Typography variant='h6'>Danh sách sự kiện</Typography>
+               <Typography variant='small' color='muted'>
+                  Danh sách các sự kiện đã và đang tổ chức.
+               </Typography>
+            </Box>
+
+            <Select defaultValue={params.type ?? 'all'} onValueChange={(value) => setParam('type', value)}>
+               <SelectTrigger id='type-select' className='h-8 max-w-[16rem] sm:max-w-full'>
+                  <Box className='flex items-center gap-x-2'>
+                     <Icon name='ListFilter' />
+                     <SelectValue placeholder='Lọc' />
+                  </Box>
+               </SelectTrigger>
+               <SelectContent>
+                  <SelectItem value='all'>Tất cả</SelectItem>
+                  <SelectItem value='joined'>Đã tham gia tổ chức</SelectItem>
+               </SelectContent>
+            </Select>
          </Box>
+
          <DataTable
             enableColumnResizing
             columns={columns}
-            data={eventsList!}
+            data={eventsList}
             loading={isLoading}
             slot={
                <Tooltip content='Thêm mới'>
