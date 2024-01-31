@@ -65,8 +65,9 @@ export const extensions = [
    Gapcursor.configure(),
    Table.configure({
       resizable: true,
+      allowTableNodeSelection: true,
       HTMLAttributes: {
-         class: 'm-0 w-full table-fixed overflow-hidden border rounded border-collapse [& .resize-cursor]:cursor-col-resize'
+         class: 'm-0 w-full table-fixed overflow-hidden border rounded border-collapse [&~.resize-cursor]:cursor-col-resize [&_.resize-cursor]:cursor-ew-resize'
       }
    }),
    TableRow.configure(),

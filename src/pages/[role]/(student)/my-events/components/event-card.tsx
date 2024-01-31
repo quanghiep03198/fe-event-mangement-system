@@ -20,7 +20,6 @@ const EventCard: React.FC<{ data: EventInterface; onSelectEventToFeedback: React
             className='aspect-video h-[12rem] w-full min-w-[12rem] max-w-full rounded-lg object-cover object-center lg:max-w-full xl:aspect-square xl:max-w-[12rem]'
             width='100%'
          />
-
          <Box className='flex flex-col justify-between'>
             <Box className='mb-6 flex flex-col gap-y-2'>
                <Link to={Paths.EVENTS_DETAILS.replace(':id', String(data?.id))} className='underline-offset-2 hover:underline'>

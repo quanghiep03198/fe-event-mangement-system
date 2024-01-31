@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { FormItem, Icon, Label, RadioGroup, RadioGroupItem } from '..'
 import { cn } from '@/common/utils/cn'
@@ -7,16 +7,16 @@ type StarRatingRadioGroupProps<T extends FieldValues> = {
    field?: ControllerRenderProps<T, any>
 } & React.ComponentProps<typeof RadioGroup>
 
-const ratingValues = [
-   { id: 'rate-1', value: '1' },
-   { id: 'rate-2', value: '2' },
-   { id: 'rate-3', value: '3' },
-   { id: 'rate-4', value: '4' },
-   { id: 'rate-5', value: '5' }
-]
-
 function StarRatingRadioGroup<T extends FieldValues>({ field, defaultValue, disabled, onValueChange, ...props }: StarRatingRadioGroupProps<T>) {
    const [value, setValue] = useState<string>('0')
+
+   const ratingValues = [
+      { id: useId(), value: '1' },
+      { id: useId(), value: '2' },
+      { id: useId(), value: '3' },
+      { id: useId(), value: '4' },
+      { id: useId(), value: '5' }
+   ]
 
    useEffect(() => {
       if (field) setValue(field.value)

@@ -9,7 +9,7 @@ import NotificationCard from './notification-card'
 import SearchBox from './search-box'
 
 const NotificationListPanel: React.FunctionComponent = () => {
-   const [params] = useQueryParams('type', 'page')
+   const [params, setParam] = useQueryParams('type', 'page')
    const user = useAppSelector((state) => state.auth.user)
    const [advancedSearchOptions, setAdvancedSearchOptions] = useState<Record<string, any>>({})
    const { data, isLoading } = useGetAllNotificationToUserQuery({
@@ -22,6 +22,7 @@ const NotificationListPanel: React.FunctionComponent = () => {
       if (data) {
          if (data.totalDocs > 0) setSelectedNotification(data.docs[0])
          else setSelectedNotification(undefined)
+         if (+params.page > data?.totalPages) setParam('page', 1)
       }
    }, [data])
 

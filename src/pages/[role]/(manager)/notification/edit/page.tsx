@@ -10,9 +10,21 @@ import { z } from 'zod'
 import { Paths } from '@/common/constants/pathnames'
 import { EventInterface } from '@/common/types/entities'
 import { cn } from '@/common/utils/cn'
-import { Box, Button, ComboboxFieldControl, Form, FormDescription, Icon, InputFieldControl, Label, Switch, Typography, buttonVariants } from '@/components/ui'
+import {
+   Box,
+   Button,
+   ComboboxFieldControl,
+   Form,
+   FormDescription,
+   FormItem,
+   Icon,
+   InputFieldControl,
+   Label,
+   Switch,
+   Typography,
+   buttonVariants
+} from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
-import Tooltip from '@/components/ui/@override/tooltip'
 import { useGetEventsQuery } from '@/redux/apis/event.api'
 import { useEditNotificationMutation, useGetNotificationDetailsQuery } from '@/redux/apis/notification.api'
 import { NotificationSchema } from '@/schemas/notification.schema'
@@ -126,13 +138,18 @@ const EditNotificationPage: React.FunctionComponent = () => {
                   </Box>
                   {/* Time send */}
                   <Box className='col-span-full flex justify-between rounded-lg border p-4'>
-                     <Box className='space-y-2'>
+                     <FormItem className='space-y-1'>
                         <Label htmlFor='schedule-switch'>Nhắc hẹn</Label>
                         <FormDescription>Thông báo sẽ được gửi với thời gian đã đặt</FormDescription>
+                     </FormItem>
+                     <Box className='flex flex-col items-end gap-y-1'>
+                        <Switch id='schedule-switch' checked={Boolean(timeSend)} onCheckedChange={handleToggleSetSchedule} />
+                        {timeSend && (
+                           <FormDescription className='text-foreground'>
+                              {_.capitalize(formatRelative(new Date(timeSend!), new Date(), { locale: vi }))}
+                           </FormDescription>
+                        )}
                      </Box>
-                     <Tooltip content={_.capitalize(formatRelative(new Date(timeSend!), new Date(), { locale: vi }))} hidden={!timeSend}>
-                        <Switch id='schedule-switch' className='space-y-0' checked={Boolean(timeSend)} onCheckedChange={handleToggleSetSchedule} />
-                     </Tooltip>
                   </Box>
                   {/* Content */}
                   <Box className='col-span-full'>

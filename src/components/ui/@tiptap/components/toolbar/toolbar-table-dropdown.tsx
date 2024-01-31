@@ -26,12 +26,20 @@ import { z } from 'zod'
 type FormValue = z.infer<typeof TablePresetSchema>
 
 const TablePresetSchema = z.object({
-   rows: z.number({ required_error: 'Vui lòng nhập số hàng' }).positive('Số hàng phải lớn hơn hoặc bằng 1'),
-   cols: z.number({ required_error: 'Vui lòng nhập số cột' }).positive('Số cột phải lớn hơn hoặc bằng 1')
+   rows: z
+      .number({ required_error: 'Vui lòng nhập số hàng' })
+      .or(z.string({ required_error: 'Vui lòng nhập số hàng' }))
+      .transform((value) => +value)
+      .refine((value) => value >= 1, { message: 'Số hàng phải lớn hơn hoặc bằng 1' }),
+   cols: z
+      .number({ required_error: 'Vui lòng nhập số hàng' })
+      .or(z.string({ required_error: 'Vui lòng nhập số cột' }))
+      .transform((value) => +value)
+      .refine((value) => value >= 1, { message: 'Số cột phải lớn hơn hoặc bằng 1' })
 })
 
 const TableDropdownMenu: React.FC<{ editor: Editor }> = ({ editor }) => {
-   const form = useForm<FormValue>({ resolver: zodResolver(TablePresetSchema), defaultValues: { rows: 2, cols: 2 } })
+   const form = useForm<FormValue>({ resolver: zodResolver(TablePresetSchema), defaultValues: { rows: 2, cols: 2 }, mode: 'onChange' })
 
    const handleInsertTable = ({ rows, cols }: FormValue) => {
       editor.chain().focus().insertTable({ cols: +cols, rows: +rows }).run()

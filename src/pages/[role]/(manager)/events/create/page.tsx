@@ -130,7 +130,7 @@ const CreateEventPage = () => {
                         control={form.control}
                         placeholder='Nhập một địa điểm'
                         label='Địa điểm tổ chức'
-                        description='Địa điểm tổ chức sự kiên, mặc định sẽ là địa chỉ của cơ sở'
+                        description='Địa điểm tổ chức sự kiện'
                      />
                   </Box>
                   <Box className='col-span-1'>

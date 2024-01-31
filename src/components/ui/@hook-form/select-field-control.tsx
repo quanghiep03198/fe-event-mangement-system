@@ -22,7 +22,7 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                <FormItem className={cn({ hidden, 'grid grid-cols-[1fr_2fr] items-center gap-2 space-y-0': layout === 'horizontal' })}>
                   <FormLabel>{props.label}</FormLabel>
                   <Select
-                     {...field}
+                     defaultValue={field.value}
                      onValueChange={(value) => {
                         field.onChange(value)
                         if (onValueChange) {
@@ -31,7 +31,7 @@ export function SelectFieldControl<T extends FieldValues>(props: SelectFieldCont
                      }}
                      {...restProps}
                   >
-                     <SelectTrigger className={className}>
+                     <SelectTrigger className={className} ref={(e) => field.ref(e)}>
                         <SelectValue placeholder={placeholder} />
                      </SelectTrigger>
 

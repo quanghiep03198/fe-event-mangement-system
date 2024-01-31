@@ -10,7 +10,7 @@ const PreferencesPage: React.FunctionComponent = () => {
 
    useEffect(() => {
       if (!params.tab) setParam('tab', 'account-settings')
-   }, [])
+   }, [params])
 
    return (
       <Box className='flex h-screen flex-col items-stretch gap-y-10 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/25'>

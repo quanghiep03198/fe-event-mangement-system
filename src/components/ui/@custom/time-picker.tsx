@@ -42,7 +42,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
             <ScrollArea className='h-56'>
                <Box className='flex flex-col items-center justify-center gap-y-1 p-2'>
                   {Array.apply(null, Array(24)).map((_, i) => (
-                     <ToggleButton value={i} pressed={time.hours === i} onPressedChange={() => setTime((prev) => ({ ...prev, hours: i }))} />
+                     <ToggleButton key={i} value={i} pressed={time.hours === i} onPressedChange={() => setTime((prev) => ({ ...prev, hours: i }))} />
                   ))}
                </Box>
             </ScrollArea>

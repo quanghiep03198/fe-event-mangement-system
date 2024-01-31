@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { Paths } from '@/common/constants/pathnames'
 import { Button, Icon } from '@/components/ui'
 import { Box } from '@/components/ui/@custom/box'

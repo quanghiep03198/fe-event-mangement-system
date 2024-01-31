@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { useCallback, useMemo } from 'react'
 import _ from 'lodash'
 import useQueryParams from '@/common/hooks/use-query-params'

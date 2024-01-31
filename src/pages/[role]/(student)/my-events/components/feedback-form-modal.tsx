@@ -36,14 +36,6 @@ type FeedbackFormModalProps = {
 
 type FormValue = z.infer<typeof FeedbackSchema>
 
-const ratingValues = [
-   { id: 'rate-1', value: '1' },
-   { id: 'rate-2', value: '2' },
-   { id: 'rate-3', value: '3' },
-   { id: 'rate-4', value: '4' },
-   { id: 'rate-5', value: '5' }
-]
-
 const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
    const form = useForm<FormValue>({
       resolver: zodResolver(FeedbackSchema),
@@ -59,6 +51,7 @@ const FeedbackFormModal: React.FC<FeedbackFormModalProps> = (props) => {
          loading: 'Đang gửi feedback ...',
          success: () => {
             props.onAfterFeedback()
+            form.reset()
             return 'Feedback của bạn đã được gửi đi'
          },
          error: 'Lỗi không gửi được feedback'

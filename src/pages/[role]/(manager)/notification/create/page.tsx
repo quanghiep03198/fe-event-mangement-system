@@ -20,7 +20,6 @@ import {
    buttonVariants
 } from '@/components/ui'
 import { EditorFieldControl } from '@/components/ui/@hook-form/editor-field-control'
-import Tooltip from '@/components/ui/@override/tooltip'
 import { useGetEventDetailsQuery, useGetEventsQuery } from '@/redux/apis/event.api'
 import { useCreateNotificationMutation } from '@/redux/apis/notification.api'
 import { NotificationSchema } from '@/schemas/notification.schema'
@@ -151,7 +150,6 @@ const CreateNotificationPage: React.FunctionComponent = () => {
                               </Box>
                               <Box className='inline-flex items-center gap-x-2'>
                                  <Icon name='Users' className='basis-4' />
-
                                  <Typography variant='small' className='text-xs'>
                                     {Intl.NumberFormat().format(selectedEvent?.attendances?.length ?? 0)} thành viên
                                  </Typography>
@@ -173,16 +171,22 @@ const CreateNotificationPage: React.FunctionComponent = () => {
                      )}
                   </Box>
                   {/* Time send */}
-                  <Box className='col-span-full flex justify-between rounded-lg border p-4'>
-                     <Box className='space-y-2'>
-                        <Label htmlFor='schedule-switch'>Nhắc hẹn</Label>
+                  <Box className='col-span-full grid grid-cols-2 rounded-lg border p-4'>
+                     <Box className='space-y-1'>
+                        <Label htmlFor='schedule-switch' className='cursor-pointer'>
+                           Nhắc hẹn
+                        </Label>
                         <FormDescription>Thông báo sẽ được gửi với thời gian đã đặt</FormDescription>
                      </Box>
-                     <Tooltip content={_.capitalize(formatRelative(new Date(timeSend!), new Date(), { locale: vi }))} hidden={!timeSend}>
+                     <Box className='flex flex-col items-end gap-y-2'>
                         <Switch id='schedule-switch' disabled={!selectedEventId} checked={Boolean(timeSend)} onCheckedChange={handleToggleSetSchedule} />
-                     </Tooltip>
+                        {timeSend && (
+                           <Typography variant='small' className='text-xs'>
+                              {_.capitalize(formatRelative(new Date(timeSend!), new Date(), { locale: vi }))}
+                           </Typography>
+                        )}
+                     </Box>
                   </Box>
-
                   {/* Content */}
                   <Box className='col-span-full space-y-2'>
                      <EditorFieldControl form={form} name='content' label='Nội dung' />

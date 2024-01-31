@@ -1,7 +1,8 @@
-import ColorPicker from '@/components/ui/@tiptap/components/toolbar/toolbar-color-picker'
+import { cn } from '@/common/utils/cn'
+import ColorPicker from './toolbar-color-picker'
 import { Editor } from '@tiptap/react'
-import { Box, Button, Icon, Toggle } from '../../..'
-import Tooltip from '../../../@override/tooltip'
+import { Box, Button, Icon } from '@/components/ui'
+import Tooltip from '@/components/ui/@override/tooltip'
 import { AlignmentDropdownMenu } from './toolbar-alignment-dropdown'
 import FontSizeInput from './toolbar-font-size-input'
 import ImageDropdown from './toolbar-image-dropdown'
@@ -44,82 +45,100 @@ const Toolbar: React.FC<ToolbarPluginProps> = ({ editor }) => {
 
                {/* Toggle bold */}
                <Tooltip content='Đậm'>
-                  <Toggle size='sm' variant='outline' pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
+                  <Button
+                     variant='outline'
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('bold') })}
+                     onClick={() => editor.chain().focus().toggleBold().run()}
+                  >
                      <Icon name='Bold' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle quote */}
                <Tooltip content='Block quote'>
-                  <Toggle
-                     size='sm'
+                  <Button
                      variant='outline'
-                     type='button'
-                     pressed={editor.isActive('blockquote')}
-                     onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('blockquote') })}
+                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
                   >
                      <Icon name='Quote' size={14} />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle italic */}
                <Tooltip content='Nghiêng'>
-                  <Toggle
-                     size='sm'
-                     type='button'
+                  <Button
                      variant='outline'
-                     pressed={editor.isActive('italic')}
-                     onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('italic') })}
+                     onClick={() => editor.chain().focus().toggleItalic().run()}
                   >
                      <Icon name='Italic' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle underline */}
                <Tooltip content='Gạch chân'>
-                  <Toggle size='sm' variant='outline' pressed={editor.isActive('underline')} onPressedChange={() => editor.commands.toggleUnderline()}>
+                  <Button
+                     variant='outline'
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('underline') })}
+                     onClick={() => editor.commands.toggleUnderline()}
+                  >
                      <Icon name='Underline' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle underline */}
                <Tooltip content='Code'>
-                  <Toggle size='sm' variant='outline' pressed={editor.isActive('underline')} onPressedChange={() => editor.commands.toggleCodeBlock()}>
+                  <Button
+                     variant='outline'
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('underline') })}
+                     onClick={() => editor.commands.toggleCodeBlock()}
+                  >
                      <Icon name='Code' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
                <ColorPicker label='Màu văn bản' icon='Baseline' editor={editor} type='textStyle' />
                <ColorPicker label='Highlight' icon='Highlighter' editor={editor} type='highlight' />
 
                {/* Toggle strike linethough */}
                <Tooltip content='Gạch ngang'>
-                  <Toggle size='sm' variant='outline' pressed={editor.isActive('strike')} onPressedChange={() => editor.chain().focus().toggleStrike().run()}>
+                  <Button
+                     variant='outline'
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('strike') })}
+                     onClick={() => editor.chain().focus().toggleStrike().run()}
+                  >
                      <Icon name='Strikethrough' className='h-4 w-4' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle ordered list */}
                <Tooltip content='Danh sách được đánh số'>
-                  <Toggle
+                  <Button
                      variant='outline'
-                     size='sm'
-                     pressed={editor.isActive('orderedList')}
-                     onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('orderedList') })}
+                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                   >
                      <Icon name='ListOrdered' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Toggle bullet list */}
                <Tooltip content='Danh sách có dấu đầu dòng'>
-                  <Toggle
+                  <Button
                      variant='outline'
-                     size='sm'
-                     pressed={editor.isActive('bulletList')}
-                     onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+                     size='icon'
+                     className={cn('h-8 w-8', { 'bg-accent text-accent-foreground': editor.isActive('bulletList') })}
+                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                   >
                      <Icon name='List' />
-                  </Toggle>
+                  </Button>
                </Tooltip>
 
                {/* Horizontal ruler */}

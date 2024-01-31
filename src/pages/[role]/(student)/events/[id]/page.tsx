@@ -1,12 +1,9 @@
-/* eslint-disable */
-
 import { EventStatus, JoinEventStatus } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import { Badge, Box, Button, Icon } from '@/components/ui'
 import { useGetEventDetailsQuery, useParticipateInEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
 import { format } from 'date-fns'
-import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
@@ -67,6 +64,10 @@ const EventDetailsPage: React.FunctionComponent = () => {
                <Box className='flex items-center gap-x-2'>
                   <Icon name='User' />
                   {eventDetails?.user?.name}
+               </Box>
+               <Box className='flex items-center gap-x-2'>
+                  <Icon name='MapPin' />
+                  {eventDetails?.location}
                </Box>
             </Box>
 

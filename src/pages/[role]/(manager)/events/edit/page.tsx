@@ -137,7 +137,13 @@ const EditEvent = () => {
                      <SelectFieldControl name='area_id' control={form.control} placeholder='Chọn khu vực' label='Khu vực tổ chức' options={areaOptions} />
                   </Box>
                   <Box className='col-span-full'>
-                     <InputFieldControl name='location' control={form.control} label='Địa điểm tổ chức' placeholder='Nhập một địa điểm' />
+                     <InputFieldControl
+                        name='location'
+                        control={form.control}
+                        label='Địa điểm tổ chức'
+                        placeholder='Nhập một địa điểm'
+                        description='Địa điểm tổ chức sự kiện'
+                     />
                   </Box>
                   <Box className='col-span-3 sm:col-span-full'>
                      <DatePickerFieldControl name='start_time' control={form.control} label='Ngày bắt đầu' />

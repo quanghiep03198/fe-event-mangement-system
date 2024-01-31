@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import useQueryParams from '@/common/hooks/use-query-params'
 import { EventInterface } from '@/common/types/entities'
 import { Box, Icon, Typography } from '@/components/ui'

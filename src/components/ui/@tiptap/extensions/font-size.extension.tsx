@@ -1,11 +1,4 @@
-// @ts-nocheck
-
 import { Extension } from '@tiptap/react'
-
-/**
- * FontSize - Custom Extension
- * editor.commands.setFontSize(e.target.value) :set the font-size.
- */
 
 export const FontSize = Extension.create({
    name: 'fontSize',

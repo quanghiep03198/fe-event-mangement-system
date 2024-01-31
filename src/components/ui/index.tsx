@@ -118,6 +118,23 @@ export { RadioGroup, RadioGroupItem } from './@shadcn/radio-group'
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './@shadcn/carousel'
 export { Switch } from './@shadcn/switch'
 export { Separator } from './@shadcn/separator'
+export {
+   ContextMenu,
+   ContextMenuTrigger,
+   ContextMenuContent,
+   ContextMenuItem,
+   ContextMenuCheckboxItem,
+   ContextMenuRadioItem,
+   ContextMenuLabel,
+   ContextMenuSeparator,
+   ContextMenuShortcut,
+   ContextMenuGroup,
+   ContextMenuPortal,
+   ContextMenuSub,
+   ContextMenuSubContent,
+   ContextMenuSubTrigger,
+   ContextMenuRadioGroup
+} from './@shadcn/context-menu'
 // #endregion
 
 // #region Form field controls
