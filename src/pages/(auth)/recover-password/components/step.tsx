@@ -15,7 +15,7 @@ export const Steps: React.FC<{ data: Array<StepItem> }> = ({ data }) => {
             {data.map((step, stepIndex) => (
                <li key={step.name} className='relative flex flex-1'>
                   {step.status === 'completed' ? (
-                     <Link to={step.href} className='group flex w-full items-center'>
+                     <Link to={step.href} className='group pointer-events-none flex w-full items-center'>
                         <span className='flex items-center px-6 py-4 text-sm font-medium'>
                            <span className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary group-hover:bg-primary/80'>
                               <Icon name='Check' size={24} className='text-primary-foreground' aria-hidden='true' />
@@ -24,14 +24,14 @@ export const Steps: React.FC<{ data: Array<StepItem> }> = ({ data }) => {
                         </span>
                      </Link>
                   ) : step.status === 'current' ? (
-                     <Link to={step.href} className='flex items-center px-6 py-4 text-sm font-medium' aria-current='step'>
+                     <Link to={step.href} className='pointer-events-none flex items-center px-6 py-4 text-sm font-medium' aria-current='step'>
                         <span className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary'>
                            <span className='text-primary'>{step.index}</span>
                         </span>
                         <span className='ml-4 text-sm font-medium text-primary'>{step.name}</span>
                      </Link>
                   ) : (
-                     <Link to={step.href} className='group flex items-center'>
+                     <Link to={step.href} className='group pointer-events-none flex items-center'>
                         <span className='flex items-center px-6 py-4 text-sm font-medium'>
                            <span className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 duration-200 group-hover:border-muted-foreground'>
                               <span className='text-muted-foreground duration-200 group-hover:text-foreground'>{step.index}</span>

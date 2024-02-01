@@ -17,7 +17,7 @@ const DrawerNavSidebar: React.FC<DrawerSidebarProps> = (props) => {
 
    return (
       <Sheet open={props.open} onOpenChange={props.onOpenStateChange}>
-         <SheetContent className='w-full max-w-xs'>
+         <SheetContent className='w-full max-w-xs' side='left'>
             <Menu className='mt-10'>
                <Menu>
                   {props.navigation.map((item) => {

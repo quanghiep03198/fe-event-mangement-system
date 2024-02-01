@@ -1,4 +1,4 @@
-import { calculatePaginationRange } from '@/common/utils/calculate-pagination-range'
+import { calculatePaginationRange } from '../src/common/utils/calculate-pagination-range'
 import { describe, expect, it } from 'vitest'
 
 // Should return an array of length 3 when currentPage is 2 and totalPages is 3

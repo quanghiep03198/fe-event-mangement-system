@@ -78,7 +78,10 @@
    .divider {
       @apply relative flex max-h-none w-full max-w-full items-center justify-center text-center text-xs uppercase text-muted-foreground before:relative before:right-2 before:inline-block before:h-px before:w-1/4 before:bg-muted-foreground/50 before:align-middle after:relative after:left-2 after:inline-block after:h-px after:w-1/4 after:bg-muted-foreground/50 after:align-middle sm:before:w-full sm:after:w-full;
    }
-
+   .tableWrapper {
+      padding: 1rem 0;
+      overflow-x: auto;
+   }
    .resize-cursor {
       @apply cursor-col-resize;
    }

@@ -13,6 +13,7 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import Gapcursor from '@tiptap/extension-gapcursor'
+import FileHandler from '@tiptap-pro/extension-file-handler'
 
 export const extensions = [
    StarterKit.configure({
@@ -65,25 +66,27 @@ export const extensions = [
    Gapcursor.configure(),
    Table.configure({
       resizable: true,
+      lastColumnResizable: false,
       allowTableNodeSelection: true,
       HTMLAttributes: {
-         class: 'm-0 w-full table-fixed overflow-hidden border rounded border-collapse [&~.resize-cursor]:cursor-col-resize [&_.resize-cursor]:cursor-ew-resize'
+         class: 'm-0 w-full table-fixed overflow-hidden border rounded border-collapse [&.resize-cursor]:cursor-col-resize'
       }
    }),
    TableRow.configure(),
    TableHeader.configure({
       HTMLAttributes: {
-         class: 'border p-3 relative'
+         class: 'border p-3 relative [&.selectedCell]:bg-secondary/50 dark:[&.selectedCell]:bg-secondary/25'
       }
    }),
    TableCell.configure({
       HTMLAttributes: {
-         class: 'p-3 border'
+         class: 'p-3 border [&.selectedCell]:bg-secondary/50 dark:[&.selectedCell]:bg-secondary/25'
       }
    }),
    Highlight.configure({ multicolor: true }),
    Link.configure({
       openOnClick: false,
+      autolink: false,
       HTMLAttributes: {
          class: 'text-blue-500 font-normal'
       }
@@ -96,5 +99,50 @@ export const extensions = [
          class: 'object-center object-cover max-w-full aspect-[16/9]'
       },
       allowBase64: true
+   }),
+   FileHandler.configure({
+      allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+      onDrop: (currentEditor, files, pos) => {
+         files.forEach((file) => {
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+               currentEditor
+                  .chain()
+                  .insertContentAt(pos, {
+                     type: 'image',
+                     attrs: {
+                        src: fileReader.result
+                     }
+                  })
+                  .focus()
+                  .run()
+            }
+         })
+      },
+      onPaste: (currentEditor, files, htmlContent) => {
+         files.forEach((file) => {
+            if (htmlContent) {
+               console.log(htmlContent)
+               return false
+            }
+
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+               currentEditor
+                  .chain()
+                  .insertContentAt(currentEditor.state.selection.anchor, {
+                     type: 'image',
+                     attrs: {
+                        src: fileReader.result
+                     }
+                  })
+                  .focus()
+                  .run()
+            }
+         })
+      }
    })
 ]

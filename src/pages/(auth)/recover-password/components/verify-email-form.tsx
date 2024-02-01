@@ -40,10 +40,10 @@ const VerifyEmailForm: React.FunctionComponent = () => {
                control={form.control}
                type='email'
                placeholder='example@email.com'
-               description='Mật khẩu mới sẽ được gửi về địa chỉ email của bạn'
+               description='Mã xác thực sẽ được gửi về địa chỉ email của bạn'
             />
             <Button type='submit' className='gap-x-2'>
-               <Icon name='CheckCircle' /> Xác nhận
+               <Icon name='CheckCircle' /> Tiếp tục
             </Button>
          </Form>
       </FormProvider>

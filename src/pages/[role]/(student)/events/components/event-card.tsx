@@ -50,7 +50,7 @@ const EventCard: React.FC<{ data: EventInterface }> = ({ data }) => {
                </Badge>
             </CardDescription>
 
-            <CardDescription className='my-2 line-clamp-2 h-9'>{data?.description ?? 'Chưa có mô tả'}</CardDescription>
+            <CardDescription className='my-2 line-clamp-2 h-10'>{data?.description ?? 'Chưa có mô tả'}</CardDescription>
          </CardContent>
          <CardFooter className={cn('mt-2 items-stretch gap-x-2 px-3')}>
             <Button asChild size='sm' variant='default' className='w-full' onMouseEnter={() => prefetchPage(String(data?.id))}>

@@ -12,6 +12,7 @@ dist
 dist-ssr
 html/*
 *.local
+.npmrc
 
 # Editor directories and files
 .vscode/*

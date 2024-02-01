@@ -4,6 +4,7 @@ import { Badge, Box, Button, Icon } from '@/components/ui'
 import { useGetEventDetailsQuery, useParticipateInEventMutation } from '@/redux/apis/event.api'
 import { useAppSelector } from '@/redux/hook'
 import { format } from 'date-fns'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
@@ -13,6 +14,7 @@ const EventDetailsPage: React.FunctionComponent = () => {
    const { id } = useParams()
    const { data: eventDetails } = useGetEventDetailsQuery(id!)
    const { user, authenticated } = useAppSelector((state) => state.auth)
+
    const [participateInEvent] = useParticipateInEventMutation()
    const navigate = useNavigate()
 
@@ -28,6 +30,10 @@ const EventDetailsPage: React.FunctionComponent = () => {
          error: 'Đăng ký tham gia sự kiện thất bại'
       })
    }
+
+   useEffect(() => {
+      document.title = `Sự kiện - ${eventDetails?.name}`
+   }, [eventDetails])
 
    return (
       <>
@@ -63,11 +69,11 @@ const EventDetailsPage: React.FunctionComponent = () => {
                </Time>
                <Box className='flex items-center gap-x-2'>
                   <Icon name='User' />
-                  {eventDetails?.user?.name}
+                  {eventDetails?.user?.name ?? 'Chưa rõ'}
                </Box>
                <Box className='flex items-center gap-x-2'>
                   <Icon name='MapPin' />
-                  {eventDetails?.location}
+                  {eventDetails?.location ?? 'Chưa rõ'}
                </Box>
             </Box>
 
@@ -78,6 +84,12 @@ const EventDetailsPage: React.FunctionComponent = () => {
                   className='sm: prose w-full max-w-4xl basis-3/4 text-foreground sm:mx-auto sm:max-w-full md:mx-auto md:max-w-full'
                   dangerouslySetInnerHTML={{ __html: eventDetails?.content! }}
                />
+               <div
+                  className='fb-comments'
+                  data-href='https://developers.facebook.com/docs/plugins/comments#configurator'
+                  data-width=''
+                  data-numposts='5'
+               ></div>
             </Box>
          </Box>
       </>

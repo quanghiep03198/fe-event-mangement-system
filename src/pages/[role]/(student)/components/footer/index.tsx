@@ -26,37 +26,13 @@ const Footer: React.FunctionComponent = () => {
                </List>
                <Box className='flex items-center gap-x-6'>
                   <a href='https://www.facebook.com/fpt.poly' target='_blank'>
-                     <FacebookIcon
-                        width={20}
-                        height={20}
-                        fill='hsl(var(--muted-foreground))'
-                        onMouseEnter={(e) => {
-                           e.currentTarget.setAttribute('fill', 'currentColor')
-                        }}
-                        onMouseLeave={(e) => e.currentTarget.setAttribute('fill', 'hsl(var(--muted-foreground))')}
-                     />
+                     <FacebookIcon width={20} height={20} className='transition-color fill-muted-foreground duration-500 ease-in-out hover:fill-foreground' />
                   </a>
                   <a href='https://www.youtube.com/channel/UCHXm-vzOfAuLucVBKDUfhvQ' target='_blank'>
-                     <YoutubeIcon
-                        width={20}
-                        height={20}
-                        fill='hsl(var(--muted-foreground))'
-                        onMouseEnter={(e) => {
-                           e.currentTarget.setAttribute('fill', 'currentColor')
-                        }}
-                        onMouseLeave={(e) => e.currentTarget.setAttribute('fill', 'hsl(var(--muted-foreground))')}
-                     />
+                     <YoutubeIcon width={20} height={20} className='transition-color fill-muted-foreground duration-500 ease-in-out hover:fill-foreground' />
                   </a>
                   <a href='https://www.tiktok.com/@fpt.polytechnic.official' target='_blank'>
-                     <TiktokIcon
-                        width={20}
-                        height={20}
-                        fill='hsl(var(--muted-foreground))'
-                        onMouseEnter={(e) => {
-                           e.currentTarget.setAttribute('fill', 'currentColor')
-                        }}
-                        onMouseLeave={(e) => e.currentTarget.setAttribute('fill', 'hsl(var(--muted-foreground))')}
-                     />
+                     <TiktokIcon width={20} height={20} className='transition-color fill-muted-foreground duration-500 ease-in-out hover:fill-foreground' />
                   </a>
                </Box>
             </Box>
@@ -74,7 +50,7 @@ const Footer: React.FunctionComponent = () => {
                                  {area.name}
                               </Button>
                            </HoverCardTrigger>
-                           <HoverCardContent className='max-w-sm' align='start'>
+                           <HoverCardContent className='w-full max-w-sm' align='start'>
                               <Typography variant='small' className='flex items-start gap-x-2'>
                                  <Icon name='MapPin' className='basis-[32px]' /> {area.address}
                               </Typography>

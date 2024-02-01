@@ -19,6 +19,7 @@ export function GlobalFilter<T>(props: GlobalFilterProps<T>) {
                onChange={(value) => props.onGlobalFilterChange(String(value))}
                className='font-lg h-8 w-full border p-2 pl-8 shadow'
                placeholder='Tìm kiếm ...'
+               type='search'
             />
          </Box>
       </>
@@ -43,6 +44,7 @@ export function GlobalFilterPopover<T>(props: GlobalFilterProps<T>) {
                   onChange={(value) => props.onGlobalFilterChange(String(value))}
                   className='font-lg border p-2 pl-8 shadow'
                   placeholder='Tìm kiếm ...'
+                  type='search'
                />
             </Box>
          </PopoverContent>

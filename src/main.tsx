@@ -1,25 +1,25 @@
 import './styles/index.css'
 
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Toaster } from 'sonner'
-import { Theme } from './common/constants/enums'
 import { ThemeProvider } from './components/providers/theme-provider'
 import { persistor, store } from './redux/store'
-import Router from './routes'
 
-const theme = (localStorage.getItem('theme') ?? 'system') as Theme
+const Router = lazy(() => import('./routes'))
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
    <Provider store={store}>
       <PersistGate persistor={persistor}>
          <ThemeProvider>
             <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-               <Router />
+               <Suspense fallback={<div className='flex h-screen items-center justify-center'>Đang tải ...</div>}>
+                  <Router />
+               </Suspense>
                <Toaster
-                  theme={theme}
                   expand={true}
                   closeButton={true}
                   toastOptions={{
