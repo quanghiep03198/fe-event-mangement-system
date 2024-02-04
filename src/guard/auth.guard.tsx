@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom'
 
 const AuthGuard: React.FC<React.PropsWithChildren> = (props) => {
    const authenticated = useAppSelector((state) => state.auth.authenticated)
-   return authenticated ? props.children : <Navigate to={Paths.REDIRECT} />
+   return authenticated ? props.children : <Navigate to={Paths.LOGIN} />
 }
 
 export default AuthGuard

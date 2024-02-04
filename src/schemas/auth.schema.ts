@@ -29,8 +29,7 @@ export const RegisterSchema = z
 
 export const ChangePasswordSchema = z
    .object({
-      currentPassword: z.string({ required_error: 'Vui lòng nhập mật khẩu hiện tại' }),
-
+      currentPassword: z.string({ required_error: 'Vui lòng nhập mật khẩu hiện tại' }).min(1, { message: 'Vui lòng nhập mật khẩu hiện tại' }),
       password: z
          .string({ required_error: 'Vui lòng nhập mật khẩu' })
          .min(6, { message: 'Mật khẩu phải có tối thiểu 6 ký tự' })

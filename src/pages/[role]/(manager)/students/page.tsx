@@ -143,7 +143,7 @@ const StudentsListPage: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('created_at', {
          header: 'Ngày tham gia',
-         enableColumnFilter: true,
+         enableColumnFilter: false,
          enableSorting: true,
          enableGlobalFilter: false,
          filterFn: 'fuzzy',

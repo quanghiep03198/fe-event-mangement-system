@@ -1,14 +1,13 @@
-import { Paths } from '@/common/constants/pathnames'
 import { Box, Button, Form, InputFieldControl, Typography } from '@/components/ui'
 import axiosInstance from '@/configs/axios.config'
 import { useUpdateUserInfoMutation } from '@/redux/apis/auth.api'
 import { useAppSelector } from '@/redux/hook'
 import { ChangePasswordSchema } from '@/schemas/auth.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { debounce, pick } from 'lodash'
+import { debounce, isEmpty, pick } from 'lodash'
 import * as qs from 'qs'
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import tw from 'tailwind-styled-components'
@@ -18,32 +17,52 @@ type FormValue = z.infer<typeof ChangePasswordSchema>
 
 const ChangePasswordPanel: React.FunctionComponent = () => {
    const user = useAppSelector((state) => state.auth.user)
+   const [checkPasswordError, setCheckPasswordError] = useState<string | null>(null)
+   const navigate = useNavigate()
    const form = useForm<FormValue>({
       resolver: zodResolver(ChangePasswordSchema),
-      mode: 'onChange'
+      shouldUnregister: true
    })
+   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+   const currentPassword = useWatch({ name: 'currentPassword', control: form.control })
    const [changePassword, { isLoading }] = useUpdateUserInfoMutation()
-   const navigate = useNavigate()
 
    const handleChangePassword = (data: FormValue) => {
+      if (checkPasswordError) return
+
       toast.promise(changePassword(pick(data, ['password'])).unwrap(), {
          loading: 'Đang cập nhật mật khẩu ...',
          success: () => {
-            navigate({ pathname: Paths.ACCOUNT_SETTINGS, search: qs.stringify({ tab: 'account-settings' }) })
+            navigate({ search: qs.stringify({ tab: 'account-settings' }) })
             return 'Cập nhật mật khẩu thành công'
          },
          error: 'Đổi mật khẩu thất bại'
       })
    }
 
-   const handleCheckCurrentPassword: React.ChangeEventHandler<HTMLInputElement> = debounce(async (e) => {
-      try {
-         const response = (await axiosInstance.post('/check-password', { email: user.email, password: e.target.value })) as HttpResponse<boolean>
-         if (response.status === 'success') form.clearErrors('currentPassword')
-      } catch (error) {
-         form.setError('currentPassword', { message: error.response.data.message })
+   useEffect(() => {
+      timeoutRef.current = setTimeout(() => {
+         if ((form.formState.isSubmitting || form.formState.isSubmitted) && !isEmpty(currentPassword)) {
+            axiosInstance
+               .post<Record<'email' | 'password', string>, HttpResponse<boolean>>('/check-password', {
+                  email: user.email,
+                  password: currentPassword
+               })
+               .then(() => {
+                  setCheckPasswordError(null)
+                  form.clearErrors('currentPassword')
+               })
+               .catch((error) => {
+                  setCheckPasswordError(error.response.data.message)
+                  form.setError('currentPassword', { message: error.response.data.message })
+               })
+         }
+      }, 200)
+
+      return () => {
+         clearTimeout(timeoutRef.current)
       }
-   }, 500)
+   }, [currentPassword, form.formState.isSubmitted, form.formState.isSubmitting])
 
    return (
       <Box className='min-h-[75vh] space-y-6 rounded-lg border p-6'>
@@ -62,7 +81,6 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
                   label='Mật khẩu hiện tại'
                   placeholder='******'
                   description='Mật khẩu hiện tại của bạn đang sử dụng'
-                  onChange={handleCheckCurrentPassword}
                />
                <InputFieldControl
                   name='password'
@@ -71,6 +89,7 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
                   label='Mật khẩu mới'
                   placeholder='******'
                   description='Chọn mật khẩu đủ mạnh để bảo mật tốt hơn'
+                  onChange={debounce(async () => await form.trigger('password'), 200)}
                />
                <InputFieldControl
                   name='confirmPassword'
@@ -79,6 +98,7 @@ const ChangePasswordPanel: React.FunctionComponent = () => {
                   label='Xác nhận mật khẩu'
                   placeholder='******'
                   description='Xác nhận bạn đang nhập đúng mật khẩu mới'
+                  onChange={debounce(async () => await form.trigger('confirmPassword'), 200)}
                />
                <Button type='submit' className='w-fit sm:w-full' disabled={isLoading}>
                   Xác nhận

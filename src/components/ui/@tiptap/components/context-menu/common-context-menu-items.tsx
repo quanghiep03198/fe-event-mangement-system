@@ -50,6 +50,7 @@ const CommonContextMenuItems: React.FC<{ editor: Editor }> = ({ editor }) => {
             <ContextMenuShortcut>⌘+v</ContextMenuShortcut>
          </ContextMenuItem>
          <ContextMenuItem
+            disabled={!canPaste}
             className='flex gap-x-2 whitespace-nowrap'
             onClick={async () => {
                const copiedData = await navigator.clipboard.readText()

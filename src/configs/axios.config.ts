@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
 )
 
 axiosInstance.interceptors.response.use(
-   (response: AxiosResponse): AxiosResponse['data'] => response.data,
+   (response: AxiosResponse) => response.data,
    (error: AxiosError) => {
       if (error.response?.status === HttpStatusCode.Unauthorized) {
          store.dispatch(signout())

@@ -79,7 +79,7 @@ const ParticipantsList: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('created_at', {
          header: 'Ngày tham gia',
-         enableColumnFilter: true,
+         enableColumnFilter: false,
          enableSorting: true,
          cell: ({ getValue }) => {
             const value = getValue()

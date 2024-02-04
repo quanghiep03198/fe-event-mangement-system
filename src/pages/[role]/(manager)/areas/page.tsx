@@ -52,7 +52,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('created_at', {
          header: 'Ngày tạo',
          enableSorting: true,
-         enableColumnFilter: true,
+         enableColumnFilter: false,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -61,7 +61,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('updated_at', {
          header: 'Cập nhật lần gần nhất',
          enableSorting: true,
-         enableColumnFilter: true,
+         enableColumnFilter: false,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -94,7 +94,7 @@ const AreasListPage: React.FunctionComponent = () => {
    return (
       <>
          <Box className='space-y-10'>
-            <Box className='space-y-2'>
+            <Box className='space-y-1'>
                <Typography variant='h6'>Danh sách cơ sở</Typography>
                <Typography variant='small' color='muted'>
                   Danh sách các cơ sở hiện của FPT Polytechnic

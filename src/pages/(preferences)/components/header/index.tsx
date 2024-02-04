@@ -29,7 +29,9 @@ const Header: React.FunctionComponent = () => {
    return (
       <Box className='sticky top-0 z-20 border-b bg-background/50 bg-opacity-50 py-2 backdrop-blur'>
          <Box className='mx-auto flex max-w-7xl items-center justify-between px-4'>
-            <Image src={logo} className='max-h-16 max-w-[9rem] object-contain sm:max-w-[3rem]' width='100%' height='100%' />
+            <Link to='/'>
+               <Image src={logo} className='max-h-16 max-w-[9rem] object-contain sm:max-w-[3rem]' width='100%' height='100%' />
+            </Link>
             <Box className='flex items-center gap-x-2'>
                <Tooltip content='Trở về màn hình chính'>
                   <Link to='/' className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}>

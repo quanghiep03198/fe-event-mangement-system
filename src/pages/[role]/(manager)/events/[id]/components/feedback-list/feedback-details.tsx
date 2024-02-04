@@ -8,7 +8,6 @@ import { useDeleteFeedbackMutation, useGetFeedbackDetailsQuery } from '@/redux/a
 import { format } from 'date-fns'
 import { Fragment, useState } from 'react'
 import { toast } from 'sonner'
-import tw from 'tailwind-styled-components'
 
 const FeedbackDetails: React.FunctionComponent = () => {
    const [deleteFeedback] = useDeleteFeedbackMutation()
@@ -70,18 +69,24 @@ const FeedbackDetails: React.FunctionComponent = () => {
                         <AvatarFallback>A</AvatarFallback>
                      </Avatar>
                      <Box className='space-y-2'>
-                        <Paragraph className='font-medium'>{data?.user?.name}</Paragraph>
-                        <Paragraph className='text-xs'>{data?.user?.email}</Paragraph>
+                        <Typography variant='small' className='font-medium'>
+                           {data?.user?.name}
+                        </Typography>
+                        <Typography variant='small' className='text-xs'>
+                           {data?.user?.email}
+                        </Typography>
                      </Box>
                   </Box>
-                  <Time className=''>{format(data?.created_at ?? new Date(), 'MMM, d, yyyy, h:mm:ss a')}</Time>
+                  <Typography className='text-xs capitalize' color='muted'>
+                     {format(data?.created_at ?? new Date(), 'MMM, d, yyyy, h:mm:ss a')}
+                  </Typography>
                </Box>
             )}
 
             <Box className={cn('flex flex-1 flex-col gap-y-4 p-3', { 'items-center justify-center': !data })}>
                {data ? (
                   <Fragment>
-                     <StarRatingRadioGroup defaultValue={String(data?.rating)} />
+                     <StarRatingRadioGroup disabled defaultValue={String(data?.rating)} />
                      <ScrollArea className='h-[calc(50vh-4.75rem)]'>
                         <Box className='flex flex-col gap-y-6'>
                            <Box>
@@ -118,8 +123,5 @@ const FeedbackDetails: React.FunctionComponent = () => {
       </>
    )
 }
-
-const Paragraph = tw.p`text-sm`
-const Time = tw.time`text-xs capitalize text-muted-foreground`
 
 export default FeedbackDetails
