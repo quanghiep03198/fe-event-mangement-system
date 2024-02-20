@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 const TawkMessenger: React.FunctionComponent = () => {
    const authenticated = useAppSelector((state) => state.auth.authenticated)
-   const ref = useRef<typeof TawkMessengerReact.prototype>()
+   const ref = useRef<typeof TawkMessengerReact.prototype>(null!)
 
    useEffect(() => {
       if (authenticated) ref.current.showWidget()
