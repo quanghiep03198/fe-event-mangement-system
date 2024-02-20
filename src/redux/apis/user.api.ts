@@ -57,7 +57,7 @@ export const userApi = createApi({
          query: ({ id, payload }) => ({ url: `/participants/${id}`, method: 'PUT', data: payload }),
          invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       }),
-      deleteUser: build.mutation<HttpResponse<undefined>, number>({
+      deleteUser: build.mutation<HttpResponse<undefined>, string>({
          query: (id) => ({ url: `/participants/${id}`, method: 'DELETE' }),
          invalidatesTags: (_response, error, _args) => (error ? [] : tagTypes)
       })
