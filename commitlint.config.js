@@ -1,6 +1,6 @@
-const { RuleConfigSeverity } = require('@commitlint/types')
+import { RuleConfigSeverity } from '@commitlint/types'
 
-module.exports = {
+export default {
    parserPreset: 'conventional-changelog-conventionalcommits',
    rules: {
       'body-leading-blank': [RuleConfigSeverity.Warning, 'always'],

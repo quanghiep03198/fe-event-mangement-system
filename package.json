@@ -112,6 +112,7 @@
       "eslint": "^8.53.0",
       "eslint-plugin-react-hooks": "^4.6.0",
       "eslint-plugin-react-refresh": "^0.4.4",
+      "husky": "^9.0.11",
       "jsdom": "^23.2.0",
       "lint-staged": "^15.2.2",
       "postcss": "^8.4.32",
@@ -124,9 +125,9 @@
       "vitest": "^1.2.0"
    },
    "lint-staged": {
-      "*.{ts,tsx}": [
-         "npm run lint",
-         "npm run format",
+      "src/*": [
+         "npm run lint:fix",
+         "npm run prettier:fix",
          "git add ."
       ]
    },

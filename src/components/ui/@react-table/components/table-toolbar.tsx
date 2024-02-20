@@ -25,7 +25,7 @@ export default function TableToolbar<TData>(props: TableToolbarProps<TData>) {
       <Box className='flex items-center justify-between sm:justify-end'>
          <GlobalFilter table={table} globalFilter={globalFilter} onGlobalFilterChange={onGlobalFilterChange} />
 
-         <Box className='flex items-center gap-x-1'>
+         <Box className='grid grid-flow-col items-center gap-x-1'>
             <Tooltip content='Xóa lọc'>
                <Button variant='destructive' size='icon' onClick={onClearAllFilters} className={cn('h-8 w-8', !isFiltered && 'hidden')}>
                   <Icon name='X' />

@@ -15,9 +15,9 @@ function TableCellHead<TData, TValue>({ header }: TableCellHeadProps<TData, TVal
    const { isFilterOpened: isFilterCollapsed, setIsFilterOpened: setIsFilterCollapsed } = useContext(TableContext)
 
    return (
-      <Collapsible open={isFilterCollapsed} onOpenChange={setIsFilterCollapsed} className='flex flex-col items-stretch divide-y divide-border'>
+      <Collapsible open={isFilterCollapsed} onOpenChange={setIsFilterCollapsed} className={cn('flex flex-col items-stretch divide-y divide-border')}>
          <Box
-            className={cn('relative inline-flex cursor-auto touch-none select-none items-center gap-x-2 p-2', {
+            className={cn('relative inline-flex cursor-auto touch-none select-none items-center gap-x-2 py-2', {
                'cursor-pointer hover:text-foreground': header.column.columnDef.enableSorting,
                'cursor-col-resize': header.column.getIsResizing()
             })}
