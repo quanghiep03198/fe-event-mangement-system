@@ -2,6 +2,7 @@ import { UserRoleValues } from '@/common/constants/constants'
 import { UserRoleEnum } from '@/common/constants/enums'
 import { Excel } from '@/common/libs/xlsx'
 import { UserInterface } from '@/common/types/entities'
+import { createFormData } from '@/common/utils/form-data'
 import {
    Avatar,
    AvatarFallback,
@@ -9,6 +10,7 @@ import {
    Badge,
    Box,
    Button,
+   Checkbox,
    DataTable,
    DataTableRowActions,
    DropdownMenu,
@@ -22,6 +24,7 @@ import {
 import ConfirmDialog from '@/components/ui/@override/confirm-dialog'
 import Tooltip from '@/components/ui/@override/tooltip'
 import { useDeleteUserMutation, useGetUsersQuery, useImportUsersListMutation } from '@/redux/apis/user.api'
+import { CheckedState } from '@radix-ui/react-checkbox'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { useCallback, useState } from 'react'
@@ -29,7 +32,6 @@ import { toast } from 'sonner'
 import CreateUserFormModal from '../components/shared/create-user-form-modal'
 import UpdateUserFormModal from '../components/shared/update-user-form-modal'
 import { sampleData } from './data/sample-data'
-import { createFormData } from '@/common/utils/form-data'
 
 type TableDataType = UserInterface & { index: number }
 
@@ -48,6 +50,7 @@ const StudentsListPage: React.FunctionComponent = () => {
    const [updateFormOpenState, setUpdateFormOpenState] = useState<boolean>(false)
    const [userToUpdate, setUserToUpdate] = useState<Partial<UserInterface>>({})
    const [selectedRowId, setSelectedRowId] = useState<number | null>(null)
+   const [selectedRows, setSelectedRows] = useState([])
    const [deleteUser] = useDeleteUserMutation()
    const [importUsersList] = useImportUsersListMutation()
 
@@ -55,8 +58,15 @@ const StudentsListPage: React.FunctionComponent = () => {
 
    const handleDeleteUser = useCallback(async () => {
       try {
+         if (selectedRows.length === 0 && !selectedRowId) return
+         if (selectedRows.length > 0) {
+            console.log(selectedRows.map((row) => row.original.id).join(','))
+            await deleteUser(selectedRows.map((row) => row.original.id).join(',')).unwrap()
+            toast.success(`Đã xóa ${selectedRows.length} sinh viên`)
+            return
+         }
          if (selectedRowId) {
-            await deleteUser(selectedRowId).unwrap()
+            await deleteUser(String(selectedRowId)).unwrap()
             toast.success('Đã xóa sinh viên')
          }
       } catch (error) {
@@ -64,8 +74,9 @@ const StudentsListPage: React.FunctionComponent = () => {
       } finally {
          setOpenConfirmState(false)
          setSelectedRowId(null)
+         setSelectedRows([])
       }
-   }, [selectedRowId])
+   }, [selectedRowId, selectedRows])
 
    const handleImportStudents: React.ChangeEventHandler<HTMLInputElement> = (e) => {
       if (e.target.files instanceof FileList) {
@@ -85,9 +96,38 @@ const StudentsListPage: React.FunctionComponent = () => {
    }
 
    const columns = [
+      columnHelper.accessor('id', {
+         id: 'select',
+         header: ({ table }) => {
+            const checked = (table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')) as CheckedState
+
+            return (
+               <Checkbox
+                  checked={checked}
+                  onCheckedChange={(value) => {
+                     table.toggleAllPageRowsSelected(!!value)
+                  }}
+                  aria-label='Select all'
+               />
+            )
+         },
+         cell: ({ row }) => (
+            <Checkbox
+               checked={row.getIsSelected()}
+               onCheckedChange={(value) => {
+                  row.toggleSelected(!!value)
+               }}
+               aria-label='Select row'
+            />
+         ),
+         enableSorting: false,
+         enableHiding: false,
+         enableResizing: false
+      }),
       columnHelper.accessor('name', {
          header: 'Họ tên',
          enableColumnFilter: true,
+         enableResizing: true,
          enableSorting: true,
          size: 256,
          cell: ({ row }) => {
@@ -105,16 +145,19 @@ const StudentsListPage: React.FunctionComponent = () => {
       columnHelper.accessor('email', {
          header: 'Email',
          enableColumnFilter: true,
+         enableResizing: true,
          enableSorting: true
       }),
       columnHelper.accessor('phone', {
          header: 'Số điện thoại',
          enableColumnFilter: true,
+         enableResizing: true,
          enableSorting: true
       }),
       columnHelper.accessor('student_code', {
          header: 'Mã sinh viên',
          enableColumnFilter: true,
+         enableResizing: true,
          enableSorting: true,
          cell: ({ getValue }) => {
             const value = getValue()
@@ -177,17 +220,21 @@ const StudentsListPage: React.FunctionComponent = () => {
    return (
       <>
          <Box className='space-y-10'>
-            <Box className='space-y-1'>
-               <Typography variant='h6'>Danh sách sinh viên</Typography>
-               <Typography variant='small' color='muted'>
-                  Danh sách hiển thị người dùng với vai trò là sinh viên
-               </Typography>
+            <Box className='flex justify-between'>
+               <Box className='space-y-1'>
+                  <Typography variant='h6'>Danh sách sinh viên</Typography>
+                  <Typography variant='small' color='muted'>
+                     Danh sách hiển thị người dùng với vai trò là sinh viên
+                  </Typography>
+               </Box>
             </Box>
             <DataTable
                columns={columns as ColumnDef<TableDataType>[]}
                data={data as UserInterface[]}
                loading={isLoading}
-               enableColumnResizing
+               enableColumnResizing={true}
+               selectedRows={selectedRows}
+               onRowsSelectionChange={setSelectedRows}
                slot={
                   <>
                      <Tooltip content='Tải file mẫu'>
@@ -216,6 +263,13 @@ const StudentsListPage: React.FunctionComponent = () => {
                            </DropdownMenuItem>
                         </DropdownMenuContent>
                      </DropdownMenu>
+                     {selectedRows.length > 0 && (
+                        <Tooltip content='Xóa'>
+                           <Button variant='destructive' className='order-[-1] h-8 w-8 gap-x-2' size='icon' onClick={() => setOpenConfirmState(true)}>
+                              <Icon name='Trash2' />
+                           </Button>
+                        </Tooltip>
+                     )}
                   </>
                }
             />
@@ -224,7 +278,9 @@ const StudentsListPage: React.FunctionComponent = () => {
             open={openConfirmState}
             onOpenStateChange={setOpenConfirmState}
             title='Bạn chắc chắn muốn tiếp tục?'
-            description='Hành động này không thể khôi phục. Người dùng này sẽ bị xóa vĩnh viễn khỏi hệ thống.'
+            description={
+               'Hành động này không thể khôi phục. ' + `${selectedRows.length > 0 ? 'Những người' : 'Người'} dùng này sẽ bị xóa vĩnh viễn khỏi hệ thống.`
+            }
             onConfirm={handleDeleteUser}
          />
          <CreateUserFormModal openState={createFormOpenState} onOpenStateChange={setCreateFormOpenState} createForRole={UserRoleEnum.STUDENT} />

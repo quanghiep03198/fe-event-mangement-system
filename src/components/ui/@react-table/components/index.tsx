@@ -12,7 +12,7 @@ import {
    getSortedRowModel,
    useReactTable
 } from '@tanstack/react-table'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { Box } from '../..'
 import { TableProvider } from '../context/table.context'
 import { fuzzyFilter } from '../utils/fuzzy-filter.util'
@@ -29,9 +29,21 @@ export interface DataTableProps<TData, TValue> {
    enableColumnResizing?: boolean
    paginationState?: Omit<Pagination<TData>, 'docs'>
    slot?: React.ReactNode
+   selectedRows?: Array<any>
+   onRowsSelectionChange?: (...args) => void
 }
 
-function DataTable<TData, TValue>({ data, columns, loading, manualPagination, slot, paginationState, enableColumnResizing }: DataTableProps<TData, TValue>) {
+function DataTable<TData, TValue>({
+   data,
+   columns,
+   loading,
+   manualPagination,
+   slot,
+   paginationState,
+   enableColumnResizing,
+   selectedRows,
+   onRowsSelectionChange
+}: DataTableProps<TData, TValue>) {
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
    const [sorting, setSorting] = useState<SortingState>([])
    const [globalFilter, setGlobalFilter] = useState<string>('')
@@ -71,6 +83,14 @@ function DataTable<TData, TValue>({ data, columns, loading, manualPagination, sl
       setGlobalFilter('')
       setColumnFilters([])
    }, [])
+
+   useEffect(() => {
+      if (onRowsSelectionChange && typeof onRowsSelectionChange === 'function') onRowsSelectionChange(table.getSelectedRowModel().flatRows)
+   }, [table.getSelectedRowModel().flatRows])
+
+   useEffect(() => {
+      if (Array.isArray(selectedRows) && selectedRows.length === 0) table.resetRowSelection()
+   }, [selectedRows])
 
    return (
       <TableProvider areAllFiltersCleared={columnFilters.length === 0 && globalFilter.length === 0}>
