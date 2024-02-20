@@ -27,7 +27,7 @@ const StaffsListPage: React.FunctionComponent = () => {
    const handleDeleteUser = useCallback(async () => {
       try {
          if (selectedRowId) {
-            await deleteParticipant(selectedRowId).unwrap()
+            await deleteParticipant(String(selectedRowId)).unwrap()
             toast.success('Đã xóa cộng tác viên')
          }
       } catch (error) {
@@ -48,6 +48,7 @@ const StaffsListPage: React.FunctionComponent = () => {
          header: 'Họ tên',
          enableColumnFilter: true,
          enableSorting: true,
+         enableResizing: true,
          cell: ({ row }) => (
             <Box className='flex items-center gap-x-2'>
                <Avatar className='z-0 items-center'>
@@ -61,12 +62,14 @@ const StaffsListPage: React.FunctionComponent = () => {
       columnHelper.accessor('email', {
          header: 'Email',
          enableColumnFilter: true,
+         enableResizing: true,
          enableSorting: true
       }),
       columnHelper.accessor('phone', {
          header: 'Số điện thoại',
          enableColumnFilter: true,
          enableSorting: true,
+         enableResizing: true,
          cell: ({ getValue }) => {
             const value = getValue()
             return value ? (
@@ -118,7 +121,7 @@ const StaffsListPage: React.FunctionComponent = () => {
                </Typography>
             </Box>
             <DataTable
-               enableColumnResizing={false}
+               enableColumnResizing={true}
                data={data as Partial<UserInterface>[]}
                loading={isLoading}
                columns={columns}

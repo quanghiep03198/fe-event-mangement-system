@@ -120,6 +120,7 @@ const StudentsListPage: React.FunctionComponent = () => {
                aria-label='Select row'
             />
          ),
+         size: 80,
          enableSorting: false,
          enableHiding: false,
          enableResizing: false

@@ -1,12 +1,12 @@
+import useQueryParams from '@/common/hooks/use-query-params'
 import { Box } from '@/components/ui'
+import Loading from '@/pages/loading'
 import React, { Fragment, Suspense, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Footer from './components/footer'
 import Header from './components/header'
-import Loading from '@/pages/loading'
 import Sidebar from './components/sidebar'
 import DrawerSidebar from './components/sidebar/sidebar-sm'
-import useQueryParams from '@/common/hooks/use-query-params'
 
 const Layout: React.FunctionComponent = () => {
    const [open, setOpen] = useState<boolean>(false)

@@ -77,6 +77,6 @@ export default function TableDataGrid<TData, TValue>({ table, columns, loading, 
    )
 }
 
-const TableWrapper = tw.div`relative flex flex-col items-stretch h-full max-w-full mx-auto overflow-clip border-b`
+const TableWrapper = tw.div`relative flex flex-col items-stretch h-full max-w-full mx-auto overflow-clip border rounded-lg`
 
 TableDataGrid.displayName = 'DataTable'

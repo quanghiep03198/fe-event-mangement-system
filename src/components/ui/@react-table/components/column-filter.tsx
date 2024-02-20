@@ -1,10 +1,11 @@
 import { cn } from '@/common/utils/cn'
 import { Column } from '@tanstack/react-table'
 import { useContext, useMemo } from 'react'
-import { Box, DropdownSelect, buttonVariants } from '../..'
+import { Box, DropdownSelect, Icon, buttonVariants } from '../..'
 import { TableContext } from '../context/table.context'
 import { ComboboxFilter } from './combobox-filter'
 import { DebouncedInput } from './debounced-input'
+import Tooltip from '../../@override/tooltip'
 
 type ColumnFilterProps<TData, TValue> = {
    column: Column<TData, TValue>
@@ -22,7 +23,13 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
    )
 
    if (!column.columnDef.enableColumnFilter)
-      return <Box className='flex h-9 select-none items-center justify-start bg-muted/50 px-2 text-xs font-medium text-muted-foreground/50'></Box>
+      return (
+         <Tooltip content='Bộ lọc không được áp dụng'>
+            <Box className='cursor- flex h-9 select-none items-center justify-center px-2 text-xs font-medium text-muted-foreground/50'>
+               <Icon name='X' />
+            </Box>
+         </Tooltip>
+      )
 
    switch (filterType) {
       case 'inNumberRange':

@@ -64,24 +64,27 @@ const EventListPage: React.FunctionComponent = () => {
       columnHelper.accessor('name', {
          header: 'Tên sự kiện',
          enableSorting: true,
+         enableResizing: true,
          enableColumnFilter: true,
          size: 208
       }),
       columnHelper.accessor('contact', {
          header: 'Số điện thoại liên hệ',
          enableColumnFilter: true,
+         enableResizing: true,
          size: 144
       }),
       columnHelper.accessor('location', {
          header: 'Địa điểm',
          enableColumnFilter: true,
+         enableResizing: true,
          size: 240
       }),
       columnHelper.accessor('start_time', {
          header: 'Thời gian bắt đầu',
          enableSorting: true,
          enableMultiSort: true,
-         enableResizing: false,
+         enableResizing: true,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -91,7 +94,7 @@ const EventListPage: React.FunctionComponent = () => {
          header: 'Thời gian kết thúc',
          enableSorting: true,
          enableMultiSort: true,
-         enableResizing: false,
+         enableResizing: true,
          cell: ({ getValue }) => {
             const value = getValue()
             return format(value, 'dd/MM/yyyy')
@@ -100,7 +103,7 @@ const EventListPage: React.FunctionComponent = () => {
       columnHelper.accessor('status', {
          header: 'Trạng thái',
          enableColumnFilter: true,
-         enableResizing: false,
+         enableResizing: true,
          filterFn: 'equals',
          cell: ({ getValue }) => {
             const value = getValue() as string
@@ -175,7 +178,7 @@ const EventListPage: React.FunctionComponent = () => {
          </Box>
 
          <DataTable
-            enableColumnResizing
+            enableColumnResizing={true}
             columns={columns}
             data={eventsList}
             loading={isLoading}

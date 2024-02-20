@@ -17,7 +17,8 @@ type ConfirmDialogProps = {
    confirmText?: string
    cancelText?: string
    onOpenStateChange: React.Dispatch<React.SetStateAction<boolean>>
-   onConfirm: (...args: any[]) => any
+   onConfirm: (...args: any[]) => unknown
+   onCancel?: (...args: any[]) => unknown
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = (props) => {

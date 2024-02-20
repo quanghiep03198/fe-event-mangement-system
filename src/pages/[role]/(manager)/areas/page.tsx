@@ -36,6 +36,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('name', {
          header: 'Tên cơ sở',
          size: 256,
+         enableResizing: true,
          enableSorting: true,
          enableColumnFilter: true
       }),
@@ -43,6 +44,7 @@ const AreasListPage: React.FunctionComponent = () => {
          header: 'Địa chỉ',
          size: 320,
          enableSorting: true,
+         enableResizing: true,
          enableColumnFilter: true,
          cell: ({ getValue }) => {
             const value = getValue()
@@ -52,6 +54,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('created_at', {
          header: 'Ngày tạo',
          enableSorting: true,
+         enableResizing: true,
          enableColumnFilter: false,
          cell: ({ getValue }) => {
             const value = getValue()
@@ -61,6 +64,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('updated_at', {
          header: 'Cập nhật lần gần nhất',
          enableSorting: true,
+         enableResizing: true,
          enableColumnFilter: false,
          cell: ({ getValue }) => {
             const value = getValue()
@@ -70,6 +74,7 @@ const AreasListPage: React.FunctionComponent = () => {
       columnHelper.accessor('id', {
          header: 'Thao tác',
          enableSorting: true,
+
          enableColumnFilter: true,
          cell: ({ row }) => {
             return (
