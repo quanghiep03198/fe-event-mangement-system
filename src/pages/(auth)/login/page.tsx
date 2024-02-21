@@ -1,12 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useGoogleLogin } from '@react-oauth/google'
-import { AnyAction } from '@reduxjs/toolkit'
-import { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import tw from 'tailwind-styled-components'
-import { z } from 'zod'
 import { Theme } from '@/common/constants/enums'
 import { Paths } from '@/common/constants/pathnames'
 import { useLocalStorage } from '@/common/hooks/use-storage'
@@ -16,9 +7,18 @@ import { Box, Button, Checkbox, Form as FormProvider, Icon, Image, InputFieldCon
 import { GoogleIcon } from '@/components/ui/@custom/icons'
 import ThemeSelect from '@/pages/components/theme-select'
 import { useLoginMutation } from '@/redux/apis/auth.api'
-import { useAppDispatch } from '@/redux/hook'
+import { useAppDispatch, useAppSelector } from '@/redux/hook'
 import { loginWithGoogle } from '@/redux/slices/auth.slice'
 import { LoginSchema } from '@/schemas/auth.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useGoogleLogin } from '@react-oauth/google'
+import { AnyAction } from '@reduxjs/toolkit'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import tw from 'tailwind-styled-components'
+import { z } from 'zod'
 import { Divider } from '../../../components/ui/@custom/divider'
 
 type FormValue = z.infer<typeof LoginSchema>
@@ -30,6 +30,7 @@ const LoginPage: React.FunctionComponent = () => {
    const { theme } = useTheme()
    const [loginWithEmail, { isLoading }] = useLoginMutation()
    const [savedAccount, setAccountToSave, removeSavedAccount] = useLocalStorage<string | null>('account', parseJSON(localStorage.getItem('account')))
+   const authenticated = useAppSelector((state) => state.auth.user)
    const dispatch = useAppDispatch()
    const navigate = useNavigate()
 
@@ -37,10 +38,7 @@ const LoginPage: React.FunctionComponent = () => {
       onSuccess: async (response) => {
          toast.promise(dispatch(loginWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction).unwrap(), {
             loading: 'Đang xác thực thông tin ...',
-            success: () => {
-               navigate(Paths.HOME)
-               return 'Đăng nhập thành công'
-            }
+            success: 'Đăng nhập thành công'
          })
       },
       onError: () => toast.error('Đăng nhập thất bại')
@@ -58,9 +56,12 @@ const LoginPage: React.FunctionComponent = () => {
          }
       })
    }
+   useEffect(() => {
+      if (authenticated) navigate(Paths.HOME)
+   }, [])
 
    useEffect(() => {
-      if (savedAccount) form.reset({ email: savedAccount })
+      if (savedAccount) form.setValue('email', savedAccount)
    }, [savedAccount])
 
    const handleToggleSaveAccount = useCallback((checked: boolean) => {

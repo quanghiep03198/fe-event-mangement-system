@@ -3,12 +3,13 @@ import useQueryParams from '@/common/hooks/use-query-params'
 import { Box, Button, Typography } from '@/components/ui'
 import { StepItem, Steps } from '@/pages/(auth)/recover-password/components/step'
 import ThemeSelect from '@/pages/components/theme-select'
+import { useAppSelector } from '@/redux/hook'
 import * as qs from 'qs'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import ResetPasswordForm from './components/reset-password-form'
 import VerifyEmailForm from './components/verify-email-form'
-import { toast } from 'sonner'
 
 const RecoverPasswordPage: React.FunctionComponent = () => {
    const [steps, setSteps] = useState<Array<StepItem>>([
@@ -17,6 +18,7 @@ const RecoverPasswordPage: React.FunctionComponent = () => {
    ])
    const [params, setParam] = useQueryParams('step', 'status')
    const [isCompleted, setIsCompleted] = useState<boolean>(false)
+   const authenticated = useAppSelector((state) => state.auth.user)
    const navigate = useNavigate()
 
    useEffect(() => {
@@ -56,6 +58,10 @@ const RecoverPasswordPage: React.FunctionComponent = () => {
          })
       }
    }, [params.step, isCompleted])
+
+   useEffect(() => {
+      if (authenticated) navigate(Paths.HOME)
+   }, [])
 
    return (
       <Box className='relative flex h-screen items-center justify-center p-4'>
