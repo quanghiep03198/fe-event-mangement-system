@@ -2,7 +2,7 @@ import { cn } from '@/common/utils/cn'
 import React, { Fragment, useRef, useState } from 'react'
 import { Icon, Skeleton } from '..'
 
-type ImageProps = React.ImgHTMLAttributes<HTMLImageElement>
+type ImageProps = React.HTMLProps<HTMLImageElement>
 
 export const Image: React.FC<ImageProps> = (props) => {
    const [isError, setIsError] = useState<boolean>(false)
@@ -31,6 +31,7 @@ export const Image: React.FC<ImageProps> = (props) => {
          <img
             className={cn('!m-0', props.className, { hidden: !isLoaded || isError || !props.src })}
             src={props.src}
+            alt={props.alt ?? 'image'}
             onLoad={() => setIsLoaded(true)}
             onError={handleError}
             width={props.width}
