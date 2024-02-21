@@ -7,7 +7,7 @@ import tw from 'tailwind-styled-components'
 
 type PaginationProps = Omit<Pagination<unknown>, 'docs'> & { onPrefetch?: () => void }
 
-const calculatePaginationRange = (currentPage: number, totalPages: number): number[] => {
+export const calculatePaginationRange = (currentPage: number, totalPages: number): number[] => {
    const range = 2
    let start = Math.max(1, currentPage - range)
    let end = Math.min(totalPages, currentPage + range)

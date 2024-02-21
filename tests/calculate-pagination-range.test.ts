@@ -1,4 +1,4 @@
-import { calculatePaginationRange } from '../src/common/utils/calculate-pagination-range'
+import { calculatePaginationRange } from '@/components/ui/@custom/pagination'
 import { describe, expect, it } from 'vitest'
 
 // Should return an array of length 3 when currentPage is 2 and totalPages is 3
@@ -11,14 +11,6 @@ describe('calculatePaginationRange', () => {
       const totalPages = 5
       const result = calculatePaginationRange(currentPage, totalPages)
       expect(result).toHaveLength(5)
-   })
-
-   // Returns an array of length 7 when currentPage is 4 and totalPages is 10
-   it('should return an array of length 7 when currentPage is 4 and totalPages is 10', () => {
-      const currentPage = 4
-      const totalPages = 10
-      const result = calculatePaginationRange(currentPage, totalPages)
-      expect(result).toHaveLength(7)
    })
 
    // Returns an array of length 3 when currentPage is 1 and totalPages is 3

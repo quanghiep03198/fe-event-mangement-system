@@ -22,7 +22,7 @@ function useStorage<T>(key: string, defaultValue: T, storageObject: Storage): [T
    })
 
    useEffect(() => {
-      ;(function () {
+      (function () {
          try {
             if (value === undefined) return storageObject.removeItem(key)
             storageObject.setItem(key, JSON.stringify(value))
