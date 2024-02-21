@@ -4,7 +4,7 @@ import { useGetRecentEventsQuery } from '@/redux/apis/event.api'
 
 const EventItem: React.FC<{ data: EventInterface }> = ({ data }) => {
    return (
-      <div className='flex items-center'>
+      <div className='grid grid-cols-[2fr_1fr] items-start'>
          <div className='space-y-1'>
             <p className='text-sm font-medium leading-none'>{data?.name}</p>
             <p className='text-sm text-muted-foreground'>
