@@ -73,9 +73,6 @@ const AreasListPage: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('id', {
          header: 'Thao tác',
-         enableSorting: true,
-
-         enableColumnFilter: true,
          cell: ({ row }) => {
             return (
                <DataTableRowActions

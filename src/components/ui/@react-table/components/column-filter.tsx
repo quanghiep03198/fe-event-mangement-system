@@ -26,7 +26,7 @@ export function ColumnFilter<TData, TValue>({ column }: ColumnFilterProps<TData,
       return (
          <Tooltip content='Bộ lọc không được áp dụng'>
             <Box className='cursor- flex h-9 select-none items-center justify-center px-2 text-xs font-medium text-muted-foreground/50'>
-               <Icon name='X' />
+               <Icon name='Minus' />
             </Box>
          </Tooltip>
       )

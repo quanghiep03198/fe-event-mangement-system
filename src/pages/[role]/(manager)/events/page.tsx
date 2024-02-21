@@ -125,9 +125,6 @@ const EventListPage: React.FunctionComponent = () => {
       }),
       columnHelper.accessor('id', {
          header: 'Thao tác',
-         enableResizing: false,
-         size: 64,
-         enableHiding: false,
          cell: ({ cell }) => {
             const id = cell.getValue()
             return (
