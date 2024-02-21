@@ -9,7 +9,7 @@ const BaseEventSchema = z.object({
    contact: z
       .string({ required_error: 'Vui lòng nhập số điện thoại liên hệ' })
       .min(1, { message: 'Vui lòng nhập số điện thoại liên hệ' })
-      .regex(Regex.phone, { message: 'Số điện thoại không đúng định dạng' }),
+      .regex(Regex.PHONE, { message: 'Số điện thoại không đúng định dạng' }),
    user_id: z.string().or(z.number()).nullable().optional(),
    content: z.string({ required_error: 'Vui lòng nhập nội dung' }),
    description: z.string({ required_error: 'Vui lòng nhập mô tả' }),

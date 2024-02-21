@@ -17,7 +17,7 @@ type ToggleButtonProps = {
 
 const TimePicker: React.FC<TimePickerProps> = (props) => {
    const [time, setTime] = useState<TimeObject>(() => {
-      if (props.value && Regex.time.test(props.value)) return parseTime(props.value)
+      if (props.value && Regex.TIME.test(props.value)) return parseTime(props.value)
       return {
          hours: new Date().getHours(),
          minutes: new Date().getMinutes(),
