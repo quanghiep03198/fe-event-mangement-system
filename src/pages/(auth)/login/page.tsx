@@ -34,6 +34,11 @@ const LoginPage: React.FunctionComponent = () => {
    const dispatch = useAppDispatch()
    const navigate = useNavigate()
 
+   useEffect(() => {
+      if (authenticated) navigate(Paths.HOME)
+      if (savedAccount) form.setValue('email', savedAccount)
+   }, [])
+
    const handleLoginWithGoogle = useGoogleLogin({
       onSuccess: async (response) => {
          toast.promise(dispatch(loginWithGoogle(`${response.token_type} ${response.access_token}`) as unknown as AnyAction).unwrap(), {
@@ -56,13 +61,6 @@ const LoginPage: React.FunctionComponent = () => {
          }
       })
    }
-   useEffect(() => {
-      if (authenticated) navigate(Paths.HOME)
-   }, [])
-
-   useEffect(() => {
-      if (savedAccount) form.setValue('email', savedAccount)
-   }, [savedAccount])
 
    const handleToggleSaveAccount = useCallback((checked: boolean) => {
       if (checked) {
