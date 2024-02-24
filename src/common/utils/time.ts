@@ -3,7 +3,6 @@ import Regex from '../constants/regex'
 export type TimeObject = Record<'hours' | 'minutes' | 'seconds', number>
 
 export const getCurrentDate = ({ hours, minutes, seconds }: TimeObject): Date => {
-   if (!Regex.TIME.test([hours, minutes, seconds].join(':'))) throw new Error('Invalid time')
    const currentYear = new Date().getFullYear()
    const currentMonth = new Date().getMonth()
    const currentDay = new Date().getDate()
