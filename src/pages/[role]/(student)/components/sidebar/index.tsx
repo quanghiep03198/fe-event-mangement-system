@@ -9,8 +9,8 @@ import { useGetAllAreasQuery } from '@/redux/apis/area.api'
 import { NavLink, matchPath, useLocation } from 'react-router-dom'
 
 const postedTimeOptions: Record<'label' | 'value', string>[] = [
-   { label: 'Cũ nhất', value: 'latest' },
-   { label: 'Mới nhất', value: 'oldest' }
+   { label: 'Mới nhất', value: 'latest' },
+   { label: 'Cũ nhất', value: 'oldest' }
 ]
 
 const Sidebar: React.FunctionComponent = () => {
