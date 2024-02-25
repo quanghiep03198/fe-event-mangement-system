@@ -48,10 +48,13 @@ export function ComboboxFieldControl<T extends FieldValues>(props: ComboboxField
                            <FormControl>
                               <Button
                                  variant='outline'
+                                 size='sm'
                                  role='combobox'
                                  className={cn('w-full justify-between hover:bg-background', !field.value && 'text-muted-foreground')}
                               >
-                                 {field.value ? options.find((option) => option.value === field.value)?.label : placeholder}
+                                 <Typography variant='small' className='line-clamp-1'>
+                                    {field.value ? options.find((option) => option.value === field.value)?.label : placeholder}
+                                 </Typography>
                                  <Icon name='ChevronsUpDown' />
                               </Button>
                            </FormControl>
