@@ -7,5 +7,5 @@ export const isJSON = (arg: any) => {
 }
 
 export const parseJSON = (arg: string | null) => {
-   return arg && isJSON(arg) ? JSON.parse(arg) : null
+   return isJSON(arg) ? JSON.parse(arg) : null
 }
